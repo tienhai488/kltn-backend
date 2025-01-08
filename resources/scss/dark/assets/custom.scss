@@ -1,0 +1,182 @@
+$white-color: #fff;
+$border-color: #e0e6ed;
+$text-color: #3b3f5c;
+$gray-color: #515365;
+
+h1, h2, h3, h4, h5, h6 {
+  color: $text-color;
+}
+
+.navbar {
+  .sell-buy-item-nav__header {
+    padding: 16px 15px;
+    border-bottom: 1px solid $border-color;
+  }
+
+  .sell-buy-item-nav__body {
+    max-height: 360px;
+    position: relative;
+
+    .item {
+      background-color: $white-color;
+      border-radius: 6px;
+      border: 1px solid $border-color;
+      padding: 14px 26px;
+
+      img {
+        width: 45px;
+        border-radius: 10%;
+        margin-right: 17px;
+        height: 45px;
+      }
+
+      .feather-trash {
+        width: 20px;
+        margin-left: 18px;
+        cursor: pointer;
+      }
+    }
+
+    .item-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-information {
+      min-width: 180px;
+    }
+  }
+
+  .sell-buy-item-nav__footer {
+    margin-top: 20px;
+    padding: 16px 15px;
+    border-top: 1px solid $border-color;
+  }
+
+  .sell-buy-item-nav__qty-items {
+    font-size: 10px;
+    margin-left: 3px;
+  }
+
+  .sell-buy-item-nav__dropdown-menu {
+    right: 0;
+
+    .dropdown-item {
+      padding: 18px 18px 0;
+
+      &:hover {
+        background-color: inherit;
+      }
+    }
+  }
+
+  .sell-buy-item-nav__empty {
+    width: 376px;
+    padding: 20px 20px 0;
+  }
+
+  .filter-header {
+    padding: 16px 15px;
+    border-bottom: 1px solid $border-color;
+  }
+
+  .filter-body {
+    max-height: 360px;
+    position: relative;
+  }
+
+  .filter-footer {
+    margin-top: 20px;
+    padding: 16px 15px;
+    border-top: 1px solid $border-color;
+  }
+
+  .filter-dropdown-menu {
+    left: 0;
+
+    .dropdown-item {
+      padding: 18px 18px 0;
+
+      &:hover {
+        background-color: inherit;
+      }
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    .filter-body {
+      width: 460px;
+    }
+  }
+}
+
+.custom-blockUIElement {
+  .blockUI.blockMsg.blockElement {
+    left: 50% !important;
+    top: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
+.market-table__split {
+  border-top: 1px solid $border-color;
+  margin: 20px -16px 34px -16px;
+}
+
+.show-password-btn {
+  width: 46px;
+  background-color: transparent;
+  top: 30px !important;
+  margin-right: 8px;
+  border: none;
+  outline: none;
+  color: $gray-color;
+}
+
+.btn-wo-ani:focus {
+  box-shadow: none;
+  border: none;
+}
+
+#sDashBoard {
+    .widget {
+        padding: unset;
+        border: unset;
+        border-radius: 8px;
+    }
+
+    .widget-content-area {
+        padding: 21px;
+    }
+}
+
+.date-picker {
+    .btn {
+        margin-bottom: unset;
+    }
+}
+
+.sidebar-wrapper .shadow-bottom {
+    top: 2047px;
+}
+
+body.layout-dark .sidebar-wrapper .shadow-bottom{
+    top: 147px;
+}
+
+.shadow-bottom {
+    margin-top: 1000px !important;
+}
+
+.profile-img {
+    padding-left: 0 !important;
+}
+
+body.layout-dark {
+    .navbar .navbar-item .nav-item.dropdown {
+        &.notification-dropdown .dropdown-menu {
+            right: -64px;
+        }
+    }
+}
