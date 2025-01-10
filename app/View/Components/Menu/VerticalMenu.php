@@ -83,6 +83,16 @@ class VerticalMenu extends Component
                     //
                 ],
             ],
+            [
+                'title' => __('Phòng ban'),
+                'url' => route('admin.department.index'),
+                'icon' => 'users',
+                'active' => Route::is(['admin.department.*']),
+                'show' => checkPermissions([Acl::PERMISSION_DEPARTMENT_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
         ]);
     }
 

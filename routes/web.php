@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'web'], function () {
     include 'v1/web/auth.php';
 
-    Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
+    Route::middleware('auth')->group(function () {
         include 'v1/web/admin.php';
     });
 });
