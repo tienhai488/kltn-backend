@@ -39,6 +39,14 @@ final class Acl
 
     const PERMISSION_DEPARTMENT_DELETE = 'xóa phòng ban';
 
+    const PERMISSION_CATEGORY_LIST = 'danh sách danh mục';
+
+    const PERMISSION_CATEGORY_ADD = 'thêm mới danh mục';
+
+    const PERMISSION_CATEGORY_EDIT = 'chỉnh sửa danh mục';
+
+    const PERMISSION_CATEGORY_DELETE = 'xóa danh mục';
+
     /**
      * @param  array  $exclusives Exclude some permissions from the list
      */

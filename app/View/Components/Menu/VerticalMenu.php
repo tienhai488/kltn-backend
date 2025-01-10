@@ -93,6 +93,16 @@ class VerticalMenu extends Component
                     //
                 ],
             ],
+            [
+                'title' => __('Danh mục'),
+                'url' => route('admin.category.index'),
+                'icon' => 'bookmark',
+                'active' => Route::is(['admin.category.*']),
+                'show' => checkPermissions([Acl::PERMISSION_CATEGORY_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
         ]);
     }
 
