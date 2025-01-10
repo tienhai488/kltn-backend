@@ -121,9 +121,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
             $user = $model->update($data);
 
-            if (isset($data['user_avatar']) && $data['user_avatar']) {
-                $model->clearMediaCollection(UserAvatar::COLLECTION->value);
+            $model->clearMediaCollection(UserAvatar::COLLECTION->value);
 
+            if (isset($data['user_avatar']) && $data['user_avatar']) {
                 $file = json_decode($data['user_avatar'], true);
                 $model->addMediaFromBase64($file['data'])
                     ->usingFileName($file['name'])

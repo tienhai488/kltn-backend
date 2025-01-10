@@ -23,8 +23,6 @@ final class Acl
 
     const PERMISSION_ROLE_DELETE = 'xóa vai trò';
 
-    const PERMISSION_USER_MANAGE = 'quản lý người dùng';
-
     const PERMISSION_USER_LIST = 'danh sách người dùng';
 
     const PERMISSION_USER_ADD = 'thêm mới người dùng';
@@ -32,6 +30,14 @@ final class Acl
     const PERMISSION_USER_EDIT = 'chỉnh sửa người dùng';
 
     const PERMISSION_USER_DELETE = 'xóa người dùng';
+
+    const PERMISSION_DEPARTMENT_LIST = 'danh sách phòng ban';
+
+    const PERMISSION_DEPARTMENT_ADD = 'thêm mới phòng ban';
+
+    const PERMISSION_DEPARTMENT_EDIT = 'chỉnh sửa phòng ban';
+
+    const PERMISSION_DEPARTMENT_DELETE = 'xóa phòng ban';
 
     /**
      * @param  array  $exclusives Exclude some permissions from the list
