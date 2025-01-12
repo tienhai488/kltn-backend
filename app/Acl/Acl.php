@@ -47,6 +47,10 @@ final class Acl
 
     const PERMISSION_CATEGORY_DELETE = 'xóa danh mục';
 
+    const PERMISSION_CONTACT_LIST = 'danh sách liên hệ';
+
+    const PERMISSION_CONTACT_EDIT = 'chỉnh sửa liên hệ';
+
     /**
      * @param  array  $exclusives Exclude some permissions from the list
      */
