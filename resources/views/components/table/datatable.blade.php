@@ -82,8 +82,20 @@
 
         multiCheck(c1);
 
+        function debounce(func, timeout = 300) {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    func.apply(this, args);
+                }, timeout);
+            };
+        }
+
+        const processHandle = debounce((value) => c1.search(value).draw());
+
         $(document).on('keyup', '.search-bar .search-form-control', function() {
-            c1.search(this.value).draw();
+            processHandle(this.value);
         });
 
         $('.search-bar .search-close').on('click', function(e) {

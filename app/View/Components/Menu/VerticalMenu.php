@@ -103,6 +103,16 @@ class VerticalMenu extends Component
                     //
                 ],
             ],
+            [
+                'title' => __('Liên hệ'),
+                'url' => route('admin.contact.index'),
+                'icon' => 'mail',
+                'active' => Route::is(['admin.contact.*']),
+                'show' => checkPermissions([Acl::PERMISSION_CONTACT_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
         ]);
     }
 
