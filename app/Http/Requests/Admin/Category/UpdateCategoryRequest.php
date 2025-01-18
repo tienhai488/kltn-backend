@@ -31,7 +31,7 @@ class UpdateCategoryRequest extends FormRequest
                 'max:255',
                 Rule::unique('categories')->ignore($this->category->id),
             ],
-            'description' => ['required', 'string'],
+            'icon' => ['required', 'string'],
             'status' => ['required', Rule::enum(CategoryStatus::class)],
         ];
     }
