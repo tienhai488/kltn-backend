@@ -31,7 +31,7 @@ class StoreCategoryRequest extends FormRequest
                 'max:255',
                 'unique:categories',
             ],
-            'description' => ['required', 'string'],
+            'icon' => ['required', 'string'],
             'status' => ['required', Rule::enum(CategoryStatus::class)],
         ];
     }

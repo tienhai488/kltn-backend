@@ -52,13 +52,13 @@
                 :values="$category->status->value"
             />
             <x-form.form-textarea
-                :id="'sDescription'"
-                :label="__('Mô tả')"
-                :name="'description'"
-                :placeholder="__('Mô tả')"
+                :id="'sIcon'"
+                :label="__('Biểu tượng')"
+                :name="'icon'"
+                :placeholder="__('Biểu tượng')"
                 :isRequired="true"
                 :rows="5"
-                :value="$category->description"
+                :value="$category->icon"
             />
             <x-buttons.submit :label="__('Hoàn tất')"/>
         </x-form.form-layout>

@@ -50,6 +50,7 @@
             <x-slot:tableHeader>
                 <tr>
                     <th class="text-center">No.</th>
+                    <th>{{ __('Biểu tượng') }}</th>
                     <th>{{ __('Tên danh mục') }}</th>
                     <th>{{ __('Trạng thái') }}</th>
                     <th class="text-center dt-no-sorting">{{ __('Thao tác') }}</th>
@@ -82,6 +83,10 @@
                         "render": (data, type, row, meta) =>  meta.row + 1 + meta.settings._iDisplayStart,
                     },
                     {
+                        "data": "icon",
+                        "class": "text-center",
+                    },
+                    {
                         "data": "name",
                     },
                     {
@@ -111,7 +116,7 @@
                                         dataTableId="#sCategoryTable"
                                     />
                                 </ul>`;
-                            }
+                        }
                     },
                 ]
             </x-slot:customScript>
