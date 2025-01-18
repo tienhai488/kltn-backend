@@ -31,8 +31,14 @@ class UpdateProfileRequest extends FormRequest
                 'string',
                 'max:255',
             ],
+            'username' => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique('users')->ignore(auth()->id()),
+            ],
             'birth_of_date' => [
-                'required',
+                'nullable',
                 'before_or_equal:' . now()->subYears(16)->format('Y-m-d'),
             ],
             'gender' => [

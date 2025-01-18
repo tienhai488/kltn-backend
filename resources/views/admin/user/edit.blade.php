@@ -51,6 +51,7 @@
                 :value="$user->name"
                 :isRequired="true"
             />
+            <input type="hidden" name="username" value="{{ $user->username }}">
             <x-form.form-input
                 :id="'email'"
                 :label="'Email'"
@@ -83,7 +84,6 @@
                 label="{{ __('Ngày tháng năm sinh') }}"
                 name="birth_of_date"
                 placeholder="{{ __('Ngày tháng năm sinh') }}"
-                isRequired="true"
                 :max-date="$maxDate"
                 :min-date="$minDate"
                 :value="$user->birth_of_date ?? ''"

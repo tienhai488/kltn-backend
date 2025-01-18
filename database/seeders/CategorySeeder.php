@@ -13,10 +13,6 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        if (Category::count()) {
-            return;
-        }
-
         $categories = [
             [
                 'name' => 'Trẻ em',
@@ -60,6 +56,14 @@ class CategorySeeder extends Seeder
             ],
         ];
 
-        Category::insert($categories);
+        foreach ($categories as $category) {
+            Category::firstOrCreate(
+                ['name' => $category['name']],
+                [
+                    'icon'   => $category['icon'],
+                    'status' => $category['status'],
+                ]
+            );
+        }
     }
 }

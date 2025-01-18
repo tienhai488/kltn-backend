@@ -3,6 +3,7 @@
 namespace App\Repositories\Role;
 
 use App\Repositories\RepositoryInterface;
+use Illuminate\Support\Collection;
 
 /**
  * The repository interface for the Role Model
@@ -18,9 +19,10 @@ interface RoleRepositoryInterface extends RepositoryInterface
     public function allRolesWithPermissions();
 
     /**
-     * Return all roles with loaded permissions
+     * Get role by name
      *
+     * @param string $name
      * @return collection
      */
-    public function getStaffRole();
+    public function getRoleByName(string $name): Collection;
 }

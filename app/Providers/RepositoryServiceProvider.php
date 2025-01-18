@@ -8,6 +8,10 @@ use App\Repositories\Contact\ContactRepository;
 use App\Repositories\Contact\ContactRepositoryInterface;
 use App\Repositories\Department\DepartmentRepository;
 use App\Repositories\Department\DepartmentRepositoryInterface;
+use App\Repositories\IndividualAccountRequest\IndividualAccountRequestRepository;
+use App\Repositories\IndividualAccountRequest\IndividualAccountRequestRepositoryInterface;
+use App\Repositories\OrganizationAccountRequest\OrganizationAccountRequestRepository;
+use App\Repositories\OrganizationAccountRequest\OrganizationAccountRequestRepositoryInterface;
 use App\Repositories\Permission\PermissionRepository;
 use App\Repositories\Permission\PermissionRepositoryInterface;
 use App\Repositories\Role\RoleRepository;
@@ -29,5 +33,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->singleton(DepartmentRepositoryInterface::class, DepartmentRepository::class);
         $this->app->singleton(CategoryRepositoryInterface::class, CategoryRepository::class);
         $this->app->singleton(ContactRepositoryInterface::class, ContactRepository::class);
+        $this->app->singleton(IndividualAccountRequestRepositoryInterface::class, IndividualAccountRequestRepository::class);
+        $this->app->singleton(OrganizationAccountRequestRepositoryInterface::class, OrganizationAccountRequestRepository::class);
     }
 }

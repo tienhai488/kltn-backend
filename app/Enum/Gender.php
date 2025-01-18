@@ -11,4 +11,5 @@ enum Gender: string
 
     case MALE = 'Nam';
     case FEMALE = 'Nữ';
+    case OTHER = 'Khác';
 }

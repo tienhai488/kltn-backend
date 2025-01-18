@@ -52,17 +52,18 @@ class UserController extends Controller
      */
     public function create()
     {
+        $roles = $this->roleRepository->all();
         $minDate = Carbon::now()->subYears(100);
         $maxDate = Carbon::now()->subYears(16);
-
-        $roles = $this->roleRepository->all();
         $statuses = UserStatus::options(true);
+        $userRoles = session('role') ? $this->roleRepository->getRoleByName(session('role'))->pluck('id')->toArray() : [];
 
         return view('admin.user.create', compact(
             'roles',
             'statuses',
             'minDate',
             'maxDate',
+            'userRoles',
         ));
     }
 
@@ -71,7 +72,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        if ($user = $this->userRepository->create($request->validated())) {
+        if ($this->userRepository->create($request->validated())) {
             session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Thêm mới người dùng thành công.'));
         } else {
             session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Thêm môn người dùng thất bại.'));

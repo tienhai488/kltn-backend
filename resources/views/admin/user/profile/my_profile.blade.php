@@ -131,6 +131,8 @@
                                                                             </div>
                                                                         </div>
 
+                                                                        <input type="hidden" name="username" value="{{ auth()->user()->username }}">
+
                                                                         <div class="row">
                                                                             <div class="col-md-6">
                                                                                 <x-form.form-input
@@ -161,7 +163,6 @@
                                                                                     label="{{ __('Ngày tháng năm sinh') }}"
                                                                                     name="birth_of_date"
                                                                                     placeholder="{{ __('Ngày tháng năm sinh') }}"
-                                                                                    isRequired="true"
                                                                                     :max-date="$maxDate"
                                                                                     :min-date="$minDate"
                                                                                     :value="auth()->user()->birth_of_date ?? ''"

@@ -30,6 +30,21 @@ if (!function_exists('checkPermissions')) {
     }
 }
 
+if (!function_exists('customFormatDate')) {
+
+    /**
+     * Format date.
+     *
+     * @param string $date
+     * @param string $format
+     * @return string
+     */
+    function customFormatDate($date, $format = 'd/m/Y | H:i')
+    {
+        return Carbon::parse($date)->format($format);
+    }
+}
+
 
 if (!function_exists('layoutConfig')) {
     function layoutConfig()

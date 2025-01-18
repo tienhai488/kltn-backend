@@ -3,8 +3,8 @@
 namespace App\Repositories\Role;
 
 use App\Repositories\BaseRepository;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
 /**
@@ -77,8 +77,8 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function getStaffRole()
+    public function getRoleByName(string $name): Collection
     {
-        return $this->model->whereIn('name', [ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_STAFF])->get();
+        return $this->model->where('name', $name)->get();
     }
 }

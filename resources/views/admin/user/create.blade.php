@@ -45,6 +45,7 @@
                 :name="'name'"
                 :placeholder="'Nhập họ tên người dùng'"
                 :isRequired="true"
+                :value="session('name')"
             />
             <x-form.form-input
                 :id="'email'"
@@ -52,7 +53,9 @@
                 :name="'email'"
                 :placeholder="'Nhập Email'"
                 :isRequired="true"
+                :value="session('email')"
             />
+            <input type="hidden" name="username" value="{{ session('username') }}">
             <x-form.form-select
                 :id="'sStatusSelect'"
                 :label="'Trạng thái hoạt động'"
@@ -69,15 +72,16 @@
                 :name="'phone_number'"
                 :placeholder="'Số điện thoại'"
                 :isRequired="true"
+                :value="session('phone_number')"
             />
             <x-form.form-date-picker
                 id="birth_of_date"
                 label="{{ __('Ngày tháng năm sinh') }}"
                 name="birth_of_date"
                 placeholder="{{ __('Ngày tháng năm sinh') }}"
-                isRequired="true"
                 :max-date="$maxDate"
                 :min-date="$minDate"
+                :value="session('birth_of_date')"
             />
             <x-form.form-select
                 :id="'sGendersSelect'"
@@ -96,6 +100,7 @@
                 :name="'address'"
                 :placeholder="'Địa chỉ'"
                 :isRequired="true"
+                :value="session('address')"
             />
             <x-form.form-input
                 :id="'password'"
@@ -121,6 +126,7 @@
                 :multiple="true"
                 :placeholder="__('Chọn vai trò')"
                 :isRequired="true"
+                :values="$userRoles"
             />
             <x-buttons.submit :label="__('Hoàn tất')"/>
         </x-form.form-layout>

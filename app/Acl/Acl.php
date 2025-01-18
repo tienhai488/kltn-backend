@@ -11,6 +11,10 @@ final class Acl
 
     const ROLE_ADMIN = 'quản trị viên';
 
+    const ROLE_ORGANIZATION = 'tổ chức gây quỹ';
+
+    const ROLE_INDIVIDUAL = 'cá nhân gây quỹ';
+
     const PERMISSION_ASSIGNEE = 'gán vai trò';
 
     const PERMISSION_VIEW_MENU_DASHBOARD = 'xem menu bảng điều khiển';
@@ -50,6 +54,10 @@ final class Acl
     const PERMISSION_CONTACT_LIST = 'danh sách liên hệ';
 
     const PERMISSION_CONTACT_EDIT = 'chỉnh sửa liên hệ';
+
+    const PERMISSION_ACCOUNT_REQUEST_LIST = 'danh sách yêu cầu tài khoản';
+
+    const PERMISSION_ACCOUNT_REQUEST_EDIT = 'chỉnh sửa yêu cầu tài khoản';
 
     /**
      * @param  array  $exclusives Exclude some permissions from the list

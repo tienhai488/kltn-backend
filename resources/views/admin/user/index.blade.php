@@ -51,6 +51,7 @@
                 <tr>
                     <th class="text-center">No.</th>
                     <th>{{ __('Tên người dùng') }}</th>
+                    <th>{{ __('Tên tài khoản') }}</th>
                     <th>{{ __('Email') }}</th>
                     <th>{{ __('Số điện thoại') }}</th>
                     <th>{{ __('Trạng thái') }}</th>
@@ -86,6 +87,9 @@
                     },
                     {
                         "data": "name",
+                    },
+                    {
+                        "data": "username",
                     },
                     {
                         "data": "email",
