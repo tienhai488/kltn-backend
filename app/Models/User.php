@@ -33,6 +33,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'phone_number',
         'birth_of_date',

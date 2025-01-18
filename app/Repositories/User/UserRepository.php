@@ -88,6 +88,15 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         try {
             DB::beginTransaction();
+
+            if (!$data['username']) {
+                $data['username'] = explode('@', $data['email'])[0];
+            }
+
+            while ($this->model->where('username', $data['username'])->exists()) {
+                $data['username'] = $data['username'] . rand(1, 100);
+            }
+
             $user = $this->model->create($data);
 
             if (isset($data['user_avatar']) && $data['user_avatar']) {
@@ -118,6 +127,14 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         try {
             DB::beginTransaction();
+
+            if (!$data['username']) {
+                $data['username'] = explode('@', $data['email'])[0];
+            }
+
+            while ($this->model->where('username', $data['username'])->exists()) {
+                $data['username'] = $data['username'] . rand(1, 100);
+            }
 
             $user = $model->update($data);
 

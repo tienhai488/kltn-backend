@@ -26,8 +26,12 @@ class RolePermissionSeeder extends Seeder
 
         $superAdminRole = Role::findByName(Acl::ROLE_SUPER_ADMIN);
         $adminRole = Role::findByName(Acl::ROLE_ADMIN);
+        $individualRole = Role::findByName(Acl::ROLE_INDIVIDUAL);
+        $organizationRole = Role::findByName(Acl::ROLE_ORGANIZATION);
 
         $superAdminRole->givePermissionTo(Acl::permissions());
         $adminRole->givePermissionTo(Acl::permissions([Acl::PERMISSION_ROLE_LIST]));
+        $individualRole->givePermissionTo([]);
+        $organizationRole->givePermissionTo([]);
     }
 }

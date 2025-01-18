@@ -9,4 +9,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     include 'admin/department.php';
     include 'admin/category.php';
     include 'admin/contact.php';
+    include 'admin/individual_account_request.php';
+    include 'admin/organization_account_request.php';
 });

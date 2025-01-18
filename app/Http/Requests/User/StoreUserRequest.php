@@ -36,6 +36,12 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'max:255'
             ],
+            'username' => [
+                'nullable',
+                'string',
+                'max:255',
+                'unique:users',
+            ],
             'email' => [
                 'required',
                 'string',
@@ -49,7 +55,7 @@ class StoreUserRequest extends FormRequest
                 new PhoneNumber,
             ],
             'birth_of_date' => [
-                'required',
+                'nullable',
                 'before_or_equal:' . now()->subYears(16)->format('Y-m-d'),
             ],
             'password' => [
