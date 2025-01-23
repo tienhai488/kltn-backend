@@ -2,19 +2,6 @@
     <div id="filterBody" class="row align-items-center">
         <div class="col-md-6">
             <x-form.form-select
-                :id="'sUser'"
-                :label="__('Người dùng')"
-                :data-values="$users"
-                :select-value-attribute="'id'"
-                :select-value-label="'name'"
-                :name="'user_id'"
-                :multiple="false"
-                :placeholder="__('Chọn người dùng')"
-                :is-filter="true"
-            />
-        </div>
-        <div class="col-md-6">
-            <x-form.form-select
                 :id="'sStatus'"
                 :label="__('Trạng thái')"
                 :data-values="App\Enum\ContactStatus::options(true)"

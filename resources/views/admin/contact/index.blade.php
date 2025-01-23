@@ -61,7 +61,6 @@
                     </th>
                     @endcan
                     <th class="text-center">No.</th>
-                    <th>{{ __('Người dùng') }}</th>
                     <th>{{ __('Thông tin') }}</th>
                     <th>{{ __('Tiêu đề') }}</th>
                     <th>{{ __('Trạng thái') }}</th>
@@ -81,7 +80,6 @@
                         d.page = d.start / d.length + 1;
 
                         d.status = $('#sStatus').val() || searchParams.get('status');
-                        d.user_id = $('#sUser').val() || searchParams.get('user_id');
                     },
                     "dataSrc": function(res) {
                         res.draw = drawDT;
@@ -108,19 +106,6 @@
                         "render": (data, type, row, meta) =>  meta.row + 1 + meta.settings._iDisplayStart,
                     },
                     {
-                        "data": "user",
-                        "render": function (data, type, full) {
-                            if (!data) {
-                                return 'N/A';
-                            }
-                            let url = `{{ route('admin.user.edit', ':id') }}`.replace(':id', data.id);
-                            return `<a href="${url}" target="_blank" class="text-primary">
-                                ${data.name}
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link p-1 br-6 mb-1"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                            </a>`;
-                        }
-                    },
-                    {
                         "data": "name",
                         "render": function (data, type, full) {
                             return `
@@ -134,7 +119,7 @@
                                 </div>
                                 <div class="d-flex">
                                     <p class="text-start me-1">{{ __('Số điện thoại') }}:</p>
-                                    <p class="text-primary">${full.phone_numer}</p>
+                                    <p class="text-primary">${full.phone_number}</p>
                                 </div>
                             `;
                         }

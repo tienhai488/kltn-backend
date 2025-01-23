@@ -49,9 +49,8 @@ class ContactRepository extends BaseRepository implements ContactRepositoryInter
     {
         $keyword = Arr::get($searchParams, 'search', '');
         $status = Arr::get($searchParams, 'status', null);
-        $userId = Arr::get($searchParams, 'user_id', null);
 
-        $query = $this->model->query()->with('user');
+        $query = $this->model->query();
 
         if ($keyword) {
             if (is_array($keyword)) {
@@ -59,7 +58,6 @@ class ContactRepository extends BaseRepository implements ContactRepositoryInter
             }
 
             $query->whereAny([
-                'id',
                 'name',
                 'email',
                 'phone_number',
@@ -69,10 +67,6 @@ class ContactRepository extends BaseRepository implements ContactRepositoryInter
 
         if (! is_null($status)) {
             $query->where('status', $status);
-        }
-
-        if (!is_null($userId)) {
-            $query->where('user_id', $userId);
         }
 
         return $query;

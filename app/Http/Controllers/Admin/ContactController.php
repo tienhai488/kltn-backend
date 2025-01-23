@@ -7,14 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\ContactResource;
 use App\Models\Contact;
 use App\Repositories\Contact\ContactRepositoryInterface;
-use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
     public function __construct(
         protected ContactRepositoryInterface $contactRepository,
-        protected UserRepositoryInterface $userRepository,
     ) {
         $this->middleware('permission:' . Acl::PERMISSION_CONTACT_LIST)->only(['index', 'show']);
         $this->middleware('permission:' . Acl::PERMISSION_CONTACT_EDIT)->only(['update']);
@@ -30,8 +28,7 @@ class ContactController extends Controller
             return ContactResource::collection($contacts);
         }
 
-        $users = $this->userRepository->all();
-        return view('admin.contact.index', compact('users'));
+        return view('admin.contact.index');
     }
 
     /**
@@ -55,8 +52,6 @@ class ContactController extends Controller
      */
     public function show(Contact $contact)
     {
-        $contact->loadMissing('user');
-
         return view('admin.contact.show', compact('contact'));
     }
 

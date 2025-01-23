@@ -19,7 +19,7 @@ final class Acl
 
     const PERMISSION_VIEW_MENU_DASHBOARD = 'xem menu bảng điều khiển';
 
-    const PERMISSION_ROLE_LIST = 'danh sách vai trò';
+    const PERMISSION_ROLE_LIST = 'xem danh sách vai trò';
 
     const PERMISSION_ROLE_ADD = 'thêm mới vai trò';
 
@@ -27,7 +27,7 @@ final class Acl
 
     const PERMISSION_ROLE_DELETE = 'xóa vai trò';
 
-    const PERMISSION_USER_LIST = 'danh sách người dùng';
+    const PERMISSION_USER_LIST = 'xem danh sách người dùng';
 
     const PERMISSION_USER_ADD = 'thêm mới người dùng';
 
@@ -35,7 +35,7 @@ final class Acl
 
     const PERMISSION_USER_DELETE = 'xóa người dùng';
 
-    const PERMISSION_DEPARTMENT_LIST = 'danh sách phòng ban';
+    const PERMISSION_DEPARTMENT_LIST = 'xem danh sách phòng ban';
 
     const PERMISSION_DEPARTMENT_ADD = 'thêm mới phòng ban';
 
@@ -43,7 +43,7 @@ final class Acl
 
     const PERMISSION_DEPARTMENT_DELETE = 'xóa phòng ban';
 
-    const PERMISSION_CATEGORY_LIST = 'danh sách danh mục';
+    const PERMISSION_CATEGORY_LIST = 'xem danh sách danh mục';
 
     const PERMISSION_CATEGORY_ADD = 'thêm mới danh mục';
 
@@ -51,13 +51,37 @@ final class Acl
 
     const PERMISSION_CATEGORY_DELETE = 'xóa danh mục';
 
-    const PERMISSION_CONTACT_LIST = 'danh sách liên hệ';
+    const PERMISSION_CONTACT_LIST = 'xem danh sách liên hệ';
 
     const PERMISSION_CONTACT_EDIT = 'chỉnh sửa liên hệ';
 
-    const PERMISSION_ACCOUNT_REQUEST_LIST = 'danh sách yêu cầu tài khoản';
+    const PERMISSION_ACCOUNT_REQUEST_LIST = 'xem danh sách yêu cầu tài khoản';
 
     const PERMISSION_ACCOUNT_REQUEST_EDIT = 'chỉnh sửa yêu cầu tài khoản';
+
+    const PERMISSION_PROJECT_LIST = 'xem danh sách dự án';
+
+    const PERMISSION_PROJECT_ADD = 'thêm mới dự án';
+
+    const PERMISSION_PROJECT_EDIT = 'chỉnh sửa dự án';
+
+    const PERMISSION_PROJECT_DELETE = 'xóa dự án';
+
+    const PERMISSION_DONATION_LIST = 'xem danh sách quyên góp';
+
+    const PERMISSION_DONATION_ADD = 'thêm mới quyên góp';
+
+    const PERMISSION_DONATION_EDIT = 'chỉnh sửa quyên góp';
+
+    const PERMISSION_DONATION_DELETE = 'xóa quyên góp';
+
+    const PERMISSION_VOLUNTEER_LIST = 'xem danh sách tình nguyện viên';
+
+    const PERMISSION_VOLUNTEER_ADD = 'thêm mới tình nguyện viên';
+
+    const PERMISSION_VOLUNTEER_EDIT = 'chỉnh sửa tình nguyện viên';
+
+    const PERMISSION_VOLUNTEER_DELETE = 'xóa tình nguyện viên';
 
     /**
      * @param  array  $exclusives Exclude some permissions from the list

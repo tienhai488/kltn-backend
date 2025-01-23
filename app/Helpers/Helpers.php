@@ -45,6 +45,21 @@ if (!function_exists('customFormatDate')) {
     }
 }
 
+if (!function_exists('customFormatPrice')) {
+
+    /**
+     * Format price.
+     *
+     * @param int $price
+     * @param string $currency
+     * @return string
+     */
+    function customFormatPrice($price, $currency = 'đ')
+    {
+        return number_format($price) . $currency;
+    }
+}
+
 
 if (!function_exists('layoutConfig')) {
     function layoutConfig()

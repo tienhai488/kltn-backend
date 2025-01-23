@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Acl\Acl;
 use App\Enum\NotificationType;
 use App\Enum\UserStatus;
-use App\Events\UserCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
@@ -75,7 +74,7 @@ class UserController extends Controller
         if ($this->userRepository->create($request->validated())) {
             session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Thêm mới người dùng thành công.'));
         } else {
-            session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Thêm môn người dùng thất bại.'));
+            session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Thêm mới người dùng thất bại.'));
         }
 
         return to_route('admin.user.index');

@@ -274,6 +274,10 @@ return [
         'run_time'              => 'ngày chạy',
         'user_id'               => 'người tạo',
         'birth_of_date'         => 'ngày tháng năm sinh',
+        'category_id'           => 'danh mục',
+        'donation_target'       => 'số tiền quyên góp',
+        'volunteer_quantity'    => 'số lượng tình nguyện viên',
+        'note'                  => 'ghi chú',
     ],
 
 ];
