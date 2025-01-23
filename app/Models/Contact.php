@@ -14,7 +14,6 @@ class Contact extends Model
      * {@inheritdoc}
      */
     protected $fillable = [
-        'user_id',
         'name',
         'email',
         'phone_number',
