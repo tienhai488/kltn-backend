@@ -1,6 +1,5 @@
 <?php
 
-use App\Acl\Acl;
 use Dedoc\Scramble\Scramble;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +21,6 @@ Route::group(['middleware' => 'web'], function () {
         include 'v1/web/admin.php';
     });
 });
+
+Scramble::registerUiRoute('v1', 'v1');
+Scramble::registerJsonSpecificationRoute('v1.json', 'v1');
