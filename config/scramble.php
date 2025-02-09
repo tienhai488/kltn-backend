@@ -77,7 +77,7 @@ return [
      * ```
      */
     'servers' => [
-        'Live' => 'https://' . env('SUBDOMAIN_API', 'api') . '.' . parse_url(config('app.url'), PHP_URL_HOST) .'/v1',
+        'Live' => config('app.url') . '/api/v1',
     ],
 
     'middleware' => [

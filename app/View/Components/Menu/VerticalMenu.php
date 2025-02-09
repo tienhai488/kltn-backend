@@ -58,6 +58,14 @@ class VerticalMenu extends Component
                 'title' => __('Hệ Thống'),
             ],
             [
+                'title' => __('Tài liệu API'),
+                'url' => 'docs',
+                'icon' => 'grid',
+                'active' => '',
+                'show' => checkPermissions([Acl::PERMISSION_VIEW_DOC_API]),
+                'child' => [],
+            ],
+            [
                 'title' => __('Vai trò'),
                 'url' => route('admin.role.index'),
                 'icon' => 'shield',

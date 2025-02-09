@@ -22,5 +22,5 @@ Route::group(['middleware' => 'web'], function () {
     });
 });
 
-Scramble::registerUiRoute('v1', 'v1');
-Scramble::registerJsonSpecificationRoute('v1.json', 'v1');
+Scramble::registerUiRoute('docs', 'docs');
+Scramble::registerJsonSpecificationRoute('docs.json', 'docs');

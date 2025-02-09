@@ -24,7 +24,17 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
+            /**
+             * Email của người dùng.
+             * @var string
+             * @example superadmin@kltn.vn
+             */
             'email' => 'required|string',
+            /**
+             * Mật khẩu của người dùng.
+             * @var string
+             * @example 123456
+             */
             'password' => 'required|string',
         ];
     }

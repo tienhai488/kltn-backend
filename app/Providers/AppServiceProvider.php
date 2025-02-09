@@ -27,9 +27,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Route::macro('isWith', function (...$parameters) {
             foreach ($parameters as $parameter) {
-                if (url()->current() == (!is_array($parameter)
-                    ? route($parameter)
-                    : route($parameter[0], $parameter[1] ?? []))
+                if (
+                    url()->current() == (!is_array($parameter)
+                        ? route($parameter)
+                        : route($parameter[0], $parameter[1] ?? []))
                 ) {
                     return true;
                 }
@@ -37,16 +38,16 @@ class AppServiceProvider extends ServiceProvider
             return false;
         });
 
-        Scramble::registerApi('v1', [
-            'api_path' => 'v1',
+        Scramble::registerApi('docs', [
+            'api_path' => 'api/v1',
         ])
-        ->routes(function (RoutingRoute $route) {
-            return Str::startsWith($route->uri, 'v1');
-        })
-        ->afterOpenApiGenerated(function (OpenApi $openApi) {
-            $openApi->secure(
-                SecurityScheme::http('bearer')
-            );
-        });
+            ->routes(function (RoutingRoute $route) {
+                return Str::startsWith($route->uri, 'api/v1');
+            })
+            ->afterOpenApiGenerated(function (OpenApi $openApi) {
+                $openApi->secure(
+                    SecurityScheme::http('bearer')
+                );
+            });
     }
 }
