@@ -18,3 +18,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::prefix('v1')
+    ->middleware(['api'])
+    ->group(function () {
+        Route::middleware(['auth:sanctum'])->group(function () {
+            //
+        });
+        include('v1/api/auth.php');
+    })
+    ->name('api.');

@@ -83,6 +83,8 @@ final class Acl
 
     const PERMISSION_VOLUNTEER_DELETE = 'xóa tình nguyện viên';
 
+    const PERMISSION_VIEW_DOC_API = 'xem tài liệu api';
+
     /**
      * @param  array  $exclusives Exclude some permissions from the list
      */
