@@ -82,6 +82,23 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     }
 
     /**
+     * Generate a unique username based on the given email.
+     *
+     * @param string $email
+     * @return string
+     */
+    public function generateUsername($email): string
+    {
+        $username = explode('@', $email)[0];
+
+        while ($this->model->where('username', $username)->exists()) {
+            $username = $username . rand(1, 100);
+        }
+
+        return $username;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function create($data)
@@ -89,12 +106,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             DB::beginTransaction();
 
-            if (!$data['username']) {
-                $data['username'] = explode('@', $data['email'])[0];
-            }
-
-            while ($this->model->where('username', $data['username'])->exists()) {
-                $data['username'] = $data['username'] . rand(1, 100);
+            if (empty($data['username'])) {
+                $data['username'] = $this->generateUsername($data['email']);
             }
 
             $user = $this->model->create($data);
@@ -128,7 +141,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             DB::beginTransaction();
 
-            if (!$data['username']) {
+            if (empty($data['username'])) {
                 $data['username'] = explode('@', $data['email'])[0];
             }
 
@@ -172,6 +185,30 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             DB::beginTransaction();
 
             $user = $model->update($data);
+
+            DB::commit();
+
+            return $user;
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function register($data)
+    {
+        try {
+            DB::beginTransaction();
+
+            if (empty($data['username'])) {
+                $data['username'] = $this->generateUsername($data['email']);
+            }
+
+            $user = $this->model->create($data);
 
             DB::commit();
 

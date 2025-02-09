@@ -26,4 +26,12 @@ interface UserRepositoryInterface extends RepositoryInterface
      * @param mixed $data
      */
     public function updatePassword(User $model, $data);
+
+    /**
+     * Register a new user.
+     *
+     * @param array $data
+     * @return \App\Models\User
+     */
+    public function register($data);
 }

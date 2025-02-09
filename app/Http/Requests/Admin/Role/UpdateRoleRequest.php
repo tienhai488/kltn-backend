@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Role;
+namespace App\Http\Requests\Admin\Role;
 
 use App\Acl\Acl;
 use Illuminate\Foundation\Http\FormRequest;

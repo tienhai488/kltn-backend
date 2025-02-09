@@ -25,13 +25,11 @@ class LoginRequest extends FormRequest
     {
         return [
             /**
-             * Email của người dùng.
              * @var string
              * @example superadmin@kltn.vn
              */
             'email' => 'required|string',
             /**
-             * Mật khẩu của người dùng.
              * @var string
              * @example 123456
              */
