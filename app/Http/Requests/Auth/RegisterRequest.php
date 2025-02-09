@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Auth;
 
-use App\Enum\Gender;
 use App\Rules\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Enum;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
-class UpdateProfileRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,44 +22,44 @@ class UpdateProfileRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules()
     {
         return [
             'name' => [
                 'required',
                 'string',
-                'max:255',
+                'max:255'
             ],
-            'username' => [
-                'nullable',
-                'string',
-                'max:255',
-                Rule::unique('users')->ignore(auth()->id()),
-            ],
-            'birth_of_date' => [
-                'nullable',
-                'before_or_equal:' . now()->subYears(16)->format('Y-m-d'),
-            ],
-            'gender' => [
-                'required',
-                new Enum(Gender::class),
-            ],
-            'address' => [
+            'email' => [
                 'required',
                 'string',
+                'email:rfc,dns,filter',
                 'max:255',
+                'unique:users',
             ],
             'phone_number' => [
                 'required',
-                Rule::unique('users')->ignore(auth()->id()),
+                'unique:users,phone_number',
                 new PhoneNumber,
             ],
-            'user_avatar' => 'nullable',
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+            ],
         ];
     }
 
     public function attributes()
     {
         return ['name' => 'họ tên'];
+    }
+
+    protected function passedValidation()
+    {
+        $this->merge(['password' => Hash::make($this->input('password'))]);
     }
 }

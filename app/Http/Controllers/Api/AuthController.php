@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Resources\Admin\UserResource;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Resources\Api\UserResource;
+use App\Repositories\User\UserRepositoryInterface;
 use App\Traits\ApiResponses;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
@@ -17,6 +19,12 @@ class AuthController extends Controller
 {
     use AuthenticatesUsers, ApiResponses;
 
+    public function __construct(
+        protected UserRepositoryInterface $userRepository,
+    ) {
+        //
+    }
+
     /**
      * Đăng nhập.
      *
@@ -24,7 +32,7 @@ class AuthController extends Controller
      *
      * @response array{
      *   message: string,
-     *   data: App\Http\Resources\Admin\UserResource,
+     *   data: UserResource,
      * }
      *
      * @param LoginRequest $request
@@ -44,6 +52,33 @@ class AuthController extends Controller
         }
 
         return $this->unauthorizedResponse([], trans('auth.failed'));
+    }
+
+    /**
+     * Đăng kí.
+     *
+     * Người dùng đăng kí tài khoản hệ thống.
+     *
+     * @response array{
+     *   message: string,
+     *   data: UserResource,
+     * }
+     *
+     * @param RegisterRequest $request
+     * @return JsonResponse
+     */
+    public function register(RegisterRequest $request)
+    {
+        return $this->userRepository->register($request->validated()) ?
+            $this->okResponse(
+                ['status' => true],
+                __('Đăng kí tài khoản thành công.')
+            )
+            : $this->errorResponse(
+                ['status' => false],
+                __('Đăng kí tài khoản thất bại.'),
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
     }
 
     /**

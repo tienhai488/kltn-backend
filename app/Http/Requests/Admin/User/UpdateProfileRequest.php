@@ -1,36 +1,31 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Admin\User;
 
-use App\Acl\Acl;
 use App\Enum\Gender;
-use App\Enum\UserStatus;
 use App\Rules\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
-use Illuminate\Validation\Rules\Password;
 
-class UpdateUserRequest extends FormRequest
+class UpdateProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return checkPermission(Acl::PERMISSION_USER_EDIT);
+        return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules()
+    public function rules(): array
     {
-        $rules = [
+        return [
             'name' => [
                 'required',
                 'string',
@@ -41,15 +36,6 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'max:255',
                 Rule::unique('users')->ignore(auth()->id()),
-            ],
-            'status' => [
-                'required',
-                new Enum(UserStatus::class),
-            ],
-            'phone_number' => [
-                'required',
-                Rule::unique('users')->ignore($this->user->id),
-                new PhoneNumber,
             ],
             'birth_of_date' => [
                 'nullable',
@@ -64,24 +50,13 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-            'roles' => 'required',
-            'roles.*' => 'exists:roles,id',
+            'phone_number' => [
+                'required',
+                Rule::unique('users')->ignore(auth()->id()),
+                new PhoneNumber,
+            ],
             'user_avatar' => 'nullable',
         ];
-
-        if (request()->password || request()->password_confirmation) {
-            $rules['password'] = [
-                'required',
-                Password::min(8)
-                    ->letters()
-                    ->mixedCase()
-                    ->numbers()
-                    ->symbols(),
-                'confirmed',
-            ];
-        }
-
-        return $rules;
     }
 
     public function attributes()
