@@ -7,8 +7,7 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^2.0",
-        "dedoc/scramble": "^0.11.12",
-        "fingerprint/fingerprint-pro-server-api-sdk": "^5.1",
+        "dedoc/scramble": "^0.12.5",
         "guzzlehttp/guzzle": "^7.2",
         "khgc/khgc-export-excel": "dev-master",
         "khgc/khgc-import-excel": "dev-master",
@@ -24,13 +23,12 @@
         "owen-it/laravel-auditing": "^13.5",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-medialibrary": "^11.0.0",
-        "spatie/laravel-permission": "^6.0",
-        "zaloplatform/zalo-php-sdk": "^4.0"
+        "spatie/laravel-permission": "^6.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.8",
         "barryvdh/laravel-ide-helper": "^3.0",
-        "fakerphp/faker": "^1.9.1",
+        "fakerphp/faker": "*",
         "laravel/envoy": "^2.8",
         "laravel/pint": "^1.10",
         "laravel/sail": "^1.18",
