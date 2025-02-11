@@ -58,6 +58,29 @@ class VerticalMenu extends Component
                 'title' => __('Hệ Thống'),
             ],
             [
+                'title' => __('Cài đặt'),
+                'url' => '',
+                'icon' => 'settings',
+                'active' => Route::is([
+                    'admin.setting.*',
+                ]),
+                'show' => checkPermissions([Acl::PERMISSION_SETTING_POLICY, Acl::PERMISSION_SETTING_TERMS]),
+                'child' => [
+                    [
+                        'title' => __('Chính sách'),
+                        'url' => route('admin.setting.policy'),
+                        'active' => Route::is(['admin.setting.policy']),
+                        'show' => checkPermissions([Acl::PERMISSION_SETTING_POLICY]),
+                    ],
+                    [
+                        'title' => __('Điều khoản'),
+                        'url' => route('admin.setting.terms'),
+                        'active' => Route::is(['admin.setting.terms']),
+                        'show' => checkPermissions([Acl::PERMISSION_SETTING_TERMS]),
+                    ],
+                ],
+            ],
+            [
                 'title' => __('Tài liệu API'),
                 'url' => 'docs',
                 'icon' => 'grid',

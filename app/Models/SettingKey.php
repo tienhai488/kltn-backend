@@ -12,6 +12,18 @@ class SettingKey
         'status' => SettingStatus::ENABLED,
     ];
 
+    const POLICY = [
+        'key' => 'policy',
+        'value' => '',
+        'status' => SettingStatus::ENABLED,
+    ];
+
+    const TERMS = [
+        'key' => 'terms',
+        'value' => '',
+        'status' => SettingStatus::ENABLED,
+    ];
+
     public static function allKeys(): array
     {
         try {

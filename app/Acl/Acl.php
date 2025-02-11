@@ -85,6 +85,10 @@ final class Acl
 
     const PERMISSION_VIEW_DOC_API = 'xem tài liệu api';
 
+    const PERMISSION_SETTING_POLICY = 'cài đặt chính sách';
+
+    const PERMISSION_SETTING_TERMS = 'cài đặt điều khoản';
+
     /**
      * @param  array  $exclusives Exclude some permissions from the list
      */
