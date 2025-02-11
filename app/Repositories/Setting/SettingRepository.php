@@ -69,7 +69,7 @@ class SettingRepository extends BaseRepository implements SettingRepositoryInter
      */
     private function updateCache($key, $value): void
     {
-        Cache::forget('setting_'.$key);
-        Cache::rememberForever('setting_'.$key, fn () => $value);
+        Cache::forget('setting_' . $key);
+        Cache::rememberForever('setting_' . $key, fn() => $value);
     }
 }

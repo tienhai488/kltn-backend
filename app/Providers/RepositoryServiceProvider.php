@@ -20,6 +20,8 @@ use App\Repositories\Project\ProjectRepository;
 use App\Repositories\Project\ProjectRepositoryInterface;
 use App\Repositories\Role\RoleRepository;
 use App\Repositories\Role\RoleRepositoryInterface;
+use App\Repositories\Setting\SettingRepository;
+use App\Repositories\Setting\SettingRepositoryInterface;
 use App\Repositories\User\UserRepository;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Volunteer\VolunteerRepository;
@@ -44,5 +46,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->singleton(ProjectRepositoryInterface::class, ProjectRepository::class);
         $this->app->singleton(DonationRepositoryInterface::class, DonationRepository::class);
         $this->app->singleton(VolunteerRepositoryInterface::class, VolunteerRepository::class);
+        $this->app->singleton(SettingRepositoryInterface::class, SettingRepository::class);
     }
 }
