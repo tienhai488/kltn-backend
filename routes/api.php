@@ -23,7 +23,7 @@ Route::prefix('v1')
     ->middleware(['api'])
     ->group(function () {
         Route::middleware(['auth:sanctum'])->group(function () {
-            //
+            include('v1/api/setting.php');
         });
         include('v1/api/auth.php');
     })
