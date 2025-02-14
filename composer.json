@@ -9,8 +9,6 @@
         "barryvdh/laravel-dompdf": "^2.0",
         "dedoc/scramble": "^0.12.5",
         "guzzlehttp/guzzle": "^7.2",
-        "khgc/khgc-export-excel": "dev-master",
-        "khgc/khgc-import-excel": "dev-master",
         "laravel/framework": "^11.0",
         "laravel/pulse": "^1.2",
         "laravel/reverb": "@beta",
@@ -47,16 +45,6 @@
             "Database\\Seeders\\": "database/seeders/"
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@bitbucket.org:khgc-bo/khgc-export-excel.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@bitbucket.org:khgc-bo/khgc-import-excel.git"
-        }
-    ],
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"

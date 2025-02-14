@@ -171,8 +171,8 @@ return [
          * Package Service Providers...
          */
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
-        Khgc\KhgcExportExcel\Providers\KhgcExportExcelServiceProvider::class,
-        Khgc\KhgcImportExcel\Providers\KHGCImportExcelServiceProvider::class,
+        // Khgc\KhgcExportExcel\Providers\KhgcExportExcelServiceProvider::class,
+        // Khgc\KhgcImportExcel\Providers\KHGCImportExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
