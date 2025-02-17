@@ -61,7 +61,9 @@ class AuthController extends Controller
      *
      * @response array{
      *   message: string,
-     *   data: UserResource,
+     *   data: array{
+     *    status: boolean,
+     *   },
      * }
      *
      * @param RegisterRequest $request

@@ -75,6 +75,26 @@ class ContactRepository extends BaseRepository implements ContactRepositoryInter
     /**
      * {@inheritdoc}
      */
+    public function create($data)
+    {
+        try {
+            DB::beginTransaction();
+
+            $contact = $this->model->create($data);
+
+            DB::commit();
+
+            return $contact;
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function update($model, $data)
     {
         try {
