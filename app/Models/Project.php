@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\ProjectFrontStatus;
 use App\Enum\ProjectStatus;
 use App\Enum\ProjectType;
 use App\Enum\VolunteerStatus;
@@ -46,13 +47,18 @@ class Project extends Model implements HasMedia
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'status' => ProjectStatus::class,
-        'type' => ProjectType::class
+        'type' => ProjectType::class,
+        'front_status' => ProjectFrontStatus::class
     ];
 
     /**
      * {@inheritdoc}
      */
-    protected $appends = ['background_image', 'related_images'];
+    protected $appends = [
+        'background_image',
+        'related_images',
+        'front_status',
+    ];
 
     /**
      * {@inheritdoc}
@@ -60,11 +66,36 @@ class Project extends Model implements HasMedia
     protected $with = ['media'];
 
     /**
-     * {@inheritdoc}
+     * =====================================
+     * Attributes
+     * =====================================
      */
-    public function media(): MorphMany
+
+    /**
+     * Get the status of the project on the frontend.
+     *
+     * @return ProjectFrontStatus|null
+     */
+    public function getFrontStatusAttribute(): ProjectFrontStatus|null
     {
-        return $this->morphMany(config('media-library.media_model'), 'model');
+        if ($this->status == ProjectStatus::PAUSED) {
+            return ProjectFrontStatus::PAUSED;
+        }
+
+        if ($this->status == ProjectStatus::APPROVED) {
+            if (now() > $this->end_date) {
+                return ProjectFrontStatus::FINISHED;
+            } else if (
+                $this->donations()->sum('amount') >= $this->donation_target
+                && $this->volunteers_without_canceled()->count() >= $this->volunteer_quantity
+            ) {
+                return ProjectFrontStatus::GOAL_ACHIEVED;
+            }
+
+            return ProjectFrontStatus::IN_PROGRESS;
+        }
+
+        return null;
     }
 
     /**
@@ -89,6 +120,20 @@ class Project extends Model implements HasMedia
         return Attribute::make(
             get: fn() => $this->getMedia(self::PROJECT_RELATED_IMAGES) ?? [],
         );
+    }
+
+    /**
+     * =====================================
+     * Relationships
+     * =====================================
+     */
+
+    /**
+     * {@inheritdoc}
+     */
+    public function media(): MorphMany
+    {
+        return $this->morphMany(config('media-library.media_model'), 'model');
     }
 
     /**

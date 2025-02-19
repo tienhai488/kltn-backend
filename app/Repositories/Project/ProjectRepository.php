@@ -2,7 +2,8 @@
 
 namespace App\Repositories\Project;
 
-use App\Enum\VolunteerStatus;
+use App\Acl\Acl;
+use App\Enum\ProjectStatus;
 use App\Models\Project;
 use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 class ProjectRepository extends BaseRepository implements ProjectRepositoryInterface
 {
     const ITEM_PER_PAGE = 50;
+
+    const ITEM_PER_PAGE_API = 9;
 
     /**
      * {@inheritdoc}
@@ -38,9 +41,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
     {
         $limit = Arr::get($searchParams, 'limit', self::ITEM_PER_PAGE);
 
-        $query = $this->projectFilter($searchParams);
-
-        return $query->latest()->paginate($limit);
+        return $this->projectFilter($searchParams)->latest()->paginate($limit);
     }
 
     /**
@@ -90,6 +91,66 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
 
         if (! is_null($status)) {
             $query->where('status', $status);
+        }
+
+        return $query;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serverPaginationFilteringForApi(array $searchParams): LengthAwarePaginator
+    {
+        $limit = Arr::get($searchParams, 'limit', self::ITEM_PER_PAGE_API);
+
+        return $this->apiFilter($searchParams)->latest()->paginate($limit);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function apiFilter(array $searchParams): Builder|Project
+    {
+        $type = Arr::get($searchParams, 'type', null);
+        $categoryId = Arr::get($searchParams, 'category_id', null);
+        $role = Arr::get($searchParams, 'role', null);
+        $keyword = Arr::get($searchParams, 'search', '');
+
+        $query = $this->model->query()
+            ->whereHas('user.roles', function ($q) {
+                $q->whereIn('name', [Acl::ROLE_ORGANIZATION, Acl::ROLE_INDIVIDUAL]);
+            })
+            ->whereIn('status', [ProjectStatus::APPROVED, ProjectStatus::PAUSED])
+            ->with('user', 'category')
+            ->withCount([
+                'volunteers',
+                'volunteers_without_canceled',
+                'donations',
+            ])
+            ->withSum('donations', 'amount');
+
+        if ($keyword) {
+            if (is_array($keyword)) {
+                $keyword = $keyword['value'];
+            }
+
+            $query->whereAny([
+                'name',
+            ], 'LIKE', '%' . $keyword . '%');
+        }
+
+        if (! is_null($role)) {
+            $query->whereHas('user.roles', function ($q) use ($role) {
+                $q->where('name', $role);
+            });
+        }
+
+        if (! is_null($categoryId)) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if (! is_null($type)) {
+            $query->where('type', $type);
         }
 
         return $query;
