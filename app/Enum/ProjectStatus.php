@@ -13,6 +13,8 @@ enum ProjectStatus: int
     case IN_PROGRESS = 2;
     case APPROVED = 3;
     case REJECTED = 4;
+    case PAUSED = 5;
+    case CLOSED = 6;
 
     public function getBadge(): string
     {
@@ -20,7 +22,9 @@ enum ProjectStatus: int
             self::PENDING => 'primary',
             self::IN_PROGRESS => 'warning',
             self::APPROVED => 'success',
-            self::REJECTED => 'dark',
+            self::REJECTED => 'danger',
+            self::PAUSED => 'info',
+            self::CLOSED => 'dark',
         };
     }
 
@@ -31,6 +35,8 @@ enum ProjectStatus: int
             self::IN_PROGRESS => 'Đang xử lý',
             self::APPROVED => 'Chấp nhận',
             self::REJECTED => 'Từ chối',
+            self::PAUSED => 'Tạm dừng',
+            self::CLOSED => 'Đã đóng',
         };
     }
 }
