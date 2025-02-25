@@ -1,104 +1,61 @@
 <?php
 
+use App\Acl\Acl;
+
 return [
     'Vai trò' => [
-        'danh sách vai trò',
-        'thêm mới vai trò',
-        'chỉnh sửa vai trò',
-        'xóa vai trò',
-        'gán vai trò',
+        Acl::PERMISSION_ASSIGNEE,
+        Acl::PERMISSION_ROLE_LIST,
+        Acl::PERMISSION_ROLE_ADD,
+        Acl::PERMISSION_ROLE_EDIT,
+        Acl::PERMISSION_ROLE_DELETE,
     ],
-
     'Người dùng' => [
-        'quản lý người dùng',
-        'danh sách người dùng',
-        'thêm mới người dùng',
-        'chỉnh sửa người dùng',
+        Acl::PERMISSION_USER_LIST,
+        Acl::PERMISSION_USER_ADD,
+        Acl::PERMISSION_USER_EDIT,
+        Acl::PERMISSION_USER_DELETE,
     ],
-
+    'Phòng ban' => [
+        Acl::PERMISSION_DEPARTMENT_LIST,
+        Acl::PERMISSION_DEPARTMENT_ADD,
+        Acl::PERMISSION_DEPARTMENT_EDIT,
+        Acl::PERMISSION_DEPARTMENT_DELETE,
+    ],
+    'Danh mục' => [
+        Acl::PERMISSION_CATEGORY_LIST,
+        Acl::PERMISSION_CATEGORY_ADD,
+        Acl::PERMISSION_CATEGORY_EDIT,
+        Acl::PERMISSION_CATEGORY_DELETE,
+    ],
+    'Liên hệ' => [
+        Acl::PERMISSION_CONTACT_LIST,
+        Acl::PERMISSION_CONTACT_EDIT,
+    ],
+    'Yêu cầu tài khoản' => [
+        Acl::PERMISSION_ACCOUNT_REQUEST_LIST,
+        Acl::PERMISSION_ACCOUNT_REQUEST_EDIT,
+    ],
+    'Dự án' => [
+        Acl::PERMISSION_PROJECT_LIST,
+        Acl::PERMISSION_PROJECT_ADD,
+        Acl::PERMISSION_PROJECT_EDIT,
+        Acl::PERMISSION_PROJECT_DELETE,
+    ],
+    'Quyên góp' => [
+        Acl::PERMISSION_DONATION_LIST,
+        Acl::PERMISSION_DONATION_ADD,
+        Acl::PERMISSION_DONATION_EDIT,
+        Acl::PERMISSION_DONATION_DELETE,
+    ],
+    'Tình nguyện viên' => [
+        Acl::PERMISSION_VOLUNTEER_LIST,
+        Acl::PERMISSION_VOLUNTEER_ADD,
+        Acl::PERMISSION_VOLUNTEER_EDIT,
+        Acl::PERMISSION_VOLUNTEER_DELETE,
+    ],
     'Cài đặt' => [
-        'chỉnh sửa cài đặt zalo',
-        'xem telescope',
-        'xem menu bảng điều khiển',
-    ],
-
-    'Khách hàng' => [
-        'xem danh sách khách hàng',
-        'tạo khách hàng',
-        'cập nhật khách hàng',
-        'xoá khách hàng',
-    ],
-
-    'Quà tặng' => [
-        'danh sách quà tặng',
-        'thêm mới quà tặng',
-        'chỉnh sửa quà tặng',
-        'xóa quà tặng',
-    ],
-
-    'Sản phẩm' => [
-        'danh sách sản phẩm',
-        'thêm mới sản phẩm',
-        'chỉnh sửa sản phẩm',
-        'xóa sản phẩm',
-    ],
-
-    'Chiến dịch' => [
-        'xem danh sách chiến dịch',
-        'tạo chiến dịch',
-        'cập nhật chiến dịch',
-        'xem chiến dịch',
-        'xoá chiến dịch',
-    ],
-
-    'Store' => [
-        'danh sách store',
-        'thêm mới store',
-        'chỉnh sửa store',
-        'xóa store',
-    ],
-
-    'Lịch trình chiến dịch' => [
-        'xem danh sách lịch trình chiến dịch',
-        'tạo lịch trình chiến dịch',
-        'cập nhật lịch trình chiến dịch',
-        'xem lịch trình chiến dịch',
-        'xoá lịch trình chiến dịch',
-    ],
-
-    'Đơn hàng' => [
-        'xem danh sách đơn hàng',
-        'Thêm đơn hàng',
-    ],
-
-    'Điểm danh' => [
-        'xem danh sách điểm danh',
-        'tạo điểm danh',
-    ],
-
-    'Thông tin' => [
-        'xem thông tin pulse',
-        'xuất excel',
-    ],
-
-    'Khu vực' => [
-        'danh sách khu vực',
-        'thêm mới khu vực',
-        'chỉnh sửa khu vực',
-        'xóa khu vực',
-    ],
-
-    'Tỉnh thành' => [
-        'danh sách tỉnh thành',
-        'thêm mới tỉnh thành',
-        'chỉnh sửa tỉnh thành',
-        'xóa tỉnh thành',
-    ],
-
-    'Kênh' => [
-        'danh sách kênh',
-        'thêm mới kênh',
-        'chỉnh sửa kênh',
-        'xóa kênh',
+        Acl::PERMISSION_SETTING_POLICY,
+        Acl::PERMISSION_SETTING_TERMS,
     ],
 ];
