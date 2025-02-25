@@ -26,6 +26,7 @@ Route::prefix('v1')
             include('v1/api/setting.php');
             include('v1/api/contact.php');
             include('v1/api/project.php');
+            include('v1/api/category.php');
         });
         include('v1/api/auth.php');
     })

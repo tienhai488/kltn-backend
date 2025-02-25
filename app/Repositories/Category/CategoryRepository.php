@@ -33,6 +33,14 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
     /**
      * {@inheritdoc}
      */
+    public function all()
+    {
+        return $this->model->withCount('projects')->orderByDesc('created_at')->get();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function serverPaginationFilteringForAdmin($searchParams): LengthAwarePaginator
     {
         $limit = Arr::get($searchParams, 'limit', self::ITEM_PER_PAGE);
