@@ -29,8 +29,10 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\View
      */
+
     public function index(Request $request)
     {
         $roles = $this->roleRepository->allRolesWithPermissions();
@@ -40,22 +42,13 @@ class RoleController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
         $permissions = $this->permissionRepository->all();
         $groups = config('permission-groups');
-        $groupedPermissions = collect($permissions)->groupBy(function ($permission) use ($groups) {
-            foreach ($groups as $group => $keywords) {
-                foreach ($keywords as $keyword) {
-                    if (Str::contains($permission->name, $keyword)) {
-                        return $group;
-                    }
-                }
-            }
-            return 'Khác';
-        });
+        $groupedPermissions = $this->permissionRepository->groupPermissions($permissions, $groups);
 
         return view('admin.role.create', compact('groupedPermissions'));
     }
@@ -63,8 +56,8 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param \App\Http\Requests\Admin\Role\StoreRoleRequest $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(StoreRoleRequest $request)
     {
@@ -80,7 +73,7 @@ class RoleController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param \Spatie\Permission\Models\Role $role
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Role $role)
     {
@@ -88,16 +81,7 @@ class RoleController extends Controller
         $role->load('permissions');
         $rolePermissions = $role->permissions->pluck('name')->toArray();
         $groups = config('permission-groups');
-        $groupedPermissions = collect($permissions)->groupBy(function ($permission) use ($groups) {
-            foreach ($groups as $group => $keywords) {
-                foreach ($keywords as $keyword) {
-                    if (Str::contains($permission->name, $keyword)) {
-                        return $group;
-                    }
-                }
-            }
-            return 'Khác';
-        });
+        $groupedPermissions = $this->permissionRepository->groupPermissions($permissions, $groups);
 
         return view('admin.role.edit', compact('role', 'groupedPermissions', 'rolePermissions'));
     }
@@ -107,7 +91,7 @@ class RoleController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param \Spatie\Permission\Models\Role $role
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateRoleRequest $request, Role $role)
     {

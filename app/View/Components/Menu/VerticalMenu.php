@@ -82,7 +82,7 @@ class VerticalMenu extends Component
             ],
             [
                 'title' => __('Tài liệu API'),
-                'url' => 'docs',
+                'url' => config('app.url') . '/docs',
                 'icon' => 'grid',
                 'active' => '',
                 'show' => checkPermissions([Acl::PERMISSION_VIEW_DOC_API]),
