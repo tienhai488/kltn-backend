@@ -18,8 +18,6 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
 {
     const ITEM_PER_PAGE = 50;
 
-    const ITEM_PER_PAGE_API = 9;
-
     /**
      * {@inheritdoc}
      */
@@ -101,7 +99,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
      */
     public function serverPaginationFilteringForApi(array $searchParams): LengthAwarePaginator
     {
-        $limit = Arr::get($searchParams, 'limit', self::ITEM_PER_PAGE_API);
+        $limit = Arr::get($searchParams, 'limit', self::ITEM_PER_PAGE);
 
         return $this->apiFilter($searchParams)->latest()->paginate($limit);
     }
