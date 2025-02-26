@@ -48,7 +48,6 @@ class Project extends Model implements HasMedia
         'end_date' => 'datetime',
         'status' => ProjectStatus::class,
         'type' => ProjectType::class,
-        'front_status' => ProjectFrontStatus::class
     ];
 
     /**
