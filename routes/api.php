@@ -28,6 +28,7 @@ Route::prefix('v1')
             include('v1/api/project.php');
             include('v1/api/category.php');
             include('v1/api/donation.php');
+            include('v1/api/statistic.php');
         });
         include('v1/api/auth.php');
     })
