@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Acl\Acl;
 use App\Enum\NotificationType;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Setting\UpdateBannerRequest;
+use App\Http\Requests\Admin\Setting\UpdateCompanionUnitRequest;
 use App\Http\Requests\Admin\Setting\UpdatePolicyRequest;
 use App\Http\Requests\Admin\Setting\UpdateTermsRequest;
+use App\Models\Setting;
 use App\Repositories\Setting\SettingRepositoryInterface;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
@@ -72,6 +76,64 @@ class SettingController extends Controller
         $this->settingRepository->updateByKeys($request->validated()) ?
             session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Cài đặt điều khoản thành công.'))
             : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Cài đặt điều khoản thất bại.'));
+
+        return redirect()->back();
+    }
+
+    /**
+     * Display the banner settings view.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function banner()
+    {
+        $banner = $this->settingRepository->findByKey('banner');
+
+        return view('admin.setting.banner', compact('banner'));
+    }
+
+    /**
+     * Update the banner settings.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateBanner(UpdateBannerRequest $request)
+    {
+        $banner = $this->settingRepository->findByKey('banner');
+
+        $this->settingRepository->updateImage($banner, $request->banner, Setting::IMAGE_COLLECTION) ?
+            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Cài đặt banner thành công.'))
+            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Cài đặt banner thất bại.'));
+
+        return redirect()->back();
+    }
+
+    /**
+     * Display the companion unit settings view.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function companionUnit()
+    {
+        $companionUnit = $this->settingRepository->findByKey('companion_unit');
+
+        return view('admin.setting.companion_unit', compact('companionUnit'));
+    }
+
+    /**
+     * Update the companion unit settings.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateCompanionUnit(UpdateCompanionUnitRequest $request)
+    {
+        $companionUnit = $this->settingRepository->findByKey('companion_unit');
+
+        $this->settingRepository->updateImages($companionUnit, $request->validated()['companion_units'], Setting::IMAGES_COLLECTION) ?
+            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Cài đặt đơn vị đồng hành thành công.'))
+            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Cài đặt đơn vị đồng hành thất bại.'));
 
         return redirect()->back();
     }

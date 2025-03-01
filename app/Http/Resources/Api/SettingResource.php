@@ -17,6 +17,10 @@ class SettingResource extends JsonResource
         return [
             'key' => $this->key,
             'value' => $this->value,
+            'image' => $this->image,
+            'images' => $this->images
+                ->map(fn($media) => $media->original_url)
+                ->toArray(),
         ];
     }
 }

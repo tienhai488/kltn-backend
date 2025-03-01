@@ -6,10 +6,16 @@ use App\Enum\SettingStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Setting extends Model
+class Setting extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
+
+    const IMAGE_COLLECTION = 'image';
+
+    const IMAGES_COLLECTION = 'images';
 
     protected $fillable = [
         'key',
@@ -17,7 +23,7 @@ class Setting extends Model
         'status',
     ];
 
-    protected $table = 'settings';
+    protected $with = ['media'];
 
     /**
      * The attributes that should be cast.
@@ -36,6 +42,30 @@ class Setting extends Model
     {
         return Attribute::make(
             get: fn($value) => $this->status == SettingStatus::ENABLED
+        );
+    }
+
+    /**
+     * Get the image URL.
+     *
+     * @return string
+     */
+    public function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $this->getFirstMediaUrl(self::IMAGE_COLLECTION) ?: '',
+        );
+    }
+
+    /**
+     * Retrieve images associated with the model.
+     *
+     * @return Attribute
+     */
+    public function images(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->getMedia(self::IMAGES_COLLECTION) ?: [],
         );
     }
 }

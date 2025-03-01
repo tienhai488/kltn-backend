@@ -24,6 +24,18 @@ class SettingKey
         'status' => SettingStatus::ENABLED,
     ];
 
+    const BANNER = [
+        'key' => 'banner',
+        'value' => '',
+        'status' => SettingStatus::ENABLED,
+    ];
+
+    const COMPANION_UNIT = [
+        'key' => 'companion_unit',
+        'value' => '',
+        'status' => SettingStatus::ENABLED,
+    ];
+
     public static function allKeys(): array
     {
         try {
