@@ -22,4 +22,22 @@ interface SettingRepositoryInterface extends RepositoryInterface
      * Update by keys.
      */
     public function updateByKeys($data);
+
+    /**
+     * Update image.
+     *
+     * @param Model $model
+     * @param $data
+     * @param string $collection
+     */
+    public function updateImage(Model $model, $data, string $collection);
+
+    /**
+     * Update images.
+     *
+     * @param Model $model
+     * @param $data
+     * @param string $collection
+     */
+    public function updateImages(Model $model, $data, string $collection);
 }

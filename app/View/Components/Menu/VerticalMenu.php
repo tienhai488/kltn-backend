@@ -78,6 +78,18 @@ class VerticalMenu extends Component
                         'active' => Route::is(['admin.setting.terms']),
                         'show' => checkPermissions([Acl::PERMISSION_SETTING_TERMS]),
                     ],
+                    [
+                        'title' => __('Banner'),
+                        'url' => route('admin.setting.banner'),
+                        'active' => Route::is(['admin.setting.banner']),
+                        'show' => checkPermissions([Acl::PERMISSION_SETTING_GENERAL]),
+                    ],
+                    [
+                        'title' => __('Đơn vị đồng hành'),
+                        'url' => route('admin.setting.companion_unit'),
+                        'active' => Route::is(['admin.setting.companion_unit']),
+                        'show' => checkPermissions([Acl::PERMISSION_SETTING_GENERAL]),
+                    ],
                 ],
             ],
             [
