@@ -173,7 +173,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
             if (isset($data['related_images']) && $data['related_images']) {
                 foreach ($data['related_images'] as $file) {
                     if (!empty($file) && !is_null($file[0])) {
-                        $fileDecode = json_decode($file['data'], true);
+                        $fileDecode = json_decode($file[0], true);
                         $project->addMediaFromBase64($fileDecode['data'])
                             ->usingFileName($fileDecode['name'])
                             ->toMediaCollection(Project::PROJECT_RELATED_IMAGES);
