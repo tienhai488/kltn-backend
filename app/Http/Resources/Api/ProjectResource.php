@@ -28,13 +28,13 @@ class ProjectResource extends JsonResource
             'type' => $this->type,
             'background_image' => $this->background_image,
 
-            'donation_percent' => round($this->donations_sum_amount / $this->donation_target * 100),
+            'donation_percent' => $this->donations_sum_amount ? round($this->donations_sum_amount / $this->donation_target * 100) : 0,
             'donations_sum_amount' => $this->donations_sum_amount,
             'donations_sum_amount_formatted' => customFormatPrice($this->donations_sum_amount),
             'donation_target' => $this->donation_target,
             'donations_count' => $this->donations_count,
 
-            'volunteer_percent' => round($this->volunteers_without_canceled_count / $this->volunteer_quantity * 100),
+            'volunteer_percent' => $this->volunteers_without_canceled_count ? round($this->volunteers_without_canceled_count / $this->volunteer_quantity * 100) : 0,
             'volunteers_without_canceled_count' => $this->volunteers_without_canceled_count ?? 0,
             'volunteer_quantity' => $this->volunteer_quantity,
 
