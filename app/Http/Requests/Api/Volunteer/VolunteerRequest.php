@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\Donation;
+namespace App\Http\Requests\Api\Volunteer;
 
+use App\Enum\VolunteerStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class DonationRequest extends FormRequest
+class VolunteerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -41,6 +43,10 @@ class DonationRequest extends FormRequest
                 'integer',
                 'min:1',
                 'exists:departments,id',
+            ],
+            'status' => [
+                'nullable',
+                Rule::enum(VolunteerStatus::class),
             ],
         ];
     }

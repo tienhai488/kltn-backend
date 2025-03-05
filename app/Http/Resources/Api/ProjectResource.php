@@ -35,7 +35,6 @@ class ProjectResource extends JsonResource
 
             'donation_percent' => $this->donations_sum_amount ? round($this->donations_sum_amount / $this->donation_target * 100) : 0,
             'donations_sum_amount' => $this->donations_sum_amount,
-            'donations_sum_amount_formatted' => customFormatPrice($this->donations_sum_amount),
             'donation_target' => $this->donation_target,
             'donations_count' => $this->donations_count,
 
