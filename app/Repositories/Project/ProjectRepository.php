@@ -112,7 +112,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         $type = Arr::get($searchParams, 'type', null);
         $categoryId = Arr::get($searchParams, 'category_id', null);
         $role = Arr::get($searchParams, 'role', null);
-        $keyword = Arr::get($searchParams, 'search', '');
+        $keyword = Arr::get($searchParams, 'keyword', '');
 
         $query = $this->model->query()
             ->whereHas('user.roles', function ($q) {
