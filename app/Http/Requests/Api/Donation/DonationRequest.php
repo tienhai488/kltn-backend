@@ -24,6 +24,18 @@ class DonationRequest extends FormRequest
         return [
             'page' => 'nullable|integer|min:1',
             'limit' => 'nullable|integer|min:1',
+            'project_id' => [
+                'nullable',
+                'integer',
+                'min:1',
+                'exists:projects,id',
+            ],
+            'user_id' => [
+                'nullable',
+                'integer',
+                'min:1',
+                'exists:users,id',
+            ],
         ];
     }
 }

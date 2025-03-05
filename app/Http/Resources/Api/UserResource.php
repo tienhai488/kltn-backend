@@ -21,10 +21,13 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'phone_number' => $this->phone_number,
             'birth_of_date' => $this->birth_of_date,
+            'status' => $this->status,
             'status_label' => $this->status->getLabel(),
             'status_badge' => $this->status->getBadge(),
             'gender' => $this->gender,
             'address' => $this->address,
+            'avatar_url' => $this->avatar_url,
+            'description' => $this->description,
         ];
     }
 }

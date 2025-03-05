@@ -35,7 +35,7 @@ class DonationController extends Controller
     public function index(DonationRequest $request)
     {
         return $this->okResponse(
-            DonationResource::collection($this->donationRepository->serverPaginationFilteringForAdmin($request->only(['page', 'limit']))),
+            DonationResource::collection($this->donationRepository->serverPaginationFilteringForAdmin($request->all())),
             __('Danh sách quyên góp')
         );
     }

@@ -51,6 +51,7 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
         $projectId = Arr::get($searchParams, 'project_id', null);
         $departmentId = Arr::get($searchParams, 'department_id', null);
         $isAnonymous = Arr::get($searchParams, 'is_anonymous', null);
+        $userId = Arr::get($searchParams, 'user_id', null);
 
         $query = $this->model->query()->with(['user', 'project', 'department']);
 
@@ -86,6 +87,10 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
 
         if (! is_null($isAnonymous)) {
             $query->where('is_anonymous', $isAnonymous);
+        }
+
+        if (! is_null($userId)) {
+            $query->where('user_id', $userId);
         }
 
         return $query;
