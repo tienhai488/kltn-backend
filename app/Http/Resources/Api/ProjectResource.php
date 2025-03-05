@@ -24,9 +24,14 @@ class ProjectResource extends JsonResource
             'front_status' => $this->front_status,
             'front_status_label' => $this->front_status->getLabel(),
             'category' => CategoryResource::make($this->whenLoaded('category')),
+            'user' => UserResource::make($this->whenLoaded('user')),
             'name' => $this->name,
             'type' => $this->type,
             'background_image' => $this->background_image,
+            'related_images' => $this->related_images
+                ->map(fn($media) => $media->original_url)
+                ->toArray(),
+            'content' => $this->content,
 
             'donation_percent' => $this->donations_sum_amount ? round($this->donations_sum_amount / $this->donation_target * 100) : 0,
             'donations_sum_amount' => $this->donations_sum_amount,
@@ -39,8 +44,8 @@ class ProjectResource extends JsonResource
             'volunteer_quantity' => $this->volunteer_quantity,
 
             'diff_date' => $this->getDiffAttribute(),
-            'start_date' => customFormatDate($this->start_date),
-            'end_date' => customFormatDate($this->end_date),
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
         ];
     }
 
