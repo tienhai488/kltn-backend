@@ -16,7 +16,7 @@ class DonationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => $this->whenLoaded('user'),
+            'user' => UserResource::make($this->whenLoaded('user')),
             'project' => $this->whenLoaded('project'),
             'department' => $this->whenLoaded('department'),
             'account_number' => $this->account_number,
@@ -32,7 +32,7 @@ class DonationResource extends JsonResource
             'note' => $this->note,
             'student_code' => $this->student_code,
             'class' => $this->class,
-            'created_at' => customFormatDate($this->created_at),
+            'created_at' => $this->created_at,
         ];
     }
 }
