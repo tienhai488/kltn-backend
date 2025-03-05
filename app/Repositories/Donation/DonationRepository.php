@@ -90,4 +90,12 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
 
         return $query;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function sumAmount()
+    {
+        return $this->model->sum('amount');
+    }
 }

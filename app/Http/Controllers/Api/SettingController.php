@@ -27,6 +27,8 @@ class SettingController extends Controller
      * Lấy thông tin theo key.
      * - Chính sách: 'policy'
      * - Điều khoản: 'terms'
+     * - Banner: 'banner'
+     * - Đơn vị đồng hành: 'companion_unit'
      *
      * @response SettingResource
      *
