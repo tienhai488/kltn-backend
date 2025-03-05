@@ -39,6 +39,12 @@ class ProjectRequest extends FormRequest
                 Rule::in([Acl::ROLE_ORGANIZATION, Acl::ROLE_INDIVIDUAL]),
             ],
             'keyword' => 'nullable|string',
+            'project_id' => [
+                'nullable',
+                'integer',
+                'min:1',
+                'exists:projects,id',
+            ],
         ];
     }
 }
