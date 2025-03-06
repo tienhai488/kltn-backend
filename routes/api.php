@@ -21,10 +21,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('v1')
     ->middleware(['api'])
+    ->name('api.')
     ->group(function () {
         Route::middleware(['auth:sanctum'])->group(function () {
             //
         });
+        include('v1/api/image.php');
         include('v1/api/setting.php');
         include('v1/api/contact.php');
         include('v1/api/project.php');
@@ -34,5 +36,4 @@ Route::prefix('v1')
         include('v1/api/department.php');
         include('v1/api/statistic.php');
         include('v1/api/auth.php');
-    })
-    ->name('api.');
+    });

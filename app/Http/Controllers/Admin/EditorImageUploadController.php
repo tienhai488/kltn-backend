@@ -33,7 +33,7 @@ class EditorImageUploadController extends Controller
             $datePath = now()->format('Y/m/d');
             $path = $file->storeAs("public/media/{$datePath}", $fileName);
 
-            $url = route('admin.load_image', ['file_url' => $path]);
+            $url = route('api.load_image', ['file_url' => $path]);
 
             return response()->json([
                 'fileName' => $fileName,
