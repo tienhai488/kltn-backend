@@ -5,7 +5,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class VolunteerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,18 +16,19 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user' => UserResource::make($this->whenLoaded('user')),
+            'project' => $this->whenLoaded('project'),
+            'department' => $this->whenLoaded('department'),
             'name' => $this->name,
-            'username' => $this->username,
             'email' => $this->email,
             'phone_number' => $this->phone_number,
-            'birth_of_date' => $this->birth_of_date,
+            'note' => $this->note,
+            'student_code' => $this->student_code,
+            'class' => $this->class,
             'status' => $this->status,
             'status_label' => $this->status->getLabel(),
             'status_badge' => $this->status->getBadge(),
-            'gender' => $this->gender,
-            'address' => $this->address,
-            'avatar_url' => $this->avatar_url,
-            'description' => $this->description,
+            'created_at' => $this->created_at,
         ];
     }
 }

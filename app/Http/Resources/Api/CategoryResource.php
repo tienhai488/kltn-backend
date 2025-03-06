@@ -18,6 +18,15 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'icon' => $this->icon,
+            /**
+             * 0.Tắt 1.Bật
+             */
+            'status' => $this->status,
+            /**
+             * Số lượng dự án thuộc danh mục.
+             * @var int
+             */
+            'projects_count' => $this->projects_count,
         ];
     }
 }

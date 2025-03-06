@@ -89,6 +89,8 @@ final class Acl
 
     const PERMISSION_SETTING_TERMS = 'cài đặt điều khoản';
 
+    const PERMISSION_SETTING_GENERAL = 'cài đặt chung';
+
     /**
      * @param  array  $exclusives Exclude some permissions from the list
      */

@@ -72,4 +72,60 @@ class SettingRepository extends BaseRepository implements SettingRepositoryInter
         Cache::forget('setting_' . $key);
         Cache::rememberForever('setting_' . $key, fn() => $value);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function updateImage(Model $model, $data, string $collection)
+    {
+        try {
+            DB::beginTransaction();
+
+            $model->clearMediaCollection($collection);
+
+            if (isset($data) && $data) {
+                $file = json_decode($data, true);
+                $model->addMediaFromBase64($file['data'])
+                    ->usingFileName($file['name'])
+                    ->toMediaCollection($collection);
+            }
+
+            DB::commit();
+
+            return $model;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function updateImages(Model $model, $data, string $collection)
+    {
+        try {
+            DB::beginTransaction();
+
+            $model->clearMediaCollection($collection);
+
+            if (isset($data) && $data) {
+                foreach ($data as $file) {
+                    if (!empty($file)) {
+                        $fileDecode = json_decode($file, true);
+                        $model->addMediaFromBase64($fileDecode['data'])
+                            ->usingFileName($fileDecode['name'])
+                            ->toMediaCollection($collection);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return $model;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
 }

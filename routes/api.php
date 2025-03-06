@@ -24,15 +24,8 @@ Route::prefix('v1')
     ->name('api.')
     ->group(function () {
         Route::middleware(['auth:sanctum'])->group(function () {
-            include('v1/api/setting.php');
-            include('v1/api/contact.php');
-            include('v1/api/project.php');
+            //
         });
-<<<<<<< Updated upstream
-        include('v1/api/auth.php');
-    })
-    ->name('api.');
-=======
         include('v1/api/image.php');
         include('v1/api/setting.php');
         include('v1/api/contact.php');
@@ -44,4 +37,3 @@ Route::prefix('v1')
         include('v1/api/statistic.php');
         include('v1/api/auth.php');
     });
->>>>>>> Stashed changes

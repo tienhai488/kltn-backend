@@ -34,4 +34,12 @@ interface UserRepositoryInterface extends RepositoryInterface
      * @return \App\Models\User
      */
     public function register($data);
+
+    /**
+     * Get the count of user filtered by role.
+     *
+     * @param string $role
+     * @return int
+     */
+    public function count(string $role = null): int;
 }

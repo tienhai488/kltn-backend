@@ -219,4 +219,18 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             return $e->getMessage();
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count(string $role = null): int
+    {
+        $query = $this->model->query();
+
+        if ($role) {
+            $query->whereHas('roles', fn($query) => $query->where('name', $role));
+        }
+
+        return $query->count();
+    }
 }

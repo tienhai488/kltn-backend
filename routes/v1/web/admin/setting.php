@@ -11,4 +11,12 @@ Route::prefix('setting')->name('setting.')->group(function () {
     Route::get('terms', [SettingController::class, 'terms'])->name('terms');
 
     Route::post('terms', [SettingController::class, 'updateTerms']);
+
+    Route::get('banner', [SettingController::class, 'banner'])->name('banner');
+
+    Route::post('banner', [SettingController::class, 'updateBanner']);
+
+    Route::get('companion-unit', [SettingController::class, 'companionUnit'])->name('companion_unit');
+
+    Route::post('companion-unit', [SettingController::class, 'updateCompanionUnit']);
 });

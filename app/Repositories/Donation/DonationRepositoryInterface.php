@@ -17,4 +17,9 @@ interface DonationRepositoryInterface extends RepositoryInterface
      * @return LengthAwarePaginator
      */
     public function serverPaginationFilteringForAdmin(array $searchParams): LengthAwarePaginator;
+
+    /**
+     * Calculate the total amount of all donations.
+     */
+    public function sumAmount();
 }

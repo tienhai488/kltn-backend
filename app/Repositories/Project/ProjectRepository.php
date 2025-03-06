@@ -18,8 +18,6 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
 {
     const ITEM_PER_PAGE = 50;
 
-    const ITEM_PER_PAGE_API = 9;
-
     /**
      * {@inheritdoc}
      */
@@ -101,7 +99,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
      */
     public function serverPaginationFilteringForApi(array $searchParams): LengthAwarePaginator
     {
-        $limit = Arr::get($searchParams, 'limit', self::ITEM_PER_PAGE_API);
+        $limit = Arr::get($searchParams, 'limit', self::ITEM_PER_PAGE);
 
         return $this->apiFilter($searchParams)->latest()->paginate($limit);
     }
@@ -114,7 +112,8 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         $type = Arr::get($searchParams, 'type', null);
         $categoryId = Arr::get($searchParams, 'category_id', null);
         $role = Arr::get($searchParams, 'role', null);
-        $keyword = Arr::get($searchParams, 'search', '');
+        $keyword = Arr::get($searchParams, 'keyword', '');
+        $projectId = Arr::get($searchParams, 'project_id', null);
 
         $query = $this->model->query()
             ->whereHas('user.roles', function ($q) {
@@ -153,6 +152,10 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
             $query->where('type', $type);
         }
 
+        if (! is_null($projectId)) {
+            $query->where('id', $projectId);
+        }
+
         return $query;
     }
 
@@ -175,7 +178,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
             if (isset($data['related_images']) && $data['related_images']) {
                 foreach ($data['related_images'] as $file) {
                     if (!empty($file) && !is_null($file[0])) {
-                        $fileDecode = json_decode($file['data'], true);
+                        $fileDecode = json_decode($file[0], true);
                         $project->addMediaFromBase64($fileDecode['data'])
                             ->usingFileName($fileDecode['name'])
                             ->toMediaCollection(Project::PROJECT_RELATED_IMAGES);
