@@ -82,33 +82,12 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     }
 
     /**
-     * Generate a unique username based on the given email.
-     *
-     * @param string $email
-     * @return string
-     */
-    public function generateUsername($email): string
-    {
-        $username = explode('@', $email)[0];
-
-        while ($this->model->where('username', $username)->exists()) {
-            $username = $username . rand(1, 100);
-        }
-
-        return $username;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function create($data)
     {
         try {
             DB::beginTransaction();
-
-            if (empty($data['username'])) {
-                $data['username'] = $this->generateUsername($data['email']);
-            }
 
             $user = $this->model->create($data);
 
@@ -141,14 +120,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             DB::beginTransaction();
 
-            if (empty($data['username'])) {
-                $data['username'] = explode('@', $data['email'])[0];
-            }
-
-            while ($this->model->where('username', $data['username'])->exists()) {
-                $data['username'] = $data['username'] . rand(1, 100);
-            }
-
             $user = $model->update($data);
 
             $model->clearMediaCollection(UserAvatar::COLLECTION->value);
@@ -165,6 +136,26 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                     DB::rollBack();
                 }
             }
+
+            DB::commit();
+
+            return $user;
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function updateProfileForApi(User $model, array $data): bool
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = $model->update($data);
 
             DB::commit();
 
@@ -204,10 +195,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             DB::beginTransaction();
 
-            if (empty($data['username'])) {
-                $data['username'] = $this->generateUsername($data['email']);
-            }
-
             $user = $this->model->create($data);
 
             DB::commit();
@@ -232,5 +219,28 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
 
         return $query->count();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function updateAvatar(User $model, $data)
+    {
+        try {
+            DB::beginTransaction();
+
+            $model->clearMediaCollection(User::USER_AVATAR_COLLECTION);
+            $model->addMediaFromBase64($data['base64'])
+                ->usingFileName($data['name'])
+                ->toMediaCollection(User::USER_AVATAR_COLLECTION);
+
+            DB::commit();
+
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
     }
 }

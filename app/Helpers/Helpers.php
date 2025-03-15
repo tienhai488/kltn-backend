@@ -60,6 +60,20 @@ if (!function_exists('customFormatPrice')) {
     }
 }
 
+if (!function_exists('generateUsername')) {
+
+    /**
+     * Generate unique username.
+     *
+     * @param int $id
+     * @param string $email
+     * @return string
+     */
+    function generateUsername($id, string $email): string
+    {
+        return explode('@', $email)[0] . hash("crc32b", (string)$id);
+    }
+}
 
 if (!function_exists('layoutConfig')) {
     function layoutConfig()

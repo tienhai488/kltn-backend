@@ -42,4 +42,22 @@ interface UserRepositoryInterface extends RepositoryInterface
      * @return int
      */
     public function count(string $role = null): int;
+
+    /**
+     * Update profile for user api.
+     *
+     * @param \App\Models\User $model
+     * @param array $data
+     * @return bool
+     */
+    public function updateProfileForApi(User $model, array $data): bool;
+
+    /**
+     * Update avatar for user.
+     *
+     * @param \App\Models\User $model
+     * @param array $data
+     * @return bool
+     */
+    public function updateAvatar(User $model, $data);
 }

@@ -28,6 +28,9 @@ class UserResource extends JsonResource
             'address' => $this->address,
             'avatar_url' => $this->avatar_url,
             'description' => $this->description,
+            'facebook' => $this->facebook,
+            'youtube' => $this->youtube,
+            'tiktok' => $this->tiktok,
         ];
     }
 }

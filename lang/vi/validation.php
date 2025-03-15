@@ -278,6 +278,9 @@ return [
         'donation_target'       => 'số tiền quyên góp',
         'volunteer_quantity'    => 'số lượng tình nguyện viên',
         'note'                  => 'ghi chú',
+        'department_id'         => 'phòng ban',
+        'class'                 => 'lớp',
+        'student_code'          => 'mã sinh viên',
     ],
 
 ];
