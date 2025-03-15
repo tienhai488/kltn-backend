@@ -52,7 +52,7 @@
         <script src="{{ asset('plugins/filepond/FilePondPluginImageResize.min.js') }}"></script>
         <script src="{{ asset('plugins/filepond/FilePondPluginImageTransform.min.js') }}"></script>
         <script src="{{ asset('plugins/filepond/filepondPluginFileValidateSize.min.js') }}"></script>
-        <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+        <script src="{{ asset('plugins/filepond/filepond-plugin-file-encode.js') }}"></script>
 
         <script>
             FilePond.registerPlugin(

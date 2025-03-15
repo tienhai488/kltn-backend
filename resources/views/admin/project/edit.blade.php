@@ -208,7 +208,7 @@
         <script src="{{ asset('plugins/filepond/FilePondPluginImageResize.min.js') }}"></script>
         <script src="{{ asset('plugins/filepond/FilePondPluginImageTransform.min.js') }}"></script>
         <script src="{{ asset('plugins/filepond/filepondPluginFileValidateSize.min.js') }}"></script>
-        <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+        <script src="{{ asset('plugins/filepond/filepond-plugin-file-encode.js') }}"></script>
         <script src="{{asset('plugins/tomSelect/tom-select.base.js')}}"></script>
         <script src="{{ asset('plugins/flatpickr/flatpickr.js') }}"></script>
         <script src="{{ asset('plugins/flatpickr/l10n/vn.js') }}"></script>
