@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Api\Donation;
 
+use App\Enum\AnonymousStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class DonationRequest extends FormRequest
 {
@@ -41,6 +43,11 @@ class DonationRequest extends FormRequest
                 'integer',
                 'min:1',
                 'exists:departments,id',
+            ],
+            'keyword' => 'nullable|string',
+            'is_anonymous' => [
+                'nullable',
+                Rule::enum(AnonymousStatus::class),
             ],
         ];
     }
