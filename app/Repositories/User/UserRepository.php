@@ -4,6 +4,7 @@ namespace App\Repositories\User;
 
 use App\Acl\Acl;
 use App\Enum\UserAvatar;
+use App\Enum\UserType;
 use App\Models\User;
 use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -76,6 +77,77 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         if (! is_null($status)) {
             $query->where('status', $status);
+        }
+
+        return $query;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serverPaginationFilteringForApi($searchParams): LengthAwarePaginator
+    {
+        $limit = Arr::get($searchParams, 'limit', self::ITEM_PER_PAGE);
+
+        $query = $this->userFilterForApi($searchParams);
+
+        return $query->latest()->paginate($limit);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function userFilterForApi(array $searchParams): Builder|User
+    {
+        $keyword = Arr::get($searchParams, 'keyword', '');
+        $status = Arr::get($searchParams, 'status', null);
+        $departmentId = Arr::get($searchParams, 'department_id', null);
+        $type = Arr::get($searchParams, 'type', null);
+
+        $query = $this->model->query()
+            ->with(['roles', 'projects.donations'])
+            ->withCount([
+                'projects',
+                'donations',
+                'volunteers_without_canceled',
+            ])
+            ->withSum('donations', 'amount');
+
+        if ($keyword) {
+            if (is_array($keyword)) {
+                $keyword = $keyword['value'];
+            }
+
+            $query->whereAny([
+                'name',
+                'username',
+                'email',
+                'phone_number',
+                'id',
+            ], 'LIKE', '%' . $keyword . '%');
+        }
+
+        if (! is_null($status)) {
+            $query->where('status', $status);
+        }
+
+        if (! is_null($departmentId)) {
+            $query->where('department_id', $departmentId);
+        }
+
+        if (! is_null($type)) {
+            if (!$type != UserType::USER->value) {
+                $query->whereHas('roles', function ($subQuery) use ($type) {
+                    match ($type) {
+                        UserType::ADMIN->value => $subQuery->whereIn('name', [Acl::ROLE_ADMIN, Acl::ROLE_SUPER_ADMIN]),
+                        UserType::ORGANIZATION->value => $subQuery->where('name', Acl::ROLE_ORGANIZATION),
+                        UserType::INDIVIDUAL->value => $subQuery->where('name', Acl::ROLE_INDIVIDUAL),
+                        default => $subQuery->where('name', $type),
+                    };
+                });
+            } else {
+                $query->whereDoesntHave('roles');
+            }
         }
 
         return $query;

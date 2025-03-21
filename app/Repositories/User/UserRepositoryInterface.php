@@ -20,6 +20,14 @@ interface UserRepositoryInterface extends RepositoryInterface
     public function serverPaginationFilteringForAdmin(array $searchParams): LengthAwarePaginator;
 
     /**
+     * Paginating, ordering and searching through pages for server side index table for the Api.
+     *
+     * @param $searchParams
+     * @return LengthAwarePaginator
+     */
+    public function serverPaginationFilteringForApi(array $searchParams): LengthAwarePaginator;
+
+    /**
      * Update password for user.
      *
      * @param \App\Models\User $model

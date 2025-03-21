@@ -97,19 +97,12 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
      */
     public function getTypeAttribute(): string
     {
-        if ($this->hasAnyRole([Acl::ROLE_SUPER_ADMIN, Acl::ROLE_ADMIN])) {
-            return UserType::ADMIN->value;
-        }
-
-        if ($this->hasAnyRole([Acl::ROLE_ORGANIZATION])) {
-            return UserType::ORGANIZATION->value;
-        }
-
-        if ($this->hasAnyRole([Acl::ROLE_INDIVIDUAL])) {
-            return UserType::INDIVIDUAL->value;
-        }
-
-        return UserType::USER->value;
+        return match (true) {
+            $this->hasAnyRole([Acl::ROLE_SUPER_ADMIN, Acl::ROLE_ADMIN]) => UserType::ADMIN->value,
+            $this->hasAnyRole([Acl::ROLE_ORGANIZATION]) => UserType::ORGANIZATION->value,
+            $this->hasAnyRole([Acl::ROLE_INDIVIDUAL]) => UserType::INDIVIDUAL->value,
+            default => UserType::USER->value,
+        };
     }
 
     /**
@@ -160,10 +153,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
      */
     public function getProjectsDonationsSumAmountAttribute(): float
     {
-        $sum = 0;
-        foreach ($this->projects as $project) {
-            $sum += $project->donations->sum('amount');
-        }
-        return $sum;
+        return $this->projects->sum(function ($project) {
+            return $project->donations->sum('amount');
+        });
     }
 }

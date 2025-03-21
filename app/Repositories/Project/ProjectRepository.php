@@ -4,6 +4,7 @@ namespace App\Repositories\Project;
 
 use App\Acl\Acl;
 use App\Enum\ProjectStatus;
+use App\Enum\UserType;
 use App\Models\Project;
 use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -114,6 +115,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         $role = Arr::get($searchParams, 'role', null);
         $keyword = Arr::get($searchParams, 'keyword', '');
         $projectId = Arr::get($searchParams, 'project_id', null);
+        $userType = Arr::get($searchParams, 'user_type', null);
 
         $query = $this->model->query()
             ->whereHas('user.roles', function ($q) {
@@ -154,6 +156,21 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
 
         if (! is_null($projectId)) {
             $query->where('id', $projectId);
+        }
+
+        if (! is_null($userType)) {
+            if (!$userType != UserType::USER->value) {
+                $query->whereHas('user.roles', function ($subQuery) use ($userType) {
+                    match ($userType) {
+                        UserType::ADMIN->value => $subQuery->whereIn('name', [Acl::ROLE_ADMIN, Acl::ROLE_SUPER_ADMIN]),
+                        UserType::ORGANIZATION->value => $subQuery->where('name', Acl::ROLE_ORGANIZATION),
+                        UserType::INDIVIDUAL->value => $subQuery->where('name', Acl::ROLE_INDIVIDUAL),
+                        default => $subQuery->where('name', $userType),
+                    };
+                });
+            } else {
+                $query->whereDoesntHave('user.roles');
+            }
         }
 
         return $query;
