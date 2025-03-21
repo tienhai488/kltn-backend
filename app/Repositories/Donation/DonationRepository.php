@@ -46,7 +46,8 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
      */
     public function donationFilter(array $searchParams): Builder|Donation
     {
-        $keyword = Arr::get($searchParams, 'search', '');
+        $search = Arr::get($searchParams, 'search', '');
+        $keyword = Arr::get($searchParams, 'keyword', '');
         $userId = Arr::get($searchParams, 'user_id', null);
         $projectId = Arr::get($searchParams, 'project_id', null);
         $departmentId = Arr::get($searchParams, 'department_id', null);
@@ -55,9 +56,9 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
 
         $query = $this->model->query()->with(['user', 'project', 'department']);
 
-        if ($keyword) {
-            if (is_array($keyword)) {
-                $keyword = $keyword['value'];
+        if ($search) {
+            if (is_array($search)) {
+                $search = $search['value'];
             }
 
             $query->whereAny([
@@ -70,6 +71,16 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
                 'amount',
                 'student_code',
                 'class',
+            ], 'LIKE', '%' . $search . '%');
+        }
+
+        if ($keyword) {
+            if (is_array($keyword)) {
+                $keyword = $keyword['value'];
+            }
+
+            $query->whereAny([
+                'name',
             ], 'LIKE', '%' . $keyword . '%');
         }
 
@@ -87,10 +98,6 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
 
         if (! is_null($isAnonymous)) {
             $query->where('is_anonymous', $isAnonymous);
-        }
-
-        if (! is_null($userId)) {
-            $query->where('user_id', $userId);
         }
 
         return $query;
