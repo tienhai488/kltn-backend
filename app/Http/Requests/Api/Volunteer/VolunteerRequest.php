@@ -48,6 +48,7 @@ class VolunteerRequest extends FormRequest
                 'nullable',
                 Rule::enum(VolunteerStatus::class),
             ],
+            'keyword' => 'nullable|string',
         ];
     }
 }

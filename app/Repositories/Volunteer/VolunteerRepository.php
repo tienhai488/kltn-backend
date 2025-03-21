@@ -47,7 +47,8 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
      */
     public function volunteerFilter(array $searchParams): Builder|Volunteer
     {
-        $keyword = Arr::get($searchParams, 'search', '');
+        $search = Arr::get($searchParams, 'search', '');
+        $keyword = Arr::get($searchParams, 'keyword', '');
         $userId = Arr::get($searchParams, 'user_id', null);
         $projectId = Arr::get($searchParams, 'project_id', null);
         $departmentId = Arr::get($searchParams, 'department_id', null);
@@ -55,9 +56,9 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
 
         $query = $this->model->query()->with(['user', 'project', 'department']);
 
-        if ($keyword) {
-            if (is_array($keyword)) {
-                $keyword = $keyword['value'];
+        if ($search) {
+            if (is_array($search)) {
+                $search = $search['value'];
             }
 
             $query->whereAny([
@@ -66,6 +67,16 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
                 'phone_number',
                 'student_code',
                 'class',
+            ], 'LIKE', '%' . $search . '%');
+        }
+
+        if ($keyword) {
+            if (is_array($keyword)) {
+                $keyword = $keyword['value'];
+            }
+
+            $query->whereAny([
+                'name',
             ], 'LIKE', '%' . $keyword . '%');
         }
 
