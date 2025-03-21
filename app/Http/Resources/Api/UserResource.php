@@ -31,6 +31,12 @@ class UserResource extends JsonResource
             'facebook' => $this->facebook,
             'youtube' => $this->youtube,
             'tiktok' => $this->tiktok,
+            'type' => $this->type,
+            'projects_count' => $this->projects_count,
+            'projects_donations_sum_amount' => $this->projects_donations_sum_amount,
+            'donations_count' => $this->donations_count,
+            'donations_sum_amount' => $this->donations_sum_amount,
+            'volunteers_without_canceled_count' => $this->volunteers_without_canceled_count,
         ];
     }
 }
