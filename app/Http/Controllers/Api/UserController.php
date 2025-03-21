@@ -34,7 +34,28 @@ class UserController extends Controller
      */
     public function profile()
     {
-        return $this->okResponse(new UserResource(auth()->user()));
+        return $this->okResponse(new UserResource(
+            $this->userRepository->advancedGetFirst([
+                'conditions' => [
+                    'where' => [
+                        ['id', '=', auth()->id()],
+                    ],
+                ],
+                'with_count' => [
+                    'projects',
+                    'donations',
+                    'volunteers_without_canceled',
+                ],
+                'with_sums' => [
+                    [
+                        'relation' => 'donations',
+                        'column' => 'amount',
+                    ],
+                ],
+                'with' => ['projects.donations'],
+                'append' => ['projects_donations_sum_amount'],
+            ]),
+        ));
     }
 
     /**
