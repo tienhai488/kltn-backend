@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\UpdateAvatarRequest;
 use App\Http\Requests\Api\User\UpdateProfileRequest;
+use App\Http\Requests\Api\User\UserRequest;
 use App\Http\Resources\Api\UserResource;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Traits\ApiResponses;
@@ -21,6 +22,23 @@ class UserController extends Controller
         protected UserRepositoryInterface $userRepository,
     ) {
         //
+    }
+
+    /**
+     * Lấy danh sách người dùng.
+     *
+     * @response UserResource
+     *
+     * @param UserRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function index(UserRequest $request)
+    {
+        return $this->okResponse(
+            UserResource::collection($this->userRepository->serverPaginationFilteringForApi($request->all())),
+            __('Danh sách người dùng'),
+        );
     }
 
     /**

@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Api\Project;
+namespace App\Http\Requests\Api\User;
 
-use App\Acl\Acl;
-use App\Enum\ProjectType;
+use App\Enum\UserStatus;
 use App\Enum\UserType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProjectRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,25 +29,18 @@ class ProjectRequest extends FormRequest
             'limit' => 'nullable|integer|min:1',
             'type' => [
                 'nullable',
-                'string',
-                Rule::enum(ProjectType::class),
-            ],
-            'category_id' => 'nullable|integer|min:1',
-            'role' => [
-                'nullable',
-                'string',
-                Rule::in([Acl::ROLE_ORGANIZATION, Acl::ROLE_INDIVIDUAL]),
+                Rule::enum(UserType::class),
             ],
             'keyword' => 'nullable|string',
-            'project_id' => [
+            'department_id' => [
                 'nullable',
                 'integer',
                 'min:1',
-                'exists:projects,id',
+                'exists:departments,id',
             ],
-            'user_type' => [
+            'status' => [
                 'nullable',
-                Rule::enum(UserType::class),
+                Rule::enum(UserStatus::class),
             ],
         ];
     }
