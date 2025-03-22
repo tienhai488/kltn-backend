@@ -26,6 +26,9 @@ class Donation extends Model
         'amount',
         'is_anonymous',
         'note',
+        'department_id',
+        'class',
+        'student_code',
     ];
 
     /**

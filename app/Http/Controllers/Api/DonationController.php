@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Donation\DonationRequest;
+use App\Http\Requests\Api\Donation\StoreDonationRequest;
 use App\Http\Resources\Api\DonationResource;
 use App\Repositories\Donation\DonationRepositoryInterface;
 use App\Traits\ApiResponses;
@@ -38,5 +39,19 @@ class DonationController extends Controller
             DonationResource::collection($this->donationRepository->serverPaginationFilteringForAdmin($request->all())),
             __('Danh sách quyên góp')
         );
+    }
+
+    /**
+     * Tạo quyên góp.
+     *
+     * @param StoreDonationRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function store(StoreDonationRequest $request)
+    {
+        $data = $this->donationRepository->create($request->validated());
+
+        return $this->createdResponse(DonationResource::make($data), __('Tạo quyên góp thành công'));
     }
 }
