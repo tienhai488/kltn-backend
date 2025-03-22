@@ -52,8 +52,7 @@ class UpdateUserRequest extends FormRequest
                 new PhoneNumber,
             ],
             'birth_of_date' => [
-                'nullable',
-                'before_or_equal:' . now()->subYears(16)->format('Y-m-d'),
+                'required',
             ],
             'gender' => [
                 'required',
@@ -64,9 +63,7 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-            'roles' => 'required',
-            'roles.*' => 'exists:roles,id',
-            'user_avatar' => 'nullable',
+            'role' => 'required|exists:roles,id',
         ];
 
         if (request()->password || request()->password_confirmation) {

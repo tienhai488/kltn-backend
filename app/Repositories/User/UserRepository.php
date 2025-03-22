@@ -4,6 +4,7 @@ namespace App\Repositories\User;
 
 use App\Acl\Acl;
 use App\Enum\UserAvatar;
+use App\Enum\UserStatus;
 use App\Enum\UserType;
 use App\Models\User;
 use App\Repositories\BaseRepository;
@@ -170,7 +171,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                     ->toMediaCollection(UserAvatar::COLLECTION->value);
             }
 
-            if (! $user->syncRoles(Arr::map($data['roles'], fn($role) => (int) $role))) {
+            if (!$user->syncRoles([(int)$data['role']])) {
                 DB::rollBack();
             }
 
@@ -179,7 +180,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             return $user;
         } catch (\Exception $e) {
             DB::rollBack();
-
             return $e->getMessage();
         }
     }
@@ -195,7 +195,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $user = $model->update($data);
 
             $model->clearMediaCollection(UserAvatar::COLLECTION->value);
-
             if (isset($data['user_avatar']) && $data['user_avatar']) {
                 $file = json_decode($data['user_avatar'], true);
                 $model->addMediaFromBase64($file['data'])
@@ -203,8 +202,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                     ->toMediaCollection(UserAvatar::COLLECTION->value);
             }
 
-            if (isset($data['roles']) && checkPermission(Acl::PERMISSION_ASSIGNEE)) {
-                if (! $model->syncRoles(Arr::map($data['roles'], fn($role) => (int) $role))) {
+            if (!empty($data['role'])) {
+                if (!$model->syncRoles([(int)$data['role']])) {
                     DB::rollBack();
                 }
             }
@@ -214,8 +213,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             return $user;
         } catch (\Exception $e) {
             DB::rollBack();
-
-            return false;
+            return $e->getMessage();
         }
     }
 
@@ -313,6 +311,26 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             DB::rollBack();
 
             return false;
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toggleStatus($model)
+    {
+        try {
+            DB::beginTransaction();
+
+            $status = $model->status == UserStatus::ACTIVE ? UserStatus::LOCKED : UserStatus::ACTIVE;
+            $model->update(['status' => $status]);
+
+            DB::commit();
+
+            return $model;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
         }
     }
 }

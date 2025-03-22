@@ -1,5 +1,6 @@
 <?php
 
+use App\Acl\Acl;
 use Dedoc\Scramble\Scramble;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'web'], function () {
     include 'v1/web/auth.php';
 
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth.admin', 'active', 'role_or_permission:' . Acl::ROLE_SUPER_ADMIN . '|' . Acl::ROLE_ADMIN . '|' . Acl::ROLE_ORGANIZATION . '|' . Acl::ROLE_INDIVIDUAL])->group(function () {
         include 'v1/web/admin.php';
     });
 });

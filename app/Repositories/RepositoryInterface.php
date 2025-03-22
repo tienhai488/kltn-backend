@@ -120,4 +120,14 @@ interface RepositoryInterface
      * @return void
      */
     public function queryByConditions(Builder &$query, array $data): void;
+
+    /**
+     * Toggle status a resource
+     *
+     * Toggle status the resource that you passed in
+     *
+     * @param $model
+     * @return bool
+     */
+    public function toggleStatus($model);
 }

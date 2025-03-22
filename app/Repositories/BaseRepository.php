@@ -272,4 +272,12 @@ abstract class BaseRepository implements RepositoryInterface
             }
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toggleStatus($model)
+    {
+        return $model->update(['status' => !$model->status]);
+    }
 }

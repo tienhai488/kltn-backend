@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Admin;
 
+use App\Acl\Acl;
+use App\Enum\UserStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
@@ -27,6 +29,9 @@ class UserResource extends JsonResource
             'gender' => $this->gender,
             'address' => $this->address,
             'roles' => $this->whenLoaded('roles'),
+            'is_locked' => $this->status == UserStatus::LOCKED,
+            'is_super_admin' => $this->hasRole(Acl::ROLE_SUPER_ADMIN),
+            'is_current_user' => $this->id == auth()->id(),
         ];
     }
 }

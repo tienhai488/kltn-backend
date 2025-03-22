@@ -163,9 +163,8 @@
                                                                                     label="{{ __('Ngày tháng năm sinh') }}"
                                                                                     name="birth_of_date"
                                                                                     placeholder="{{ __('Ngày tháng năm sinh') }}"
-                                                                                    :max-date="$maxDate"
-                                                                                    :min-date="$minDate"
                                                                                     :value="auth()->user()->birth_of_date ?? ''"
+                                                                                    :isRequired="true"
                                                                                 />
                                                                             </div>
                                                                             <div class="col-md-6">
