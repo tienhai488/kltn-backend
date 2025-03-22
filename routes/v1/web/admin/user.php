@@ -10,4 +10,7 @@ Route::put('update-profile', [UserController::class, 'updateProfile'])
 Route::put('update-password', [UserController::class, 'updatePassword'])
     ->name('user.update_password');
 
-Route::resource('user', UserController::class)->except('destroy');
+Route::put('toggle-status/{user}', [UserController::class, 'toggleStatus'])
+    ->name('user.toggle_status');
+
+Route::resource('user', UserController::class);

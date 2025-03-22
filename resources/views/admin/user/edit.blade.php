@@ -51,7 +51,6 @@
                 :value="$user->name"
                 :isRequired="true"
             />
-            <input type="hidden" name="username" value="{{ $user->username }}">
             <x-form.form-input
                 :id="'email'"
                 :label="'Email'"
@@ -63,7 +62,7 @@
             <x-form.form-select
                 :id="'sStatusSelect'"
                 :label="'Trạng thái hoạt động'"
-                :data-values="$statuses"
+                :data-values="App\Enum\UserStatus::options(true)"
                 :name="'status'"
                 :select-value-attribute="'value'"
                 :select-value-label="'label'"
@@ -84,9 +83,8 @@
                 label="{{ __('Ngày tháng năm sinh') }}"
                 name="birth_of_date"
                 placeholder="{{ __('Ngày tháng năm sinh') }}"
-                :max-date="$maxDate"
-                :min-date="$minDate"
-                :value="$user->birth_of_date ?? ''"
+                :value="$user->birth_of_date"
+                :isRequired="true"
             />
             <x-form.form-select
                 :id="'sGendersSelect'"
@@ -97,16 +95,8 @@
                 :select-value-label="'value'"
                 :multiple="false"
                 :placeholder="__('Giới tính')"
+                :values="$user->gender?->value"
                 :isRequired="'true'"
-                :values="$user?->gender?->value ?? ''"
-            />
-            <x-form.form-input
-                :id="'address'"
-                :label="'Địa chỉ'"
-                :name="'address'"
-                :placeholder="'Địa chỉ'"
-                :isRequired="true"
-                :value="$user->address"
             />
             <x-form.form-input
                 :id="'password'"
@@ -126,10 +116,18 @@
                 :id="'sRoleSelect'"
                 :label="'Vai trò trong hệ thống'"
                 :data-values="$roles"
-                :name="'roles'"
-                :multiple="true"
+                :name="'role'"
+                :multiple="false"
                 :placeholder="__('Chọn vai trò')"
                 :values="$userRoles"
+                :isRequired="true"
+            />
+            <x-form.form-input
+                :id="'address'"
+                :label="'Địa chỉ'"
+                :name="'address'"
+                :placeholder="'Địa chỉ'"
+                :value="$user->address"
                 :isRequired="true"
             />
             <x-buttons.submit :label="__('Hoàn tất')"/>
@@ -158,7 +156,8 @@
                 FilePondPluginFileValidateSize,
                 FilePondPluginImageTransform,
                 FilePondPluginFileEncode,
-                FilePondPluginFileValidateType
+                FilePondPluginFileValidateType,
+                FilePondPluginImageResize,
             );
             const userAvatar = FilePond.create(
                 document.querySelector('#sAvatar'),
@@ -166,15 +165,17 @@
                     acceptedFileTypes: ['image/*'],
                     labelFileTypeNotAllowed: 'sai định dạng',
                     fileValidateTypeLabelExpectedTypes: 'phải là hình ảnh',
-                    maxFileSize: '5MB',
+                    maxFileSize: '20MB',
                     labelMaxFileSizeExceeded: 'Tệp quá lớn',
-                    labelMaxFileSize: 'Kích thước ảnh tối đa 5MB',
+                    labelMaxFileSize: 'Kích thước ảnh tối đa 20MB',
                     labelIdle: 'Kéo & thả hoặc <span class="filepond--label-action">chọn từ thiết bị</span>',
+                    imageTransformOutputMimeType: 'image/jpeg',
+                    imageResizeTargetWidth: 1024,
                 }
             );
 
-            @if($user->getFirstMediaUrl(App\Enum\UserAvatar::COLLECTION->value))
-                userAvatar.addFile('{{ $user->getFirstMediaUrl(App\Enum\UserAvatar::COLLECTION->value) }}');
+            @if($user->avatar_url)
+                userAvatar.addFile('{{ $user->avatar_url }}');
             @endif
         </script>
     </x-slot:footerFiles>

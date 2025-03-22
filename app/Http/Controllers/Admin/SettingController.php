@@ -131,7 +131,7 @@ class SettingController extends Controller
     {
         $companionUnit = $this->settingRepository->findByKey('companion_unit');
 
-        $this->settingRepository->updateImages($companionUnit, $request->validated()['companion_units'], Setting::IMAGES_COLLECTION) ?
+        $this->settingRepository->updateImages($companionUnit, $request->validated()['images'], Setting::IMAGES_COLLECTION) ?
             session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Cài đặt đơn vị đồng hành thành công.'))
             : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Cài đặt đơn vị đồng hành thất bại.'));
 

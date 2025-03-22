@@ -50,7 +50,7 @@ class StoreProjectRequest extends FormRequest
                 'gt:0',
             ],
             'background_image' => 'required',
-            'related_images' => 'nullable|array',
+            'images' => 'nullable|array',
         ];
     }
 
@@ -67,7 +67,18 @@ class StoreProjectRequest extends FormRequest
             'end_date' => 'thời gian kết thúc',
             'type' => 'loại dự án',
             'background_image' => 'ảnh nền dự án',
-            'related_images' => 'hình ảnh liên quan',
+            'images' => 'hình ảnh liên quan',
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'donation_target' => (float) str_replace(',', '', $this->donation_target),
+            'volunteer_quantity' => (float) str_replace(',', '', $this->volunteer_quantity),
+        ]);
     }
 }

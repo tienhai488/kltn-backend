@@ -163,9 +163,8 @@
                                                                                     label="{{ __('Ngày tháng năm sinh') }}"
                                                                                     name="birth_of_date"
                                                                                     placeholder="{{ __('Ngày tháng năm sinh') }}"
-                                                                                    :max-date="$maxDate"
-                                                                                    :min-date="$minDate"
                                                                                     :value="auth()->user()->birth_of_date ?? ''"
+                                                                                    :isRequired="true"
                                                                                 />
                                                                             </div>
                                                                             <div class="col-md-6">
@@ -298,11 +297,13 @@
                     acceptedFileTypes: ['image/*'],
                     labelFileTypeNotAllowed: 'sai định dạng',
                     fileValidateTypeLabelExpectedTypes: 'phải là hình ảnh',
-                    maxFileSize: '5MB',
+                    maxFileSize: '20MB',
                     stylePanelLayout: 'compact circle',
                     labelMaxFileSizeExceeded: 'Tệp quá lớn',
-                    labelMaxFileSize: 'Kích thước ảnh tối đa 5MB',
+                    labelMaxFileSize: 'Kích thước ảnh tối đa 20MB',
                     labelIdle: 'Kéo & thả hoặc <span class="filepond--label-action">chọn từ thiết bị</span>',
+                    imageTransformOutputMimeType: 'image/jpeg',
+                    imageResizeTargetWidth: 1024,
                 }
             );
 

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Acl\Acl;
 use App\Enum\NotificationType;
-use App\Enum\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\StoreUserRequest;
 use App\Http\Requests\Admin\User\UpdatePasswordRequest;
@@ -14,19 +13,19 @@ use App\Http\Resources\Admin\UserResource;
 use App\Models\User;
 use App\Repositories\Role\RoleRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
     public function __construct(
         protected UserRepositoryInterface $userRepository,
-        protected RoleRepositoryInterface $roleRepository
+        protected RoleRepositoryInterface $roleRepository,
     ) {
         $this->middleware('permission:' . Acl::PERMISSION_USER_LIST)->only('index');
         $this->middleware('permission:' . Acl::PERMISSION_USER_ADD)->only(['create', 'store']);
         $this->middleware('permission:' . Acl::PERMISSION_USER_EDIT)->only(['edit', 'update']);
-        // $this->middleware('permission:' . Acl::PERMISSION_USER_DELETE)->only('destroy');
+        $this->middleware('permission:' . Acl::PERMISSION_USER_DELETE)->only('destroy');
     }
 
     /**
@@ -34,16 +33,12 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $title = __('Quản lý người dùng');
-
         if ($request->ajax()) {
             $users = $this->userRepository->serverPaginationFilteringForAdmin($request->all());
             return UserResource::collection($users);
         }
 
-        return view('admin.user.index', compact(
-            'title',
-        ));
+        return view('admin.user.index');
     }
 
     /**
@@ -51,19 +46,15 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = $this->roleRepository->all();
-        $minDate = Carbon::now()->subYears(100);
-        $maxDate = Carbon::now()->subYears(16);
-        $statuses = UserStatus::options(true);
-        $userRoles = session('role') ? $this->roleRepository->getRoleByName(session('role'))->pluck('id')->toArray() : [];
+        $roles = $this->roleRepository->advancedGet([
+            'conditions' => [
+                'where_not_in' => [
+                    'name' => [Acl::ROLE_SUPER_ADMIN],
+                ],
+            ],
+        ]);
 
-        return view('admin.user.create', compact(
-            'roles',
-            'statuses',
-            'minDate',
-            'maxDate',
-            'userRoles',
-        ));
+        return view('admin.user.create', compact('roles'));
     }
 
     /**
@@ -71,11 +62,9 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        if ($this->userRepository->create($request->validated())) {
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Thêm mới người dùng thành công.'));
-        } else {
-            session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Thêm mới người dùng thất bại.'));
-        }
+        $this->userRepository->create($request->validated()) ?
+            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Thêm mới người dùng thành công.'))
+            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Thêm mới người dùng thất bại.'));
 
         return to_route('admin.user.index');
     }
@@ -95,10 +84,7 @@ class UserController extends Controller
      */
     public function myProfile()
     {
-        $minDate = Carbon::now()->subYears(100);
-        $maxDate = Carbon::now()->subYears(16);
-
-        return view('admin.user.profile.my_profile', compact('minDate', 'maxDate'));
+        return view('admin.user.profile.my_profile');
     }
 
     /**
@@ -106,7 +92,7 @@ class UserController extends Controller
      */
     public function updateProfile(UpdateProfileRequest $request)
     {
-        $this->userRepository->update($request->user(), $request->validated()) ?
+        $this->userRepository->update(auth()->user(), $request->validated()) ?
             session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chỉnh sửa thông tin cá nhân thành công.'))
             : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Chỉnh sửa thông tin cá nhân thất bại.'));
 
@@ -127,19 +113,21 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $roles = $this->roleRepository->all();
         $userRoles = $user->roles->pluck('id')->toArray();
-        $statuses = UserStatus::options(true);
-        $minDate = Carbon::now()->subYears(100);
-        $maxDate = Carbon::now()->subYears(16);
+        $roles = $this->roleRepository->advancedGet([
+            'conditions' => [
+                'where_not_in' => [
+                    'name' => [Acl::ROLE_SUPER_ADMIN],
+                ],
+            ],
+        ]);
+        $userProfile = $user->userProfile;
 
         return view('admin.user.edit', compact(
             'roles',
             'user',
             'userRoles',
-            'statuses',
-            'minDate',
-            'maxDate',
+            'userProfile',
         ));
     }
 
@@ -158,15 +146,22 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    // public function destroy(User $user)
-    // {
-    //     if ($this->userRepository->destroy($user)) {
-    //         return response()->json([
-    //             'message' => __('success.user.destroy'),
-    //         ], Response::HTTP_OK);
-    //     }
-    //     return response()->json([
-    //         'message' => __('error.user.destroy'),
-    //     ], Response::HTTP_BAD_REQUEST);
-    // }
+    public function destroy(User $user)
+    {
+        if ($this->userRepository->destroy($user))
+            return response()->json([
+                'message' => __('Xóa người dùng thành công.'),
+            ], Response::HTTP_OK);
+        return response()->json([
+            'message' => __('Xóa người dùng thất bại.'),
+        ], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * Toggle the status of a user between active and locked.
+     */
+    public function toggleStatus(User $user)
+    {
+        return $this->userRepository->toggleStatus($user);
+    }
 }

@@ -40,7 +40,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         'check_user_role_redirect' => \App\Http\Middleware\CheckUserRoleRedirect::class,
         'check_user_status' => \App\Http\Middleware\CheckUserStatus::class,
-        'api_key' => \App\Http\Middleware\AuthorizeApiKey::class
+        'api_key' => \App\Http\Middleware\AuthorizeApiKey::class,
+        'active' => \App\Http\Middleware\CheckUserIsActive::class,
     ];
 }

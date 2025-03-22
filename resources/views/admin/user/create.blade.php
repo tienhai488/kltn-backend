@@ -1,7 +1,7 @@
 <x-base-layout :scrollspy="false">
 
     <x-slot:pageTitle>
-        {{ __('Tạo mới') }}
+        {{ __('Thêm mới') }}
     </x-slot:pageTitle>
 
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
@@ -25,15 +25,18 @@
         :breadcrumb-items="[
             'Người dùng' => '',
             'Danh sách người dùng' => route('admin.user.index'),
-            'Tạo mới người dùng' => ''
+            'Thêm mới người dùng' => ''
         ]"/>
 
     <x-custom.stat-box :id="'role-management'" :custom-col="'col-lg-12'">
         <x-slot:boxTitle>
-            {{ __('Thêm mới người dùng') }}
+            Thêm mới người dùng
         </x-slot:boxTitle>
 
-        <x-form.form-layout :form-id="'general-settings'" :form-url="route('admin.user.store')">
+        <x-form.form-layout
+            :form-id="'general-settings'"
+            :form-url="route('admin.user.store')"
+        >
             <x-form.form-upload
                 :label="'Ảnh đại diện'"
                 :id="'sAvatar'"
@@ -45,7 +48,6 @@
                 :name="'name'"
                 :placeholder="'Nhập họ tên người dùng'"
                 :isRequired="true"
-                :value="session('name')"
             />
             <x-form.form-input
                 :id="'email'"
@@ -53,13 +55,11 @@
                 :name="'email'"
                 :placeholder="'Nhập Email'"
                 :isRequired="true"
-                :value="session('email')"
             />
-            <input type="hidden" name="username" value="{{ session('username') }}">
             <x-form.form-select
                 :id="'sStatusSelect'"
                 :label="'Trạng thái hoạt động'"
-                :data-values="$statuses"
+                :data-values="App\Enum\UserStatus::options(true)"
                 :name="'status'"
                 :select-value-attribute="'value'"
                 :select-value-label="'label'"
@@ -72,16 +72,13 @@
                 :name="'phone_number'"
                 :placeholder="'Số điện thoại'"
                 :isRequired="true"
-                :value="session('phone_number')"
             />
             <x-form.form-date-picker
                 id="birth_of_date"
                 label="{{ __('Ngày tháng năm sinh') }}"
                 name="birth_of_date"
                 placeholder="{{ __('Ngày tháng năm sinh') }}"
-                :max-date="$maxDate"
-                :min-date="$minDate"
-                :value="session('birth_of_date')"
+                :isRequired="true"
             />
             <x-form.form-select
                 :id="'sGendersSelect'"
@@ -93,14 +90,6 @@
                 :multiple="false"
                 :placeholder="__('Giới tính')"
                 :isRequired="'true'"
-            />
-            <x-form.form-input
-                :id="'address'"
-                :label="'Địa chỉ'"
-                :name="'address'"
-                :placeholder="'Địa chỉ'"
-                :isRequired="true"
-                :value="session('address')"
             />
             <x-form.form-input
                 :id="'password'"
@@ -122,11 +111,17 @@
                 :id="'sRoleSelect'"
                 :label="'Vai trò trong hệ thống'"
                 :data-values="$roles"
-                :name="'roles'"
-                :multiple="true"
+                :name="'role'"
+                :multiple="false"
                 :placeholder="__('Chọn vai trò')"
                 :isRequired="true"
-                :values="$userRoles"
+            />
+            <x-form.form-input
+                :id="'address'"
+                :label="'Địa chỉ'"
+                :name="'address'"
+                :placeholder="'Địa chỉ'"
+                :isRequired="true"
             />
             <x-buttons.submit :label="__('Hoàn tất')"/>
         </x-form.form-layout>
@@ -154,7 +149,8 @@
                 FilePondPluginFileValidateSize,
                 FilePondPluginImageTransform,
                 FilePondPluginFileEncode,
-                FilePondPluginFileValidateType
+                FilePondPluginFileValidateType,
+                FilePondPluginImageResize,
             );
 
             const userAvatar = FilePond.create(
@@ -163,11 +159,13 @@
                     acceptedFileTypes: ['image/*'],
                     labelFileTypeNotAllowed: 'sai định dạng',
                     fileValidateTypeLabelExpectedTypes: 'phải là hình ảnh',
-                    maxFileSize: '5MB',
+                    maxFileSize: '20MB',
                     labelMaxFileSizeExceeded: 'Tệp quá lớn',
-                    labelMaxFileSize: 'Kích thước ảnh tối đa 5MB',
+                    labelMaxFileSize: 'Kích thước ảnh tối đa 20MB',
                     labelIdle: 'Kéo & thả hoặc <span class="filepond--label-action">chọn từ thiết bị</span>',
                     allowPaste: false,
+                    imageTransformOutputMimeType: 'image/jpeg',
+                    imageResizeTargetWidth: 1024,
                 }
             );
         </script>

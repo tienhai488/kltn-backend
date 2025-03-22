@@ -11,6 +11,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * The repository for Project Model
@@ -192,15 +193,18 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
                 ->usingFileName($backgroundImage['name'])
                 ->toMediaCollection(Project::PROJECT_BACKGROUND_IMAGE);
 
-            if (isset($data['related_images']) && $data['related_images']) {
-                foreach ($data['related_images'] as $file) {
-                    if (!empty($file) && !is_null($file[0])) {
-                        $fileDecode = json_decode($file[0], true);
-                        $project->addMediaFromBase64($fileDecode['data'])
-                            ->usingFileName($fileDecode['name'])
-                            ->toMediaCollection(Project::PROJECT_RELATED_IMAGES);
+            if (!empty($data['images'])) {
+                foreach ($data['images'] as $path) {
+                    if (!empty($path)) {
+                        $fullPath = storage_path('app/public/' . json_decode($path, true));
+                        if (file_exists($fullPath)) {
+                            $project->addMedia($fullPath)
+                                ->usingFileName(uniqid() . '.jpg')
+                                ->toMediaCollection(Project::PROJECT_RELATED_IMAGES);
+                        }
                     }
                 }
+                Storage::disk('public')->deleteDirectory('uploads');
             }
 
             DB::commit();
@@ -230,15 +234,18 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
                 ->toMediaCollection(Project::PROJECT_BACKGROUND_IMAGE);
 
             $model->clearMediaCollection(Project::PROJECT_RELATED_IMAGES);
-            if (isset($data['related_images']) && $data['related_images']) {
-                foreach ($data['related_images'] as $file) {
-                    if (!empty($file) && !is_null($file[0])) {
-                        $fileDecode = json_decode($file[0], true);
-                        $model->addMediaFromBase64($fileDecode['data'])
-                            ->usingFileName($fileDecode['name'])
-                            ->toMediaCollection(Project::PROJECT_RELATED_IMAGES);
+            if (!empty($data['images'])) {
+                foreach ($data['images'] as $path) {
+                    if (!empty($path)) {
+                        $fullPath = storage_path('app/public/' . json_decode($path, true));
+                        if (file_exists($fullPath)) {
+                            $model->addMedia($fullPath)
+                                ->usingFileName(uniqid() . '.jpg')
+                                ->toMediaCollection(Project::PROJECT_RELATED_IMAGES);
+                        }
                     }
                 }
+                Storage::disk('public')->deleteDirectory('uploads');
             }
 
             DB::commit();

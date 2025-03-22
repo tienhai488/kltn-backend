@@ -24,7 +24,7 @@ class UpdateCompanionUnitRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'companion_units' => [
+            'images' => [
                 'required',
                 'array',
                 new CheckEmptyUploadMultipleImage,
@@ -40,7 +40,7 @@ class UpdateCompanionUnitRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'companion_units' => __('đơn vị đồng hành'),
+            'images' => __('đơn vị đồng hành'),
         ];
     }
 }

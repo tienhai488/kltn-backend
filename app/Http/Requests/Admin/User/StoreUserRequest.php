@@ -36,12 +36,6 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'max:255'
             ],
-            'username' => [
-                'nullable',
-                'string',
-                'max:255',
-                'unique:users',
-            ],
             'email' => [
                 'required',
                 'string',
@@ -55,8 +49,7 @@ class StoreUserRequest extends FormRequest
                 new PhoneNumber,
             ],
             'birth_of_date' => [
-                'nullable',
-                'before_or_equal:' . now()->subYears(16)->format('Y-m-d'),
+                'required',
             ],
             'password' => [
                 'required',
@@ -79,8 +72,7 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'max:255'
             ],
-            'roles' => 'required|array',
-            'roles.*' => 'exists:roles,id',
+            'role' => 'required|exists:roles,id',
             'user_avatar' => 'nullable',
         ];
     }
