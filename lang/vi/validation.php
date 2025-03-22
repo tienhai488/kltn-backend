@@ -281,6 +281,10 @@ return [
         'department_id'         => 'phòng ban',
         'class'                 => 'lớp',
         'student_code'          => 'mã sinh viên',
+        'project_id'            => 'dự án',
+        'account_number'        => 'số tài khoản',
+        'account_name'          => 'tên tài khoản',
+        'is_anonymous'          => 'ẩn danh',
     ],
 
 ];
