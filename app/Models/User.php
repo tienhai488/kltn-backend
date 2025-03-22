@@ -147,14 +147,30 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     }
 
     /**
-     * Get the sum of all donations across projects.
+     * The sum of all donations of all projects created by the user.
      *
-     * @return float
+     * @return int
      */
-    public function getProjectsDonationsSumAmountAttribute(): float
+    public function projectsDonationsSumAmount(): Attribute
     {
-        return $this->projects->sum(function ($project) {
-            return $project->donations->sum('amount');
-        });
+        return Attribute::make(
+            fn($value) => $this->projects->sum(function ($project) {
+                return $project->donations->sum('amount');
+            })
+        );
+    }
+
+    /**
+     * Get the total count of all donations for all projects created by the user.
+     *
+     * @return Attribute
+     */
+    public function projectsDonationsCount(): Attribute
+    {
+        return Attribute::make(
+            fn($value) => $this->projects->sum(function ($project) {
+                return $project->donations->count();
+            })
+        );
     }
 }
