@@ -279,7 +279,8 @@
                 FilePondPluginFileValidateSize,
                 FilePondPluginImageTransform,
                 FilePondPluginFileEncode,
-                FilePondPluginFileValidateType
+                FilePondPluginFileValidateType,
+                FilePondPluginImageResize,
             );
 
             const backgroundImage = FilePond.create(
@@ -288,11 +289,13 @@
                     acceptedFileTypes: ['image/*'],
                     labelFileTypeNotAllowed: 'sai định dạng',
                     fileValidateTypeLabelExpectedTypes: 'phải là hình ảnh',
-                    maxFileSize: '5MB',
+                    maxFileSize: '20MB',
                     labelMaxFileSizeExceeded: 'Tệp quá lớn',
-                    labelMaxFileSize: 'Kích thước ảnh tối đa 5MB',
+                    labelMaxFileSize: 'Kích thước ảnh tối đa 20MB',
                     labelIdle: 'Kéo & thả hoặc <span class="filepond--label-action">chọn từ thiết bị</span>',
                     allowPaste: false,
+                    imageTransformOutputMimeType: 'image/jpeg',
+                    imageResizeTargetWidth: 1024,
                 }
             );
 
@@ -311,6 +314,9 @@
                     labelMaxFileSize: 'Kích thước ảnh tối đa 20MB',
                     labelIdle: 'Kéo & thả hoặc <span class="filepond--label-action">chọn từ thiết bị</span>',
                     allowPaste: false,
+                    maxFiles: 5,
+                    imageTransformOutputMimeType: 'image/jpeg',
+                    imageResizeTargetWidth: 1024,
                 }
             );
 
