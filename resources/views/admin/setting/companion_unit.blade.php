@@ -32,7 +32,7 @@
                 <x-form.form-upload
                     :label="'Đơn vị đồng hành'"
                     :id="'sCompanionUnit'"
-                    :name="'companion_units'"
+                    :name="'images'"
                     :multiple="true"
                     :isRequired="true"
                 />
@@ -77,6 +77,20 @@
                     labelIdle: 'Kéo & thả hoặc <span class="filepond--label-action">chọn từ thiết bị</span>',
                     imageTransformOutputMimeType: 'image/jpeg',
                     imageResizeTargetWidth: 1024,
+                    server: {
+                        process: {
+                            url: @json(route('api.file_upload.upload')),
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': @json(csrf_token())
+                            },
+                            timeout: 7000,
+                            onload: (response) => response,
+                            onerror: (response) => response,
+                            ondata: (formData) => formData
+                        },
+                        revert: @json(route('api.file_upload.revert')),
+                    },
                 }
             );
 

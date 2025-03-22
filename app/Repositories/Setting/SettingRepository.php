@@ -7,6 +7,7 @@ use App\Repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * The repository for Setting Model
@@ -109,15 +110,18 @@ class SettingRepository extends BaseRepository implements SettingRepositoryInter
 
             $model->clearMediaCollection($collection);
 
-            if (isset($data) && $data) {
-                foreach ($data as $file) {
-                    if (!empty($file)) {
-                        $fileDecode = json_decode($file, true);
-                        $model->addMediaFromBase64($fileDecode['data'])
-                            ->usingFileName($fileDecode['name'])
-                            ->toMediaCollection($collection);
+            if (!empty($data)) {
+                foreach ($data as $path) {
+                    if (!empty($path)) {
+                        $fullPath = storage_path('app/public/' . json_decode($path, true));
+                        if (file_exists($fullPath)) {
+                            $model->addMedia($fullPath)
+                                ->usingFileName(uniqid() . '.jpg')
+                                ->toMediaCollection($collection);
+                        }
                     }
                 }
+                Storage::disk('public')->deleteDirectory('uploads');
             }
 
             DB::commit();

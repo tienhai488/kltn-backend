@@ -83,7 +83,7 @@
                     <x-form.form-upload
                         :label="'Hình ảnh liên quan'"
                         :id="'sRelatedImages'"
-                        :name="'related_images[]'"
+                        :name="'images'"
                         :multiple="true"
                     />
                 </div>
@@ -204,6 +204,19 @@
         <script src="{{ asset('plugins/flatpickr/flatpickr.js') }}"></script>
         <script src="{{ asset('plugins/flatpickr/l10n/vn.js') }}"></script>
         <script>
+            const formatCurrency = (value) => {
+                value = value.replace(/,/g, '');
+                return !isNaN(value) && value.length > 0 ? Number(value).toLocaleString('en') : '';
+            };
+
+            $('#donation_target, #volunteer_quantity').each(function() {
+                $(this).val(formatCurrency($(this).val()));
+            });
+
+            $('#donation_target, #volunteer_quantity').on('input', function() {
+                $(this).val(formatCurrency($(this).val()));
+            });
+
             flatpickr("#start_date", {
                 dateFormat: "Y-m-d H:i",
                 maxDate: "features",
@@ -302,6 +315,20 @@
                     maxFiles: 5,
                     imageTransformOutputMimeType: 'image/jpeg',
                     imageResizeTargetWidth: 1024,
+                    server: {
+                        process: {
+                            url: @json(route('api.file_upload.upload')),
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': @json(csrf_token())
+                            },
+                            timeout: 7000,
+                            onload: (response) => response,
+                            onerror: (response) => response,
+                            ondata: (formData) => formData
+                        },
+                        revert: @json(route('api.file_upload.revert')),
+                    },
                 }
             );
         </script>

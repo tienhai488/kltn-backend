@@ -36,4 +36,5 @@ Route::prefix('v1')
         include('v1/api/department.php');
         include('v1/api/statistic.php');
         include('v1/api/auth.php');
+        include('v1/api/file_upload.php');
     });
