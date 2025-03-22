@@ -26,8 +26,8 @@ class VolunteerResource extends JsonResource
             'student_code' => $this->student_code,
             'class' => $this->class,
             'status' => $this->status,
-            'status_label' => $this->status->getLabel(),
-            'status_badge' => $this->status->getBadge(),
+            'status_label' => $this->status?->getLabel(),
+            'status_badge' => $this->status?->getBadge(),
             'created_at' => $this->created_at,
         ];
     }
