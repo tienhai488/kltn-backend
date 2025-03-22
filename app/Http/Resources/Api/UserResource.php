@@ -32,10 +32,29 @@ class UserResource extends JsonResource
             'youtube' => $this->youtube,
             'tiktok' => $this->tiktok,
             'type' => $this->type,
+            /**
+             * Số dự án đã tạo.
+             */
             'projects_count' => $this->projects_count,
+            /**
+             * Tổng số tiền mà các dự án đã tạo đã nhận được.
+             */
             'projects_donations_sum_amount' => $this->projects_donations_sum_amount,
+            /**
+             * Tổng số lượt ủng hộ.
+             */
+            'projects_donations_count' => $this->projects_donations_count,
+            /**
+             * Số lượt quyên góp.
+             */
             'donations_count' => $this->donations_count,
+            /**
+             * Tổng số tiền đã quyên góp.
+             */
             'donations_sum_amount' => $this->donations_sum_amount,
+            /**
+             * Số dự án đã tham gia tình nguyện.
+             */
             'volunteers_without_canceled_count' => $this->volunteers_without_canceled_count,
         ];
     }

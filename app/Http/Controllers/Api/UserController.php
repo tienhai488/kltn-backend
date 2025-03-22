@@ -71,7 +71,6 @@ class UserController extends Controller
                     ],
                 ],
                 'with' => ['projects.donations'],
-                'append' => ['projects_donations_sum_amount'],
             ]),
         ));
     }
