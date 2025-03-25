@@ -31,6 +31,7 @@ class ProjectResource extends JsonResource
             'type' => $this->type,
             'status_label' => $this->status->getLabel(),
             'status_badge' => $this->status->getBadge(),
+            'background_image' => $this->background_image,
         ];
     }
 }

@@ -51,6 +51,7 @@
                 <tr>
                     <th class="text-center">No.</th>
                     <th>{{ __('Danh mục') }}</th>
+                    <th>{{ __('Hình ảnh') }}</th>
                     <th>{{ __('Người tạo') }}</th>
                     <th>{{ __('Tên dự án') }}</th>
                     <th>{{ __('Mục tiêu') }}</th>
@@ -97,6 +98,15 @@
                         "class": "text-center",
                         "render": function (data, type, full) {
                             return `<span class="badge badge-primary">${data.name}</span>`;
+                        }
+                    },
+                    {
+                        "data": "background_image",
+                        "class": "text-center",
+                        "render": function (data, type, full) {
+                            return `<div class="avatar me-3">
+                                <img src="${data}" alt="Image" width="64" height="64">
+                            </div>`;
                         }
                     },
                     {
