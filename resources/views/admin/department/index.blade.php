@@ -88,7 +88,7 @@
                         "class": "text-center",
                         "render": function (data, type, full) {
                             return `<div class="avatar me-3">
-                                <img src="${data}" class="rounded-circle" alt="Image" width="64" height="64">
+                                <img src="${data}" alt="Image" width="64" height="64">
                             </div>`;
                         }
                     },

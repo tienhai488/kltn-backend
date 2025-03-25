@@ -116,6 +116,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         $role = Arr::get($searchParams, 'role', null);
         $keyword = Arr::get($searchParams, 'keyword', '');
         $projectId = Arr::get($searchParams, 'project_id', null);
+        $userId = Arr::get($searchParams, 'user_id', null);
         $userType = Arr::get($searchParams, 'user_type', null);
 
         $query = $this->model->query()
@@ -157,6 +158,10 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
 
         if (! is_null($projectId)) {
             $query->where('id', $projectId);
+        }
+
+        if (! is_null($userId)) {
+            $query->where('user_id', $userId);
         }
 
         if (! is_null($userType)) {

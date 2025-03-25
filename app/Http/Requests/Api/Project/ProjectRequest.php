@@ -46,6 +46,12 @@ class ProjectRequest extends FormRequest
                 'min:1',
                 'exists:projects,id',
             ],
+            'user_id' => [
+                'nullable',
+                'integer',
+                'min:1',
+                'exists:users,id',
+            ],
             'user_type' => [
                 'nullable',
                 Rule::enum(UserType::class),
