@@ -60,11 +60,6 @@ class Project extends Model implements HasMedia
     ];
 
     /**
-     * {@inheritdoc}
-     */
-    protected $with = ['media'];
-
-    /**
      * =====================================
      * Attributes
      * =====================================
@@ -126,14 +121,6 @@ class Project extends Model implements HasMedia
      * Relationships
      * =====================================
      */
-
-    /**
-     * {@inheritdoc}
-     */
-    public function media(): MorphMany
-    {
-        return $this->morphMany(config('media-library.media_model'), 'model');
-    }
 
     /**
      * Get the category associated with the project.

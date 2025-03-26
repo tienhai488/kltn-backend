@@ -74,11 +74,6 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     ];
 
     /**
-     * {@inheritdoc}
-     */
-    protected $with = ['media'];
-
-    /**
      * Get the URL of the user's avatar.
      *
      * @return Attribute

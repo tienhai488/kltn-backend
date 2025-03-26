@@ -49,6 +49,12 @@ class VolunteerRequest extends FormRequest
                 Rule::enum(VolunteerStatus::class),
             ],
             'keyword' => 'nullable|string',
+            'projects_belong_to_user_id' => [
+                'nullable',
+                'integer',
+                'min:1',
+                'exists:users,id',
+            ],
         ];
     }
 }
