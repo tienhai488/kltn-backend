@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enum\DepartmentStatus;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Vite;
 use Spatie\MediaLibrary\HasMedia;
@@ -35,19 +36,16 @@ class Department extends Model implements HasMedia
      * {@inheritdoc}
      */
     protected $appends = ['thumbnail_url'];
-    protected $with = ['media'];
 
     /**
      * Get the thumbnail url attribute.
      *
      * @return bool|string
      */
-    public function getThumbnailUrlAttribute($value): bool|string
+    public function thumbnailUrl(): Attribute
     {
-        if (!$this->relationLoaded('media')) {
-            return false;
-        }
-
-        return $this->getFirstMediaUrl(self::DEPARTMENT_THUMBNAIL_COLLECTION) ?: Vite::asset('resources/images/no-image.jpg');
+        return Attribute::make(
+            fn() => $this->getFirstMediaUrl(self::DEPARTMENT_THUMBNAIL_COLLECTION) ?: Vite::asset('resources/images/no-image.jpg')
+        );
     }
 }

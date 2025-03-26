@@ -49,6 +49,12 @@ class DonationRequest extends FormRequest
                 'nullable',
                 Rule::enum(AnonymousStatus::class),
             ],
+            'projects_belong_to_user_id' => [
+                'nullable',
+                'integer',
+                'min:1',
+                'exists:users,id',
+            ],
         ];
     }
 }
