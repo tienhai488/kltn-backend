@@ -171,8 +171,6 @@ return [
          * Package Service Providers...
          */
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
-        // Khgc\KhgcExportExcel\Providers\KhgcExportExcelServiceProvider::class,
-        // Khgc\KhgcImportExcel\Providers\KHGCImportExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -184,6 +182,9 @@ return [
         App\Providers\RouteServiceProvider::class,
         // App\Providers\TelescopeServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
+
+        // Excel
+        Maatwebsite\Excel\ExcelServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -200,8 +201,9 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         'Acl' => App\Acl\Acl::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
-        'SettingKey' => \App\Models\Contracts\SettingKey::class,
+        'SettingKey' => \App\Models\SettingKey::class,
         // 'Example' => App\Facades\Example::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray(),
 
 ];

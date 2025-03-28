@@ -60,11 +60,6 @@ class Project extends Model implements HasMedia
     ];
 
     /**
-     * {@inheritdoc}
-     */
-    protected $with = ['media'];
-
-    /**
      * =====================================
      * Attributes
      * =====================================

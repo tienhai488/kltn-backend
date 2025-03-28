@@ -33,4 +33,14 @@ enum VolunteerStatus: int
             self::CANCELED => 'Hủy',
         };
     }
+
+    public function getLabelForExport(): string
+    {
+        return match ($this) {
+            self::PENDING => 'yellow',
+            self::COMPLETED => 'green',
+            self::INCOMPLETED => 'red',
+            self::CANCELED => 'gray',
+        };
+    }
 }

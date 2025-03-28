@@ -31,6 +31,17 @@
             {{ __('Quản lý quyên góp') }}
         </x-slot:boxTitle>
 
+        <x-slot:action>
+            <div class="layout-top-spacing mx-3 col-12">
+                <button type="button" id="exportButton" class="btn btn-success">
+                    {{ __('Xuất excel tất cả') }}
+                </button>
+                <button type="button" id="studentExportButton" class="btn btn-primary">
+                    {{ __('Xuất excel chỉ lấy sinh viên') }}
+                </button>
+            </div>
+        </x-slot:action>
+
         <x-table.datatable
             :id="'sDonationTable'"
             :menu-length="[7, 10, 50, 100, 500]"
@@ -186,6 +197,74 @@
     <!--  BEGIN CUSTOM SCRIPTS FILE  -->
     <x-slot:footerFiles>
         <script src="{{ asset('plugins/tomSelect/tom-select.base.js') }}"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                $('#exportButton').on('click', function() {
+                    const userId = $('#user_id').val() || null;
+                    const projectId = $('#project_id').val() || null;
+                    const departmentId = $('#department_id').val() || null;
+                    const isAnonymous = $('#is_anonymous').val() || null;
+
+                    let exportUrl = "{{ route('admin.donation.export') }}";
+                    const params = new URLSearchParams();
+
+                    if (userId) params.append('user_id', userId);
+                    if (projectId) params.append('project_id', projectId);
+                    if (departmentId) params.append('department_id', departmentId);
+                    if (isAnonymous) params.append('is_anonymous', isAnonymous);
+                    params.append('limit', 9999);
+
+                    const queryString = params.toString();
+                    if (queryString) {
+                        exportUrl += '?' + queryString;
+                    }
+
+                    window.open(exportUrl, '_blank');
+                });
+
+                $('#studentExportButton').on('click', function() {
+                    const userId = $('#user_id').val() || null;
+                    const projectId = $('#project_id').val() || null;
+                    const departmentId = $('#department_id').val() || null;
+                    const isAnonymous = $('#is_anonymous').val() || null;
+
+                    let exportUrl = "{{ route('admin.donation.export') }}";
+                    const params = new URLSearchParams();
+
+                    if (userId) params.append('user_id', userId);
+                    if (projectId) params.append('project_id', projectId);
+                    if (departmentId) params.append('department_id', departmentId);
+                    if (isAnonymous) params.append('is_anonymous', isAnonymous);
+                    params.append('is_student', true);
+                    params.append('limit', 9999);
+
+                    const queryString = params.toString();
+                    if (queryString) {
+                        exportUrl += '?' + queryString;
+                    }
+
+                    window.open(exportUrl, '_blank');
+                });
+
+                $('#project_id').on('change', function() {
+                    if ($(this).val()) {
+                        $('#exportButton').removeClass('d-none').prop('disabled', false);
+                        $('#studentExportButton').removeClass('d-none').prop('disabled', false);
+                    } else {
+                        $('#exportButton').addClass('d-none').prop('disabled', true);
+                        $('#studentExportButton').addClass('d-none').prop('disabled', true);
+                    }
+                });
+
+                if ($('#project_id').val()) {
+                    $('#exportButton').removeClass('d-none').prop('disabled', false);
+                    $('#studentExportButton').removeClass('d-none').prop('disabled', false);
+                } else {
+                    $('#exportButton').addClass('d-none').prop('disabled', true);
+                    $('#studentExportButton').addClass('d-none').prop('disabled', true);
+                }
+            });
+        </script>
     </x-slot:footerFiles>
     <!--  END CUSTOM SCRIPTS FILE  -->
 </x-base-layout>
