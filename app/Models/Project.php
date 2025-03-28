@@ -123,14 +123,6 @@ class Project extends Model implements HasMedia
      */
 
     /**
-     * {@inheritdoc}
-     */
-    public function media(): MorphMany
-    {
-        return $this->morphMany(config('media-library.media_model'), 'model');
-    }
-
-    /**
      * Get the category associated with the project.
      *
      * @return BelongsTo

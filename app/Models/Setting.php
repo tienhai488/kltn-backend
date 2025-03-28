@@ -23,8 +23,6 @@ class Setting extends Model implements HasMedia
         'status',
     ];
 
-    protected $with = ['media'];
-
     /**
      * The attributes that should be cast.
      *
