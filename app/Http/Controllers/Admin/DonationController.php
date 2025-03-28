@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Acl\Acl;
+use App\Exports\DonationExport;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\Donation\ExportDonationResource;
 use App\Http\Resources\Admin\DonationResource;
 use App\Models\Donation;
 use App\Repositories\Department\DepartmentRepositoryInterface;
@@ -38,6 +40,16 @@ class DonationController extends Controller
         $departments = $this->departmentRepository->all();
 
         return view('admin.donation.index', compact('users', 'projects', 'departments'));
+    }
+
+    /**
+     * Export a list of donations to Excel file.
+     */
+    public function export(Request $request)
+    {
+        $donations = $this->donationRepository->serverPaginationFilteringForAdmin($request->all());
+
+        return new DonationExport(ExportDonationResource::collection($donations)->resolve());
     }
 
     /**

@@ -11,6 +11,8 @@ use App\Repositories\Project\ProjectRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Volunteer\VolunteerRepositoryInterface;
 use Illuminate\Http\Request;
+use App\Exports\VolunteerExport;
+use App\Http\Resources\Admin\Volunteer\ExportVolunteerResource;
 
 class VolunteerController extends Controller
 {
@@ -38,6 +40,16 @@ class VolunteerController extends Controller
         $departments = $this->departmentRepository->all();
 
         return view('admin.volunteer.index', compact('users', 'projects', 'departments'));
+    }
+
+    /**
+     * Export a list of volunteers to Excel file.
+     */
+    public function export(Request $request)
+    {
+        $volunteers = $this->volunteerRepository->serverPaginationFilteringForAdmin($request->all());
+
+        return new VolunteerExport(ExportVolunteerResource::collection($volunteers)->resolve());
     }
 
     /**

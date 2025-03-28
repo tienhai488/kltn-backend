@@ -14,6 +14,12 @@
         'resources/scss/dark/plugins/sweetalerts2/custom-sweetalert.scss',
     ])
     {{ isset($customStyle) ? $customStyle : '' }}
+
+    <style>
+        .pagination .paginate_button a {
+            width: fit-content;
+        }
+    </style>
 @endpush
 
 @if(isset($tableFilter))

@@ -54,6 +54,7 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
         $departmentId = Arr::get($searchParams, 'department_id', null);
         $status = Arr::get($searchParams, 'status', null);
         $projectsBelongToUserId = Arr::get($searchParams, 'projects_belong_to_user_id', null);
+        $isStudent = Arr::get($searchParams, 'is_student', null);
 
         $query = $this->model->query()->with(['user', 'project', 'department']);
 
@@ -101,6 +102,10 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
             $query->whereHas('project', function ($query) use ($projectsBelongToUserId) {
                 $query->where('user_id', $projectsBelongToUserId);
             });
+        }
+
+        if (! is_null($isStudent)) {
+            $query->whereNotNull('student_code')->whereNot('student_code', '');
         }
 
         return $query;
