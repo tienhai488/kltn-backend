@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\ActiveStatus;
 use App\Enum\AnonymousStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,11 +16,12 @@ class Donation extends Model
      * {@inheritdoc}
      */
     protected $fillable = [
+        'code',
+        'status',
         'user_id',
         'project_id',
         'account_number',
         'account_name',
-        'code',
         'name',
         'email',
         'phone_number',
@@ -35,6 +37,7 @@ class Donation extends Model
      * {@inheritdoc}
      */
     protected $casts = [
+        'status' => ActiveStatus::class,
         'is_anonymous' => AnonymousStatus::class,
     ];
 
