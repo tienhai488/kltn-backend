@@ -167,7 +167,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             if (isset($data['user_avatar']) && $data['user_avatar']) {
                 $file = json_decode($data['user_avatar'], true);
                 $user->addMediaFromBase64($file['data'])
-                    ->usingFileName($file['name'])
+                    ->usingFileName(uniqid('user-') . '.jpg')
                     ->toMediaCollection(UserAvatar::COLLECTION->value);
             }
 
@@ -198,7 +198,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             if (isset($data['user_avatar']) && $data['user_avatar']) {
                 $file = json_decode($data['user_avatar'], true);
                 $model->addMediaFromBase64($file['data'])
-                    ->usingFileName($file['name'])
+                    ->usingFileName(uniqid('user-') . '.jpg')
                     ->toMediaCollection(UserAvatar::COLLECTION->value);
             }
 
@@ -301,7 +301,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
             $model->clearMediaCollection(User::USER_AVATAR_COLLECTION);
             $model->addMediaFromBase64($data['base64'])
-                ->usingFileName($data['name'])
+                ->usingFileName(uniqid('user-') . '.jpg')
                 ->toMediaCollection(User::USER_AVATAR_COLLECTION);
 
             DB::commit();

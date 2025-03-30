@@ -87,7 +87,7 @@ class SettingRepository extends BaseRepository implements SettingRepositoryInter
             if (isset($data) && $data) {
                 $file = json_decode($data, true);
                 $model->addMediaFromBase64($file['data'])
-                    ->usingFileName($file['name'])
+                    ->usingFileName(uniqid('setting-') . '.jpg')
                     ->toMediaCollection($collection);
             }
 
@@ -116,7 +116,7 @@ class SettingRepository extends BaseRepository implements SettingRepositoryInter
                         $fullPath = storage_path('app/public/' . json_decode($path, true));
                         if (file_exists($fullPath)) {
                             $model->addMedia($fullPath)
-                                ->usingFileName(uniqid() . '.jpg')
+                                ->usingFileName(uniqid('setting-') . '.jpg')
                                 ->toMediaCollection($collection);
                         }
                     }
