@@ -161,21 +161,21 @@ class VerticalMenu extends Component
                 'url' => '',
                 'icon' => 'user-plus',
                 'active' => Route::is([
-                    'admin.individual_account_request.*',
-                    'admin.organization_account_request.*',
+                    'admin.account_request.organization.*',
+                    'admin.account_request.individual.*',
                 ]),
                 'show' => checkPermissions([Acl::PERMISSION_ACCOUNT_REQUEST_LIST]),
                 'child' => [
                     [
                         'title' => __('Tổ chức'),
-                        'url' => route('admin.organization_account_request.index'),
-                        'active' => Route::is(['admin.organization_account_request.*']),
+                        'url' => route('admin.account_request.organization.index'),
+                        'active' => Route::is(['admin.account_request.organization.*']),
                         'show' => checkPermissions([Acl::PERMISSION_ACCOUNT_REQUEST_LIST]),
                     ],
                     [
                         'title' => __('Cá nhân'),
-                        'url' => route('admin.individual_account_request.index'),
-                        'active' => Route::is(['admin.individual_account_request.*']),
+                        'url' => route('admin.account_request.individual.index'),
+                        'active' => Route::is(['admin.account_request.individual.*']),
                         'show' => checkPermissions([Acl::PERMISSION_ACCOUNT_REQUEST_LIST]),
                     ],
                 ],

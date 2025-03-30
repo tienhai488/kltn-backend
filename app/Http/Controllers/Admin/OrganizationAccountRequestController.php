@@ -39,7 +39,7 @@ class OrganizationAccountRequestController extends Controller
         $organizationAccountRequest = $this->organizationAccountRequestRepository->find($request->id);
 
         if (!$organizationAccountRequest) {
-            return to_route('admin.organization_account_request.index');
+            return to_route('admin.account_request.organization.index');
         }
 
         return to_route('admin.user.create')->with([
@@ -63,9 +63,9 @@ class OrganizationAccountRequestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(OrganizationAccountRequest $organizationAccountRequest)
+    public function show(OrganizationAccountRequest $organization)
     {
-        return view('admin.organization_account_request.show', compact('organizationAccountRequest'));
+        return view('admin.organization_account_request.show', compact('organization'));
     }
 
     /**

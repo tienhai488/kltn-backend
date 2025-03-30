@@ -53,7 +53,7 @@
                 "serverSide": true,
                 "ordering": false,
                 "ajax": {
-                "url": "{{ route('admin.organization_account_request.index') }}",
+                "url": "{{ route('admin.account_request.organization.index') }}",
                     "data": function(d) {
                         let searchParams = new URLSearchParams(window.location.search);
                         drawDT = d.draw;
@@ -114,8 +114,8 @@
                         "class": "text-center no-content",
                         "orderable": false,
                         "render": function (data, type, full) {
-                            let urlCreate = `{{ route('admin.organization_account_request.create') }}?id=:id`.replace(':id', data);
-                            let urlShow = `{{ route('admin.organization_account_request.show', ':id') }}`.replace(':id', data);
+                            let urlCreate = `{{ route('admin.account_request.organization.create') }}?id=:id`.replace(':id', data);
+                            let urlShow = `{{ route('admin.account_request.organization.show', ':id') }}`.replace(':id', data);
 
                             return `
                                 <ul class="table-controls d-flex justify-content-center">

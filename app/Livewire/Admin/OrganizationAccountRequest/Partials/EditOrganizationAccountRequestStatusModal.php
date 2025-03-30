@@ -53,7 +53,7 @@ class EditOrganizationAccountRequestStatusModal extends Component
             session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chỉnh sửa trạng thái yêu cầu tài khoản tổ chức thành công.'))
             : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Chỉnh sửa trạng thái yêu cầu tài khoản tổ chức thất bại.'));
 
-        return to_route('admin.organization_account_request.show', $this->organizationAccountRequest);
+        return to_route('admin.account_request.organization.show', $this->organizationAccountRequest);
     }
 
     public function render()
