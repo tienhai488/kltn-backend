@@ -77,16 +77,44 @@ class OrganizationAccountRequestRepository extends BaseRepository implements Org
     /**
      * {@inheritdoc}
      */
+    public function create($data)
+    {
+        try {
+            DB::beginTransaction();
+
+            $model = $this->model->create($data);
+
+            if (!empty($data['related_images'])) {
+                foreach ($data['related_images'] as $image) {
+                    $model->addMediaFromBase64($image['base64'])
+                        ->usingFileName(uniqid('organization-account-request-') . '.jpg')
+                        ->toMediaCollection(OrganizationAccountRequest::RELATED_IMAGES);
+                }
+            }
+
+            DB::commit();
+
+            return $model;
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function update($model, $data)
     {
         try {
             DB::beginTransaction();
 
-            $organizationAccountRequest = $model->update($data);
+            $model->update($data);
 
             DB::commit();
 
-            return $organizationAccountRequest;
+            return $model;
         } catch (\Exception $e) {
             DB::rollBack();
 

@@ -76,16 +76,44 @@ class IndividualAccountRequestRepository extends BaseRepository implements Indiv
     /**
      * {@inheritdoc}
      */
+    public function create($data)
+    {
+        try {
+            DB::beginTransaction();
+
+            $model = $this->model->create($data);
+
+            if (!empty($data['related_images'])) {
+                foreach ($data['related_images'] as $image) {
+                    $model->addMediaFromBase64($image['base64'])
+                        ->usingFileName(uniqid('individual-account-request-') . '.jpg')
+                        ->toMediaCollection(IndividualAccountRequest::RELATED_IMAGES);
+                }
+            }
+
+            DB::commit();
+
+            return $model;
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function update($model, $data)
     {
         try {
             DB::beginTransaction();
 
-            $individualAccountRequest = $model->update($data);
+            $model->update($data);
 
             DB::commit();
 
-            return $individualAccountRequest;
+            return $model;
         } catch (\Exception $e) {
             DB::rollBack();
 
