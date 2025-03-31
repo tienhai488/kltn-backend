@@ -14,6 +14,8 @@ use App\Repositories\IndividualAccountRequest\IndividualAccountRequestRepository
 use App\Repositories\IndividualAccountRequest\IndividualAccountRequestRepositoryInterface;
 use App\Repositories\OrganizationAccountRequest\OrganizationAccountRequestRepository;
 use App\Repositories\OrganizationAccountRequest\OrganizationAccountRequestRepositoryInterface;
+use App\Repositories\PaymentMethod\PaymentMethodRepository;
+use App\Repositories\PaymentMethod\PaymentMethodRepositoryInterface;
 use App\Repositories\Permission\PermissionRepository;
 use App\Repositories\Permission\PermissionRepositoryInterface;
 use App\Repositories\Project\ProjectRepository;
@@ -47,5 +49,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->singleton(DonationRepositoryInterface::class, DonationRepository::class);
         $this->app->singleton(VolunteerRepositoryInterface::class, VolunteerRepository::class);
         $this->app->singleton(SettingRepositoryInterface::class, SettingRepository::class);
+        $this->app->singleton(PaymentMethodRepositoryInterface::class, PaymentMethodRepository::class);
     }
 }

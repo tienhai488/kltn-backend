@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enum\ActiveStatus;
 use App\Enum\AnonymousStatus;
+use App\Enum\PaymentStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,7 +38,7 @@ class Donation extends Model
      * {@inheritdoc}
      */
     protected $casts = [
-        'status' => ActiveStatus::class,
+        'status' => PaymentStatus::class,
         'is_anonymous' => AnonymousStatus::class,
     ];
 

@@ -216,6 +216,16 @@ class VerticalMenu extends Component
                     //
                 ],
             ],
+            [
+                'title' => __('Phương thức thanh toán'),
+                'url' => route('admin.payment_method.index'),
+                'icon' => 'dollar-sign',
+                'active' => Route::is(['admin.payment_method.*']),
+                'show' => checkPermissions([Acl::PERMISSION_PAYMENT_METHOD_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
         ]);
     }
 
