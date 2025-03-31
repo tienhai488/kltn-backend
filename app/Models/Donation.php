@@ -5,13 +5,14 @@ namespace App\Models;
 use App\Enum\ActiveStatus;
 use App\Enum\AnonymousStatus;
 use App\Enum\PaymentStatus;
+use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Donation extends Model
 {
-    use HasFactory;
+    use HasFactory, Loggable;
 
     /**
      * {@inheritdoc}

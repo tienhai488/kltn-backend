@@ -51,7 +51,7 @@
             <x-slot:tableHeader>
                 <tr>
                     <th class="text-center">No.</th>
-                    <th>{{ __('Người dùng') }}</th>
+                    <th>{{ __('Người tạo') }}</th>
                     <th>{{ __('Dự án') }}</th>
                     <th>{{ __('T/t chuyển khoản') }}</th>
                     <th>{{ __('T/t người chuyển') }}</th>
@@ -124,6 +124,10 @@
                                 <div class="d-flex">
                                     <p class="text-start me-1">{{ __('Thời gian') }}:</p>
                                     <p class="text-primary">${full.created_at}</p>
+                                </div>
+                                <div class="d-flex align-items-end">
+                                    <p class="text-start me-1">{{ __('Trạng thái') }}:</p>
+                                    <p class="text-primary"><span class="badge badge-${full.status_badge}">${full.status_label}</span></p>
                                 </div>
                             `;
                         }

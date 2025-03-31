@@ -33,6 +33,9 @@ class DonationResource extends JsonResource
             'student_code' => $this->student_code,
             'class' => $this->class,
             'created_at' => customFormatDate($this->created_at),
+            'status' => $this->status,
+            'status_label' => $this->status->getLabel(),
+            'status_badge' => $this->status->getBadge(),
         ];
     }
 }

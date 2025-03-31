@@ -18,6 +18,8 @@ interface DonationRepositoryInterface extends RepositoryInterface
      */
     public function serverPaginationFilteringForAdmin(array $searchParams): LengthAwarePaginator;
 
+    public function serverPaginationFilteringForStatistic(array $searchParams): LengthAwarePaginator;
+
     /**
      * Calculate the total amount of all donations.
      */

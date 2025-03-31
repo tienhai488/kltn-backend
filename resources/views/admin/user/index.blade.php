@@ -128,8 +128,8 @@
                         "class": "text-center no-content",
                         "orderable": false,
                         "render": function (data, type, full) {
+                            let urlShow = `{{ route('admin.user.show', ':id') }}`.replace(':id', data);
                             let urlEdit = `{{ route('admin.user.edit', ':id') }}`.replace(':id', data);
-                            let urlDestroy = `{{ route('admin.user.destroy', ':id') }}`.replace(':id', data);
                             let urlToggleStatus = `{{ route('admin.user.toggle_status', ':id') }}`.replace(':id', data);
 
                             if (full.is_super_admin) {
@@ -149,8 +149,23 @@
                             let icon = full.is_locked ? '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-unlock p-1 br-6 mb-1"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>'
                             : '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-lock p-1 br-6 mb-1"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
 
+                            let show = @json(App\Enum\UserType::ADMIN->value) != full.type ? `
+                                <li>
+                                    <a
+                                        class="bs-tooltip"
+                                        href="${urlShow}"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title="{{ __('Xem chi tiết') }}"
+                                        data-bs-original-title="{{ __('Xem chi tiết') }}"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart p-1 br-6 mb-1"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+                                    </a>
+                                </li>` : '';
+
                             return `
                                 <ul class="table-controls d-flex justify-content-center">
+                                    ${show}
                                     <x-table.actions.edit-action
                                         :permission="Acl::PERMISSION_USER_EDIT"
                                         :url="'${urlEdit}'"
@@ -171,11 +186,6 @@
                                             </a>
                                         </li>
                                     @endcan
-                                    {{-- <x-table.actions.delete-action
-                                        :permission="Acl::PERMISSION_USER_DELETE"
-                                        :url="'${urlDestroy}'"
-                                        dataTableId="#sUserTable"
-                                    /> --}}
                                 </ul>`;
                             }
                     },

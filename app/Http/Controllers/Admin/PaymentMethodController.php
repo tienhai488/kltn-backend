@@ -77,7 +77,7 @@ class PaymentMethodController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chỉnh sửa phương thức thanh toán thành công.'));
+        session()->flash(NotificationType::SUCCESS->value, __('Chỉnh sửa phương thức thanh toán thành công.'));
         return response()->json([
             'message' => __('Chỉnh sửa phương thức thanh toán thành công.'),
         ], Response::HTTP_OK);

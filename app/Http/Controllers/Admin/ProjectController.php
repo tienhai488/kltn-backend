@@ -66,8 +66,8 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request)
     {
         $this->projectRepository->create($request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Thêm mới dự án thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Thêm mới dự án thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Thêm mới dự án thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Thêm mới dự án thất bại.'));
 
         return to_route('admin.project.index');
     }
@@ -110,8 +110,8 @@ class ProjectController extends Controller
     {
         // return $request->related_images;
         $this->projectRepository->update($project, $request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chỉnh sửa dự án thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Chỉnh sửa dự án thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Chỉnh sửa dự án thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Chỉnh sửa dự án thất bại.'));
 
         return to_route('admin.project.index');
     }

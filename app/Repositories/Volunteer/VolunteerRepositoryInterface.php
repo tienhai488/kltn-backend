@@ -17,4 +17,6 @@ interface VolunteerRepositoryInterface extends RepositoryInterface
      * @return LengthAwarePaginator
      */
     public function serverPaginationFilteringForAdmin(array $searchParams): LengthAwarePaginator;
+
+    public function serverPaginationFilteringForStatistic(array $searchParams): LengthAwarePaginator;
 }

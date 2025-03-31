@@ -42,7 +42,7 @@ class VerticalMenu extends Component
         $this->menuItems = array_merge($this->menuItems, [
             [
                 'title' => __('Dashboard'),
-                'url' => route('admin.dashboard'),
+                'url' => route('admin.dashboard.index'),
                 'icon' => 'home',
                 'active' => Route::is(['admin.dashboard']),
                 'show' => checkPermissions([Acl::PERMISSION_VIEW_MENU_DASHBOARD]),

@@ -54,8 +54,8 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         $this->categoryRepository->create($request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Thêm mới danh mục thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Thêm mới danh mục thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Thêm mới danh mục thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Thêm mới danh mục thất bại.'));
 
         return to_route('admin.category.index');
     }
@@ -84,8 +84,8 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $request, Category $category)
     {
         $this->categoryRepository->update($category, $request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chỉnh sửa danh mục thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Chỉnh sửa danh mục thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Chỉnh sửa danh mục thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Chỉnh sửa danh mục thất bại.'));
 
         return to_route('admin.category.index');
     }
