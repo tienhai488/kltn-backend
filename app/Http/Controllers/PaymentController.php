@@ -38,8 +38,8 @@ class PaymentController extends Controller
 
         // Chuẩn bị dữ liệu cho VNPay
         $paymentData = [
-            'donation_id' => '10011',
-            'amount' => 100000,
+            'donation_id' => '9982',
+            'amount' => 2000,
             'order_desc' => $request->order_desc ?? 'Thanh toán đơn hàng',
             'order_type' => $request->order_type ?? 'other',
             'bank_code' => $request->bank_code, // Chọn phương thức thanh toán
@@ -147,7 +147,7 @@ class PaymentController extends Controller
         // ]);
 
         try {
-            $donation = Donation::findOrFail(10011);
+            $donation = Donation::findOrFail(9982);
 
             return response()->json([
                 'success' => true,
