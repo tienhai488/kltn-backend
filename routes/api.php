@@ -50,4 +50,5 @@ Route::prefix('v1')
             Route::get('/return', [App\Http\Controllers\MomoPaymentController::class, 'handleReturn'])->name('api.momo.return');
             Route::post('/ipn', [App\Http\Controllers\MomoPaymentController::class, 'handleIpn']);
         });
+        include('v1/api/account_request.php');
     });

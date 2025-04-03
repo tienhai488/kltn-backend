@@ -334,7 +334,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
 
             $backgroundImage = json_decode($data['background_image'], true);
             $project->addMediaFromBase64($backgroundImage['data'])
-                ->usingFileName($backgroundImage['name'])
+                ->usingFileName(uniqid('project-') . '.jpg')
                 ->toMediaCollection(Project::PROJECT_BACKGROUND_IMAGE);
 
             if (!empty($data['images'])) {
@@ -343,7 +343,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
                         $fullPath = storage_path('app/public/' . json_decode($path, true));
                         if (file_exists($fullPath)) {
                             $project->addMedia($fullPath)
-                                ->usingFileName(uniqid() . '.jpg')
+                                ->usingFileName(uniqid('project-') . '.jpg')
                                 ->toMediaCollection(Project::PROJECT_RELATED_IMAGES);
                         }
                     }
@@ -374,7 +374,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
             $model->clearMediaCollection(Project::PROJECT_BACKGROUND_IMAGE);
             $backgroundImage = json_decode($data['background_image'], true);
             $model->addMediaFromBase64($backgroundImage['data'])
-                ->usingFileName($backgroundImage['name'])
+                ->usingFileName(uniqid('project-') . '.jpg')
                 ->toMediaCollection(Project::PROJECT_BACKGROUND_IMAGE);
 
             $model->clearMediaCollection(Project::PROJECT_RELATED_IMAGES);
@@ -384,7 +384,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
                         $fullPath = storage_path('app/public/' . json_decode($path, true));
                         if (file_exists($fullPath)) {
                             $model->addMedia($fullPath)
-                                ->usingFileName(uniqid() . '.jpg')
+                                ->usingFileName(uniqid('project-') . '.jpg')
                                 ->toMediaCollection(Project::PROJECT_RELATED_IMAGES);
                         }
                     }

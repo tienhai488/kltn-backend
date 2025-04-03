@@ -85,7 +85,7 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
                 $file = json_decode($data['department_thumbnail'], true);
 
                 $department->addMediaFromBase64($file['data'])
-                    ->usingFileName($file['name'])
+                    ->usingFileName(uniqid('department-') . '.jpg')
                     ->toMediaCollection(Department::DEPARTMENT_THUMBNAIL_COLLECTION);
             }
 
@@ -114,7 +114,7 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
             if (isset($data['department_thumbnail']) && $data['department_thumbnail']) {
                 $file = json_decode($data['department_thumbnail'], true);
                 $model->addMediaFromBase64($file['data'])
-                    ->usingFileName($file['name'])
+                    ->usingFileName(uniqid('department-') . '.jpg')
                     ->toMediaCollection(Department::DEPARTMENT_THUMBNAIL_COLLECTION);
             }
 
