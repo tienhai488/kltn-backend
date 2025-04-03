@@ -119,7 +119,7 @@
                                                                 <div class="col-xl-10 col-lg-12 col-md-8 mt-md-0 mt-4">
                                                                     <div class="form">
                                                                         <div class="row">
-                                                                            <div class="col-md-12">
+                                                                            <div class="col-md-6">
                                                                                 <x-form.form-input
                                                                                     :id="'name'"
                                                                                     :isRequired="'true'"
@@ -129,9 +129,17 @@
                                                                                     :value="auth()->user()->name"
                                                                                 />
                                                                             </div>
+                                                                            <div class="col-md-6">
+                                                                                <x-form.form-input
+                                                                                    :id="'username'"
+                                                                                    :label="__('Tên tài khoản ')"
+                                                                                    :name="'username'"
+                                                                                    :placeholder="__('Tên tài khoản ')"
+                                                                                    :value="auth()->user()->username"
+                                                                                    :readonly="true"
+                                                                                />
+                                                                            </div>
                                                                         </div>
-
-                                                                        <input type="hidden" name="username" value="{{ auth()->user()->username }}">
 
                                                                         <div class="row">
                                                                             <div class="col-md-6">

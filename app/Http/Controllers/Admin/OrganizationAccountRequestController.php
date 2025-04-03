@@ -47,6 +47,7 @@ class OrganizationAccountRequestController extends Controller
             'username' => $organizationAccountRequest->username,
             'email' => $organizationAccountRequest->representative_email,
             'phone_number' => $organizationAccountRequest->representative_phone_number,
+            'birth_of_date' => $organizationAccountRequest->birth,
             'address' => $organizationAccountRequest->address,
             'role' => Acl::ROLE_ORGANIZATION,
         ]);
