@@ -7,7 +7,7 @@ use App\Repositories\Volunteer\VolunteerRepositoryInterface;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class WidgetVolunteersCount extends Component
+class WidgetVolunteersProjectsCount extends Component
 {
     protected $volunteerRepository;
     public $search;
@@ -22,7 +22,7 @@ class WidgetVolunteersCount extends Component
     public $fromDate;
     public $toDate;
     public $donationPriceRange;
-    public $volunteersCount;
+    public $volunteersProjectsCount;
     public $loaded = false;
 
     #[On('initFilter')]
@@ -57,7 +57,7 @@ class WidgetVolunteersCount extends Component
             'to_date' => $this->toDate,
             'donation_price_range' => $this->donationPriceRange,
         ];
-        $this->volunteersCount = $this->volunteerRepository->getVolunteerData($conditions)->count();
+        $this->volunteersProjectsCount = $this->volunteerRepository->getVolunteerData($conditions)->unique('project_id')->count();
     }
 
     #[On('filterDataForStatistic')]
@@ -98,6 +98,6 @@ class WidgetVolunteersCount extends Component
 
     public function render()
     {
-        return view('livewire.admin.user.partials.widget-volunteers-count');
+        return view('livewire.admin.user.partials.widget-volunteers-projects-count');
     }
 }

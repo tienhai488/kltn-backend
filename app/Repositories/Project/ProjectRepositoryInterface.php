@@ -27,6 +27,13 @@ interface ProjectRepositoryInterface extends RepositoryInterface
      */
     public function serverPaginationFilteringForApi(array $searchParams): LengthAwarePaginator;
 
+
+    /**
+     * Paginating, ordering and searching through pages for server side index table for the Statistic.
+     *
+     * @param $searchParams
+     * @return LengthAwarePaginator
+     */
     public function serverPaginationFilteringForStatistic(array $searchParams): LengthAwarePaginator;
 
     /**
@@ -38,5 +45,11 @@ interface ProjectRepositoryInterface extends RepositoryInterface
      */
     public function updateStatus(Project $project, $status): Project|bool;
 
+    /**
+     * Get all projects according to the given conditions.
+     *
+     * @param array $conditions
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function getProjectData(array $conditions);
 }

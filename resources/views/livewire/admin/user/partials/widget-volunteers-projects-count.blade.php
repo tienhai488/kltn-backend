@@ -24,8 +24,8 @@
                     </svg>
                 </div>
                 <div wire:loading.remove>
-                    <p class="w-value">{{ $donationsCount }}</p>
-                    <h5>{{ __('Số lượt quyên góp') }}</h5>
+                    <p class="w-value">{{ $volunteersProjectsCount }}</p>
+                    <h5>{{ __('Số dự án đã tham gia tình nguyện') }}</h5>
                 </div>
             @else
             <div>

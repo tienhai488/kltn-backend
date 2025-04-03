@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Donation;
 
+use App\Enum\PaymentStatus;
 use App\Enum\PriceRangeFilter;
 use App\Models\Donation;
 use App\Repositories\BaseRepository;
@@ -155,6 +156,7 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
     {
         $keyword = Arr::get($searchParams, 'search', '');
         $userId = Arr::get($searchParams, 'user_id', null);
+        $belongToUserId = Arr::get($searchParams, 'belong_to_user_id', null);
         $projectCategoryId = Arr::get($searchParams, 'project_category_id', null);
         $projectId = Arr::get($searchParams, 'project_id', null);
         $projectType = Arr::get($searchParams, 'project_type', null);
@@ -192,6 +194,10 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
             $query->whereHas('project', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             });
+        }
+
+        if (! is_null($belongToUserId)) {
+            $query->where('user_id', $belongToUserId);
         }
 
         if (! is_null($projectCategoryId)) {
@@ -266,8 +272,16 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
     /**
      * {@inheritdoc}
      */
+    public function getDonationData(array $conditions)
+    {
+        return $this->filterForStatistic($conditions)->get();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function sumAmount()
     {
-        return $this->model->sum('amount');
+        return $this->model->where('status', PaymentStatus::PAID->value)->sum('amount');
     }
 }

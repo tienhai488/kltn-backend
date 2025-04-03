@@ -2,14 +2,14 @@
 
 namespace App\Livewire\Admin\User\Partials;
 
-use App\Enum\VolunteerStatus;
-use App\Repositories\Volunteer\VolunteerRepositoryInterface;
+use App\Enum\PaymentStatus;
+use App\Repositories\Donation\DonationRepositoryInterface;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class WidgetVolunteersCount extends Component
+class WidgetDonationsProjectsCount extends Component
 {
-    protected $volunteerRepository;
+    protected $donationRepository;
     public $search;
     public $belongToUserId;
     public $projectCategoryId;
@@ -22,14 +22,14 @@ class WidgetVolunteersCount extends Component
     public $fromDate;
     public $toDate;
     public $donationPriceRange;
-    public $volunteersCount;
+    public $donationsProjectsCount;
     public $loaded = false;
 
     #[On('initFilter')]
     public function boot(
-        VolunteerRepositoryInterface $volunteerRepository,
+        DonationRepositoryInterface $donationRepository,
     ) {
-        $this->volunteerRepository = $volunteerRepository;
+        $this->donationRepository = $donationRepository;
     }
 
     public function mount()
@@ -50,14 +50,14 @@ class WidgetVolunteersCount extends Component
             'project_type' => $this->projectType,
             'project_status' => $this->projectStatus,
             'donation_volunteer_user_id' => $this->donationVolunteerUserId,
-            'donation_status' => $this->donationStatus,
+            'donation_status' => PaymentStatus::PAID->value,
             'volunteer_status' => $this->volunteerStatus,
-            'volunteer_without_status' => VolunteerStatus::CANCELED->value,
             'from_date' => $this->fromDate,
             'to_date' => $this->toDate,
             'donation_price_range' => $this->donationPriceRange,
         ];
-        $this->volunteersCount = $this->volunteerRepository->getVolunteerData($conditions)->count();
+
+        $this->donationsProjectsCount = $this->donationRepository->getDonationData($conditions)->unique('project_id')->count();
     }
 
     #[On('filterDataForStatistic')]
@@ -98,6 +98,6 @@ class WidgetVolunteersCount extends Component
 
     public function render()
     {
-        return view('livewire.admin.user.partials.widget-volunteers-count');
+        return view('livewire.admin.user.partials.widget-donations-projects-count');
     }
 }

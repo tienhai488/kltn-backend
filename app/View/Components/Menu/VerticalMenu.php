@@ -64,7 +64,7 @@ class VerticalMenu extends Component
                 'active' => Route::is([
                     'admin.setting.*',
                 ]),
-                'show' => checkPermissions([Acl::PERMISSION_SETTING_POLICY, Acl::PERMISSION_SETTING_TERMS]),
+                'show' => checkPermissions([Acl::PERMISSION_SETTING_POLICY, Acl::PERMISSION_SETTING_TERMS, Acl::PERMISSION_SETTING_GENERAL]),
                 'child' => [
                     [
                         'title' => __('Chính sách'),

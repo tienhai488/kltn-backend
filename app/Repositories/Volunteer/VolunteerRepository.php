@@ -51,6 +51,7 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
         $search = Arr::get($searchParams, 'search', '');
         $keyword = Arr::get($searchParams, 'keyword', '');
         $userId = Arr::get($searchParams, 'user_id', null);
+        $belongToUserId = Arr::get($searchParams, 'belong_to_user_id', null);
         $projectId = Arr::get($searchParams, 'project_id', null);
         $departmentId = Arr::get($searchParams, 'department_id', null);
         $status = Arr::get($searchParams, 'status', null);
@@ -94,6 +95,10 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
 
         if (! is_null($userId)) {
             $query->where('user_id', $userId);
+        }
+
+        if (! is_null($belongToUserId)) {
+            $query->where('user_id', $belongToUserId);
         }
 
         if (! is_null($projectId)) {
@@ -146,6 +151,7 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
     {
         $keyword = Arr::get($searchParams, 'search', '');
         $userId = Arr::get($searchParams, 'user_id', null);
+        $belongToUserId = Arr::get($searchParams, 'belong_to_user_id', null);
         $projectCategoryId = Arr::get($searchParams, 'project_category_id', null);
         $projectId = Arr::get($searchParams, 'project_id', null);
         $projectType = Arr::get($searchParams, 'project_type', null);
@@ -153,6 +159,7 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
         $donationVolunteerUserId = Arr::get($searchParams, 'donation_volunteer_user_id', null);
         $donationStatus = Arr::get($searchParams, 'donation_status', null);
         $volunteerStatus = Arr::get($searchParams, 'volunteer_status', null);
+        $volunteerWithoutStatus = Arr::get($searchParams, 'volunteer_without_status', null);
         $fromDate = Arr::get($searchParams, 'from_date', null);
         $toDate = Arr::get($searchParams, 'to_date', null);
         $donationPriceRange = Arr::get($searchParams, 'donation_price_range', null);
@@ -183,6 +190,10 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
             $query->whereHas('project', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             });
+        }
+
+        if (! is_null($belongToUserId)) {
+            $query->where('user_id', $belongToUserId);
         }
 
         if (! is_null($projectCategoryId)) {
@@ -223,6 +234,10 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
             $query->where('status', $volunteerStatus);
         }
 
+        if (! is_null($volunteerWithoutStatus)) {
+            $query->where('status', '!=', $volunteerWithoutStatus);
+        }
+
         if (! is_null($fromDate)) {
             $query
                 ->whereDate('created_at', '>=', $fromDate)
@@ -256,6 +271,14 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
         }
 
         return $query;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getVolunteerData(array $conditions)
+    {
+        return $this->filterForStatistic($conditions)->get();
     }
 
     /**

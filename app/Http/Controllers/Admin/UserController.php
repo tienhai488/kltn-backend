@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Acl\Acl;
 use App\Enum\NotificationType;
+use App\Enum\UserType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\StoreUserRequest;
 use App\Http\Requests\Admin\User\UpdatePasswordRequest;
@@ -78,6 +79,13 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        if (!in_array(
+            $user->type,
+            [UserType::ORGANIZATION->value, UserType::INDIVIDUAL->value, UserType::USER->value],
+        )) {
+            abort(404);
+        }
+
         $user->load([
             'projects' => function ($query) {
                 $query->with('donations');
@@ -95,8 +103,10 @@ class UserController extends Controller
             ],
         ]);
 
+        $view = $user->type == UserType::USER->value ? 'admin.user.show.user' : 'admin.user.show.member';
+
         return view(
-            'admin.user.show.member',
+            $view,
             compact(
                 'user',
                 'users',

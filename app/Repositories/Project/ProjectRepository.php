@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * The repository for Project Model
@@ -201,6 +200,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
     {
         $keyword = Arr::get($searchParams, 'search', '');
         $userId = Arr::get($searchParams, 'user_id', null);
+        $belongToUserId = Arr::get($searchParams, 'belong_to_user_id', null);
         $projectCategoryId = Arr::get($searchParams, 'project_category_id', null);
         $projectId = Arr::get($searchParams, 'project_id', null);
         $projectType = Arr::get($searchParams, 'project_type', null);
@@ -234,6 +234,16 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
 
         if (! is_null($userId)) {
             $query->where('user_id', $userId);
+        }
+
+        if (! is_null($belongToUserId)) {
+            $query
+                ->whereHas('donations', function ($q) use ($belongToUserId) {
+                    $q->where('user_id', $belongToUserId);
+                })
+                ->orWhereHas('volunteers', function ($q) use ($belongToUserId) {
+                    $q->where('user_id', $belongToUserId);
+                });
         }
 
         if (! is_null($projectCategoryId)) {
@@ -303,6 +313,9 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         return $query;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getProjectData(array $conditions)
     {
         return $this->filterForStatistic($conditions)->get();
