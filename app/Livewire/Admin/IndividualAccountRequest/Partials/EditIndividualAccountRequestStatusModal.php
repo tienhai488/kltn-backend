@@ -50,8 +50,8 @@ class EditIndividualAccountRequestStatusModal extends Component
         $validated = $this->validate();
 
         $this->individualAccountRequestRepository->update($this->individualAccountRequest, $validated) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chỉnh sửa trạng thái yêu cầu tài khoản cá nhân thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Chỉnh sửa trạng thái yêu cầu tài khoản cá nhân thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Chỉnh sửa trạng thái yêu cầu tài khoản cá nhân thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Chỉnh sửa trạng thái yêu cầu tài khoản cá nhân thất bại.'));
 
         return to_route('admin.individual_account_request.show', $this->individualAccountRequest);
     }

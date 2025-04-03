@@ -13,7 +13,7 @@
             <p>
                 {{ config('app.name') }}
             </p>
-            <a href="{{ route('admin.dashboard') }}" style="color: gray; font-size: 16px; margin-top: 38px">
+            <a href="{{ route('admin.dashboard.index') }}" style="color: gray; font-size: 16px; margin-top: 38px">
                 Go to admin page
             </a>
         </div>

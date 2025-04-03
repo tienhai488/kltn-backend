@@ -9,6 +9,6 @@ enum NotificationType: string
 {
     use EnumOptions, EnumValues;
 
-    case NOTIFICATION_SUCCESS = 'success';
-    case NOTIFICATION_ERROR = 'error';
+    case SUCCESS = 'success';
+    case ERROR = 'error';
 }

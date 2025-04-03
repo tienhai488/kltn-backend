@@ -2,24 +2,28 @@
 
 namespace App\Models;
 
+use App\Enum\ActiveStatus;
 use App\Enum\AnonymousStatus;
+use App\Enum\PaymentStatus;
+use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Donation extends Model
 {
-    use HasFactory;
+    use HasFactory, Loggable;
 
     /**
      * {@inheritdoc}
      */
     protected $fillable = [
+        'code',
+        'status',
         'user_id',
         'project_id',
         'account_number',
         'account_name',
-        'code',
         'name',
         'email',
         'phone_number',
@@ -35,6 +39,7 @@ class Donation extends Model
      * {@inheritdoc}
      */
     protected $casts = [
+        'status' => PaymentStatus::class,
         'is_anonymous' => AnonymousStatus::class,
     ];
 

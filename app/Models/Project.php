@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\PaymentStatus;
 use App\Enum\ProjectFrontStatus;
 use App\Enum\ProjectStatus;
 use App\Enum\ProjectType;
@@ -150,6 +151,12 @@ class Project extends Model implements HasMedia
     public function donations(): HasMany
     {
         return $this->hasMany(Donation::class);
+    }
+
+    public function donations_with_paid(): HasMany
+    {
+        return $this->hasMany(Donation::class)
+            ->where('status', PaymentStatus::PAID->value);
     }
 
     /**

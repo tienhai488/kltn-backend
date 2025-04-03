@@ -42,7 +42,7 @@ class VerticalMenu extends Component
         $this->menuItems = array_merge($this->menuItems, [
             [
                 'title' => __('Dashboard'),
-                'url' => route('admin.dashboard'),
+                'url' => route('admin.dashboard.index'),
                 'icon' => 'home',
                 'active' => Route::is(['admin.dashboard']),
                 'show' => checkPermissions([Acl::PERMISSION_VIEW_MENU_DASHBOARD]),
@@ -64,7 +64,7 @@ class VerticalMenu extends Component
                 'active' => Route::is([
                     'admin.setting.*',
                 ]),
-                'show' => checkPermissions([Acl::PERMISSION_SETTING_POLICY, Acl::PERMISSION_SETTING_TERMS]),
+                'show' => checkPermissions([Acl::PERMISSION_SETTING_POLICY, Acl::PERMISSION_SETTING_TERMS, Acl::PERMISSION_SETTING_GENERAL]),
                 'child' => [
                     [
                         'title' => __('Chính sách'),
@@ -212,6 +212,16 @@ class VerticalMenu extends Component
                     'admin.volunteer.*',
                 ]),
                 'show' => checkPermissions([Acl::PERMISSION_VOLUNTEER_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
+            [
+                'title' => __('Phương thức thanh toán'),
+                'url' => route('admin.payment_method.index'),
+                'icon' => 'dollar-sign',
+                'active' => Route::is(['admin.payment_method.*']),
+                'show' => checkPermissions([Acl::PERMISSION_PAYMENT_METHOD_LIST]),
                 'child' => [
                     //
                 ],

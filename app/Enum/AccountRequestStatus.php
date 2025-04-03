@@ -30,7 +30,7 @@ enum AccountRequestStatus: int
             self::PENDING => 'Chờ xử lý',
             self::IN_PROGRESS => 'Đang xử lý',
             self::APPROVED => 'Đã duyệt',
-            self::REJECTED => 'Từ chối',
+            self::REJECTED => 'Đã từ chối',
         };
     }
 }

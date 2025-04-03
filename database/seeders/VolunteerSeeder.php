@@ -16,6 +16,6 @@ class VolunteerSeeder extends Seeder
             return;
         }
 
-        Volunteer::factory(10)->create();
+        Volunteer::factory(10000)->create();
     }
 }

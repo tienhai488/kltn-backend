@@ -21,12 +21,12 @@
         });
     }
 
-    @if (session()->has(\App\Enum\NotificationType::NOTIFICATION_SUCCESS->value))
-    showSuccess('{{ session()->get(\App\Enum\NotificationType::NOTIFICATION_SUCCESS->value) }}')
+    @if (session()->has(\App\Enum\NotificationType::SUCCESS->value))
+    showSuccess('{{ session()->get(\App\Enum\NotificationType::SUCCESS->value) }}')
     @endif
 
-    @if (session()->has(\App\Enum\NotificationType::NOTIFICATION_ERROR->value))
-    showError('{{ session()->get(\App\Enum\NotificationType::NOTIFICATION_ERROR->value) }}')
+    @if (session()->has(\App\Enum\NotificationType::ERROR->value))
+    showError('{{ session()->get(\App\Enum\NotificationType::ERROR->value) }}')
     @endif
 
     window.addEventListener('notification', event => {

@@ -1,6 +1,7 @@
 <?php
 
 use App\Acl\Acl;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,5 +38,17 @@ Route::prefix('v1')
         include('v1/api/statistic.php');
         include('v1/api/auth.php');
         include('v1/api/file_upload.php');
+        // Routes cho VNPay
+        Route::prefix('payment')->group(function () {
+            Route::post('/create-payment', [PaymentController::class, 'createPayment']);
+            Route::get('/payment-status', [PaymentController::class, 'getPaymentStatus']);
+        });
+
+        // MoMo Payment Routes
+        Route::prefix('payment/momo')->group(function () {
+            Route::post('/create', [App\Http\Controllers\MomoPaymentController::class, 'createPayment']);
+            Route::get('/return', [App\Http\Controllers\MomoPaymentController::class, 'handleReturn'])->name('api.momo.return');
+            Route::post('/ipn', [App\Http\Controllers\MomoPaymentController::class, 'handleIpn']);
+        });
         include('v1/api/account_request.php');
     });

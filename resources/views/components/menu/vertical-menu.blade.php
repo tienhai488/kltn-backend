@@ -4,7 +4,7 @@
         <div class="navbar-nav theme-brand flex-row  text-center">
             <div class="nav-logo">
                 <div class="nav-item theme-text">
-                    <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                    <a href="{{ route('admin.dashboard.index') }}" class="nav-link">
                         {{ config('app.name') }}
                     </a>
                 </div>

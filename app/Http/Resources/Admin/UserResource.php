@@ -32,6 +32,7 @@ class UserResource extends JsonResource
             'is_locked' => $this->status == UserStatus::LOCKED,
             'is_super_admin' => $this->hasRole(Acl::ROLE_SUPER_ADMIN),
             'is_current_user' => $this->id == auth()->id(),
+            'type' => $this->type,
         ];
     }
 }

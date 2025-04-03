@@ -30,7 +30,7 @@ enum VolunteerStatus: int
             self::PENDING => 'Chờ xử lý',
             self::COMPLETED => 'Hoàn thành',
             self::INCOMPLETED => 'Không hoàn thành',
-            self::CANCELED => 'Hủy',
+            self::CANCELED => 'Đã hủy',
         };
     }
 

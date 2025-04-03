@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enum\PaymentStatus;
 use App\Models\Department;
 use App\Models\Project;
 use App\Models\User;
@@ -25,6 +26,7 @@ class DonationFactory extends Factory
             'account_number' => $this->faker->bankAccountNumber,
             'account_name' => $this->faker->name,
             'code' => $this->faker->uuid,
+            'status' => $this->faker->randomElement(PaymentStatus::cases())->value,
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
             'phone_number' => $this->faker->phoneNumber,

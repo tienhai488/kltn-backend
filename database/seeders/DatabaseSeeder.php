@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ProjectSeeder::class);
         $this->call(DonationSeeder::class);
         $this->call(VolunteerSeeder::class);
+        $this->call(PaymentMethodSeeder::class);
     }
 }

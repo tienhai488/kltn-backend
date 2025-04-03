@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Acl\Acl;
 use App\Enum\NotificationType;
+use App\Enum\UserType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\StoreUserRequest;
 use App\Http\Requests\Admin\User\UpdatePasswordRequest;
@@ -11,6 +12,8 @@ use App\Http\Requests\Admin\User\UpdateProfileRequest;
 use App\Http\Requests\Admin\User\UpdateUserRequest;
 use App\Http\Resources\Admin\UserResource;
 use App\Models\User;
+use App\Repositories\Category\CategoryRepositoryInterface;
+use App\Repositories\Project\ProjectRepositoryInterface;
 use App\Repositories\Role\RoleRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
@@ -21,6 +24,8 @@ class UserController extends Controller
     public function __construct(
         protected UserRepositoryInterface $userRepository,
         protected RoleRepositoryInterface $roleRepository,
+        protected CategoryRepositoryInterface $categoryRepository,
+        protected ProjectRepositoryInterface $projectRepository,
     ) {
         $this->middleware('permission:' . Acl::PERMISSION_USER_LIST)->only('index');
         $this->middleware('permission:' . Acl::PERMISSION_USER_ADD)->only(['create', 'store']);
@@ -63,8 +68,8 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $this->userRepository->create($request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Thêm mới người dùng thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Thêm mới người dùng thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Thêm mới người dùng thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Thêm mới người dùng thất bại.'));
 
         return to_route('admin.user.index');
     }
@@ -74,7 +79,41 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        if (!in_array(
+            $user->type,
+            [UserType::ORGANIZATION->value, UserType::INDIVIDUAL->value, UserType::USER->value],
+        )) {
+            abort(404);
+        }
+
+        $user->load([
+            'projects' => function ($query) {
+                $query->with('donations');
+            },
+            'donations',
+            'volunteers_without_canceled',
+        ]);
+        $users = $this->userRepository->all();
+        $categories = $this->categoryRepository->all();
+        $projects = $this->projectRepository->advancedGet([
+            'conditions' => [
+                'where' => [
+                    'user_id' => $user->id,
+                ],
+            ],
+        ]);
+
+        $view = $user->type == UserType::USER->value ? 'admin.user.show.user' : 'admin.user.show.member';
+
+        return view(
+            $view,
+            compact(
+                'user',
+                'users',
+                'categories',
+                'projects',
+            ),
+        );
     }
 
     /**
@@ -93,8 +132,8 @@ class UserController extends Controller
     public function updateProfile(UpdateProfileRequest $request)
     {
         $this->userRepository->update(auth()->user(), $request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chỉnh sửa thông tin cá nhân thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Chỉnh sửa thông tin cá nhân thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Chỉnh sửa thông tin cá nhân thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Chỉnh sửa thông tin cá nhân thất bại.'));
 
         return redirect()->back();
     }
@@ -102,8 +141,8 @@ class UserController extends Controller
     public function updatePassword(UpdatePasswordRequest $request)
     {
         $this->userRepository->updatePassword($request->user(), $request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Đặt lại mật khẩu thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Đặt lại mật khẩu thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Đặt lại mật khẩu thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Đặt lại mật khẩu thất bại.'));
 
         return to_route('admin.user.my_profile', ['tab' => 'password']);
     }
@@ -137,8 +176,8 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $this->userRepository->update($user, $request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chỉnh sửa người dùng thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Chỉnh sửa người dùng thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Chỉnh sửa người dùng thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Chỉnh sửa người dùng thất bại.'));
 
         return to_route('admin.user.index');
     }

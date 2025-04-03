@@ -54,8 +54,8 @@ class EditVolunteerStatusModal extends Component
         $validated = $this->validate();
 
         $this->volunteerRepository->update($this->volunteer, $validated) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chỉnh sửa tình nguyện viên thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Chỉnh sửa tình nguyện viên thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Chỉnh sửa tình nguyện viên thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Chỉnh sửa tình nguyện viên thất bại.'));
 
         return to_route('admin.volunteer.show', $this->volunteer);
     }

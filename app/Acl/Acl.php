@@ -91,6 +91,10 @@ final class Acl
 
     const PERMISSION_SETTING_GENERAL = 'cài đặt chung';
 
+    const PERMISSION_PAYMENT_METHOD_LIST = 'xem danh sách phương thức thanh toán';
+
+    const PERMISSION_PAYMENT_METHOD_EDIT = 'chỉnh sửa phương thức thanh toán';
+
     /**
      * @param  array  $exclusives Exclude some permissions from the list
      */

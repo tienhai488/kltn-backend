@@ -33,7 +33,7 @@ enum ProjectStatus: int
         return match ($this) {
             self::PENDING => 'Chờ xử lý',
             self::IN_PROGRESS => 'Đang xử lý',
-            self::APPROVED => 'Chấp nhận',
+            self::APPROVED => 'Đã duyệt',
             self::REJECTED => 'Từ chối',
             self::PAUSED => 'Tạm dừng',
             self::CLOSED => 'Đã đóng',

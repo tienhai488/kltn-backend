@@ -51,7 +51,7 @@
             <x-slot:tableHeader>
                 <tr>
                     <th class="text-center">No.</th>
-                    <th>{{ __('Người dùng') }}</th>
+                    <th>{{ __('Người tạo') }}</th>
                     <th>{{ __('Dự án') }}</th>
                     <th>{{ __('T/t tình nguyện viên') }}</th>
                     <th>{{ __('Trạng thái') }}</th>

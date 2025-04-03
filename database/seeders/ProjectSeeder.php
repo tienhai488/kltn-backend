@@ -16,6 +16,6 @@ class ProjectSeeder extends Seeder
             return;
         }
 
-        Project::factory(10)->create();
+        Project::factory(100)->create();
     }
 }
