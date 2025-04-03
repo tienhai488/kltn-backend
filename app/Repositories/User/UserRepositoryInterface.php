@@ -28,6 +28,15 @@ interface UserRepositoryInterface extends RepositoryInterface
     public function serverPaginationFilteringForApi(array $searchParams): LengthAwarePaginator;
 
     /**
+     * Update profile for user.
+     *
+     * @param \App\Models\User $model
+     * @param array $data
+     * @return \App\Models\User
+     */
+    public function updateProfile(User $model, array $data);
+
+    /**
      * Update password for user.
      *
      * @param \App\Models\User $model

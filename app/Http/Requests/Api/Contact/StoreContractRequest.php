@@ -39,7 +39,7 @@ class StoreContractRequest extends FormRequest
             'email' => [
                 'required',
                 'string',
-                'email:rfc,dns,filter',
+                'email:filter',
                 'max:255',
             ],
             /**

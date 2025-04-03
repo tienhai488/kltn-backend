@@ -36,12 +36,6 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-            'username' => [
-                'nullable',
-                'string',
-                'max:255',
-                Rule::unique('users')->ignore(auth()->id()),
-            ],
             'status' => [
                 'required',
                 new Enum(UserStatus::class),
@@ -63,7 +57,8 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-            'role' => 'required|exists:roles,id',
+            'role' => 'nullable|exists:roles,id',
+            'user_avatar' => 'nullable',
         ];
 
         if (request()->password || request()->password_confirmation) {

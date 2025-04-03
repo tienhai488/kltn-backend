@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\AccountRequest;
 
+use App\Rules\CheckUsername;
 use App\Rules\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -28,7 +29,7 @@ class IndividualRequest extends FormRequest
              * Ngày sinh.
              */
             'birth' => 'required|date|before_or_equal:today',
-            'email' => 'required|email:rfc,dns|max:255',
+            'email' => 'required|email:filter|max:255',
             'phone_number' => [
                 'required',
                 new PhoneNumber,
@@ -43,7 +44,12 @@ class IndividualRequest extends FormRequest
             'field' => 'required|string|max:255',
             'website' => 'required|url|max:255',
             'address' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username',
+            'username' => [
+                'required',
+                'max:30',
+                new CheckUsername,
+                'unique:users,username',
+            ],
             'information' => 'required|string',
             /**
              * Hình ảnh minh chứng.

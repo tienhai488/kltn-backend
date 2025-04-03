@@ -131,7 +131,7 @@ class UserController extends Controller
      */
     public function updateProfile(UpdateProfileRequest $request)
     {
-        $this->userRepository->update(auth()->user(), $request->validated()) ?
+        $this->userRepository->updateProfile(auth()->user(), $request->validated()) ?
             session()->flash(NotificationType::SUCCESS->value, __('Chỉnh sửa thông tin cá nhân thành công.'))
             : session()->flash(NotificationType::ERROR->value, __('Chỉnh sửa thông tin cá nhân thất bại.'));
 
