@@ -16,12 +16,12 @@ class DatabaseSeeder extends Seeder
         $this->call(SettingSeeder::class);
         $this->call(DepartmentSeeder::class);
         $this->call(CategorySeeder::class);
-        $this->call(ContactSeeder::class);
-        $this->call(OrganizationAccountRequestSeeder::class);
-        $this->call(IndividualAccountRequestSeeder::class);
-        $this->call(ProjectSeeder::class);
-        $this->call(DonationSeeder::class);
-        $this->call(VolunteerSeeder::class);
+        // $this->call(ContactSeeder::class);
+        // $this->call(OrganizationAccountRequestSeeder::class);
+        // $this->call(IndividualAccountRequestSeeder::class);
+        // $this->call(ProjectSeeder::class);
+        // $this->call(DonationSeeder::class);
+        // $this->call(VolunteerSeeder::class);
         $this->call(PaymentMethodSeeder::class);
     }
 }
