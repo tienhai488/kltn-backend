@@ -9,7 +9,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class CheckRegistedUser implements ValidationRule
 {
     public function __construct(
-        protected int $projectId
+        protected $projectId
     ) {
         //
     }
