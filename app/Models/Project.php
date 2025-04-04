@@ -117,6 +117,46 @@ class Project extends Model implements HasMedia
         );
     }
 
+    public function totalAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->type == ProjectType::VOLUNTEER ? 0 : $this->donations_with_paid()->sum('amount'),
+        );
+    }
+
+    public function volunteersCount(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->type == ProjectType::DONATION ? 0 : $this->volunteers_without_canceled()->count(),
+        );
+    }
+
+    public function getTimePercentAttribute(): int
+    {
+        // If project is finished, return 100%
+        if ($this->end_date < now()) {
+            return 100;
+        }
+
+        // If project hasn't started yet, return 0%
+        if ($this->start_date > now()) {
+            return 0;
+        }
+
+        // Calculate percentage for ongoing projects
+        $totalDuration = $this->end_date->diffInSeconds($this->start_date);
+        $elapsedDuration = now()->diffInSeconds($this->start_date);
+
+        // Avoid division by zero
+        if ($totalDuration == 0) {
+            return 0;
+        }
+
+        $percentage = round(($elapsedDuration / $totalDuration) * 100);
+
+        return $percentage;
+    }
+
     /**
      * =====================================
      * Relationships

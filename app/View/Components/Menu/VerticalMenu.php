@@ -44,7 +44,7 @@ class VerticalMenu extends Component
                 'title' => __('Dashboard'),
                 'url' => route('admin.dashboard.index'),
                 'icon' => 'home',
-                'active' => Route::is(['admin.dashboard']),
+                'active' => Route::is(['admin.dashboard.*']),
                 'show' => checkPermissions([Acl::PERMISSION_VIEW_MENU_DASHBOARD]),
                 'child' => [],
             ],

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Acl\Acl;
+use App\Enum\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Repositories\Donation\DonationRepositoryInterface;
 use App\Repositories\Project\ProjectRepositoryInterface;
@@ -49,7 +50,13 @@ class StatisticController extends Controller
             'individual_count' => $this->userRepository->count(Acl::ROLE_INDIVIDUAL),
             'user_count' => $this->userRepository->count(),
             'project_count' => $this->projectRepository->count(),
-            'donation_count' => $this->donationRepository->count(),
+            'donation_count' => $this->donationRepository->advancedGet([
+                'conditions' => [
+                    'where' => [
+                        'status' => PaymentStatus::PAID->value,
+                    ],
+                ],
+            ])->count(),
             'total_donation_amount' => $this->donationRepository->sumAmount(),
         ]);
     }

@@ -28,7 +28,7 @@ class MomoPaymentController extends Controller
             // $validated['order_id'],
             // $validated['amount'],
             // $validated['order_info']
-            9976,
+            4444,
             10000,
             'Test payment',
         );
