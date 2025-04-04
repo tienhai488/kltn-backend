@@ -11,6 +11,9 @@ class UserObserver
      */
     public function created(User $user): void
     {
+        if ($user->username) {
+            return;
+        }
         $user->updateQuietly([
             'username' => generateUsername($user->id, $user->email),
         ]);

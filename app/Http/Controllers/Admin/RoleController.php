@@ -62,9 +62,9 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request)
     {
         $this->roleRepository->create($request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('success.role.store'))
+            session()->flash(NotificationType::SUCCESS->value, __('success.role.store'))
             :
-            session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('error.role.store'));
+            session()->flash(NotificationType::ERROR->value, __('error.role.store'));
 
         return to_route('admin.role.index');
     }
@@ -96,9 +96,9 @@ class RoleController extends Controller
     public function update(UpdateRoleRequest $request, Role $role)
     {
         $this->roleRepository->update($role, $request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('success.role.update'))
+            session()->flash(NotificationType::SUCCESS->value, __('success.role.update'))
             :
-            session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('error.role.update'));
+            session()->flash(NotificationType::ERROR->value, __('error.role.update'));
 
         return to_route('admin.role.index');
     }

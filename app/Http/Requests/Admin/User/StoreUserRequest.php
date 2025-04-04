@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin\User;
 use App\Acl\Acl;
 use App\Enum\Gender;
 use App\Enum\UserStatus;
+use App\Rules\CheckUsername;
 use App\Rules\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
@@ -36,10 +37,16 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'max:255'
             ],
+            'username' => [
+                'required',
+                'max:30',
+                new CheckUsername,
+                'unique:users,username',
+            ],
             'email' => [
                 'required',
                 'string',
-                'email:rfc,dns,filter',
+                'email:filter',
                 'max:255',
                 'unique:users',
             ],
@@ -72,7 +79,7 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'max:255'
             ],
-            'role' => 'required|exists:roles,id',
+            'role' => 'nullable|exists:roles,id',
             'user_avatar' => 'nullable',
         ];
     }

@@ -45,8 +45,8 @@ class SettingController extends Controller
     public function updatePolicy(UpdatePolicyRequest $request)
     {
         $this->settingRepository->updateByKeys($request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Cài đặt chính sách thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Cài đặt chính sách thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Cài đặt chính sách thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Cài đặt chính sách thất bại.'));
 
         return redirect()->back();
     }
@@ -74,8 +74,8 @@ class SettingController extends Controller
     public function updateTerms(UpdateTermsRequest $request)
     {
         $this->settingRepository->updateByKeys($request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Cài đặt điều khoản thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Cài đặt điều khoản thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Cài đặt điều khoản thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Cài đặt điều khoản thất bại.'));
 
         return redirect()->back();
     }
@@ -103,8 +103,8 @@ class SettingController extends Controller
         $banner = $this->settingRepository->findByKey('banner');
 
         $this->settingRepository->updateImage($banner, $request->banner, Setting::IMAGE_COLLECTION) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Cài đặt banner thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Cài đặt banner thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Cài đặt banner thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Cài đặt banner thất bại.'));
 
         return redirect()->back();
     }
@@ -132,8 +132,8 @@ class SettingController extends Controller
         $companionUnit = $this->settingRepository->findByKey('companion_unit');
 
         $this->settingRepository->updateImages($companionUnit, $request->validated()['images'], Setting::IMAGES_COLLECTION) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Cài đặt đơn vị đồng hành thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Cài đặt đơn vị đồng hành thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Cài đặt đơn vị đồng hành thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Cài đặt đơn vị đồng hành thất bại.'));
 
         return redirect()->back();
     }

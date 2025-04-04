@@ -9,20 +9,20 @@
             success: function (response) {
                 if (response) {
                     Snackbar.show({
-                        text: '{{ __('success.toggle_status') }}',
+                        text: '{{ __('Thay đổi trạng thái thành công.') }}',
                         textColor: '#ddf5f0',
                         backgroundColor: '#00ab55',
-                        actionText: '{{ __('general.common.dismiss') }}',
+                        actionText: '{{ __('Bỏ qua') }}',
                         actionTextColor: '#3b3f5c'
                     });
                 }
             },
             error: function (response) {
                 Snackbar.show({
-                    text: '{{ __('error.toggle_status') }}',
+                    text: '{{ __('Thay đổi trạng thái thất bại.') }}',
                     textColor: '#fbeced',
                     backgroundColor: '#e7515a',
-                    actionText: '{{ __('general.common.dismiss') }}',
+                    actionText: '{{ __('Bỏ qua') }}',
                     actionTextColor: '#3b3f5c'
                 });
             }

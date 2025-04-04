@@ -60,6 +60,16 @@ class UserSeeder extends Seeder
             ]);
         });
 
+        $user = User::withoutEvents(function () {
+            return User::create([
+                'name' => 'User',
+                'username' => 'user',
+                'email' => 'user@kltn.vn',
+                'password' => Hash::make('123456'),
+                'status' => UserStatus::ACTIVE->value,
+            ]);
+        });
+
         $superAdminRole = Role::findByName(Acl::ROLE_SUPER_ADMIN);
         $adminRole = Role::findByName(Acl::ROLE_ADMIN);
         $individualRole = Role::findByName(Acl::ROLE_INDIVIDUAL);

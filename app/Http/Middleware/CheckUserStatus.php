@@ -21,7 +21,7 @@ class CheckUserStatus
             if (auth()->user()->status->value === UserStatus::LOCKED->value) {
                 auth()->logout();
                 session()->flash(
-                    NotificationType::NOTIFICATION_ERROR->value,
+                    NotificationType::ERROR->value,
                     __('Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ.')
                 );
                 return to_route('auth.login.show-form');

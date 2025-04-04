@@ -164,15 +164,17 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
             $user = $this->model->create($data);
 
-            if (isset($data['user_avatar']) && $data['user_avatar']) {
+            if (!empty($data['user_avatar'])) {
                 $file = json_decode($data['user_avatar'], true);
                 $user->addMediaFromBase64($file['data'])
                     ->usingFileName(uniqid('user-') . '.jpg')
                     ->toMediaCollection(UserAvatar::COLLECTION->value);
             }
 
-            if (!$user->syncRoles([(int)$data['role']])) {
-                DB::rollBack();
+            if (!empty($data['role'])) {
+                if (!$user->syncRoles([(int)$data['role']])) {
+                    DB::rollBack();
+                }
             }
 
             DB::commit();
@@ -195,7 +197,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $user = $model->update($data);
 
             $model->clearMediaCollection(UserAvatar::COLLECTION->value);
-            if (isset($data['user_avatar']) && $data['user_avatar']) {
+            if (!empty($data['user_avatar'])) {
                 $file = json_decode($data['user_avatar'], true);
                 $model->addMediaFromBase64($file['data'])
                     ->usingFileName(uniqid('user-') . '.jpg')
@@ -206,6 +208,35 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                 if (!$model->syncRoles([(int)$data['role']])) {
                     DB::rollBack();
                 }
+            } else {
+                $model->syncRoles([]);
+            }
+
+            DB::commit();
+
+            return $user;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function updateProfile(User $model, array $data)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = $model->update($data);
+
+            $model->clearMediaCollection(UserAvatar::COLLECTION->value);
+            if (!empty($data['user_avatar'])) {
+                $file = json_decode($data['user_avatar'], true);
+                $model->addMediaFromBase64($file['data'])
+                    ->usingFileName(uniqid('user-') . '.jpg')
+                    ->toMediaCollection(UserAvatar::COLLECTION->value);
             }
 
             DB::commit();
@@ -245,11 +276,11 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             DB::beginTransaction();
 
-            $user = $model->update($data);
+            $model->update($data);
 
             DB::commit();
 
-            return $user;
+            return $model;
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -265,11 +296,11 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             DB::beginTransaction();
 
-            $user = $this->model->create($data);
+            $model = $this->model->create($data);
 
             DB::commit();
 
-            return $user;
+            return $model;
         } catch (\Exception $e) {
             DB::rollBack();
 

@@ -50,8 +50,8 @@ class EditProjectStatusModal extends Component
         $validated = $this->validate();
 
         $this->projectRepository->updateStatus($this->project, $validated['status']) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chỉnh sửa dự án thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Chỉnh sửa dự án thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Chỉnh sửa dự án thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Chỉnh sửa dự án thất bại.'));
 
         return to_route('admin.project.show', $this->project);
     }

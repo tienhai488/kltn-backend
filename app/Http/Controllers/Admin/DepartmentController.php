@@ -54,8 +54,8 @@ class DepartmentController extends Controller
     public function store(StoreDepartmentRequest $request)
     {
         $this->departmentRepository->create($request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Thêm mới phòng ban thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Thêm mới phòng ban thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Thêm mới phòng ban thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Thêm mới phòng ban thất bại.'));
 
         return to_route('admin.department.index');
     }
@@ -84,8 +84,8 @@ class DepartmentController extends Controller
     public function update(UpdateDepartmentRequest $request, Department $department)
     {
         $this->departmentRepository->update($department, $request->validated()) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chình sửa phòng ban thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Chình sửa phòng ban thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Chình sửa phòng ban thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Chình sửa phòng ban thất bại.'));
 
         return to_route('admin.department.index');
     }

@@ -29,8 +29,8 @@ enum ContactStatus: int
         return match ($this) {
             self::PENDING => 'Chờ xử lý',
             self::IN_PROGRESS => 'Đang xử lý',
-            self::DONE => 'Hoàn thành',
-            self::CLOSED => 'Đóng',
+            self::DONE => 'Đã hoàn thành',
+            self::CLOSED => 'Đã đóng',
         };
     }
 }

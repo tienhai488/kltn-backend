@@ -50,8 +50,8 @@ class EditContactStatusModal extends Component
         $validated = $this->validate();
 
         $this->contactRepository->update($this->contact, $validated) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chỉnh sửa trạng thái liên hệ thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Chỉnh sửa trạng thái liên hệ thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Chỉnh sửa trạng thái liên hệ thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Chỉnh sửa trạng thái liên hệ thất bại.'));
 
         return to_route('admin.contact.show', $this->contact);
     }

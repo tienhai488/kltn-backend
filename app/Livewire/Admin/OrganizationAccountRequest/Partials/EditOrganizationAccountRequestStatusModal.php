@@ -50,8 +50,8 @@ class EditOrganizationAccountRequestStatusModal extends Component
         $validated = $this->validate();
 
         $this->organizationAccountRequestRepository->update($this->organizationAccountRequest, $validated) ?
-            session()->flash(NotificationType::NOTIFICATION_SUCCESS->value, __('Chỉnh sửa trạng thái yêu cầu tài khoản tổ chức thành công.'))
-            : session()->flash(NotificationType::NOTIFICATION_ERROR->value, __('Chỉnh sửa trạng thái yêu cầu tài khoản tổ chức thất bại.'));
+            session()->flash(NotificationType::SUCCESS->value, __('Chỉnh sửa trạng thái yêu cầu tài khoản tổ chức thành công.'))
+            : session()->flash(NotificationType::ERROR->value, __('Chỉnh sửa trạng thái yêu cầu tài khoản tổ chức thất bại.'));
 
         return to_route('admin.account_request.organization.show', $this->organizationAccountRequest);
     }

@@ -50,7 +50,7 @@
             <x-slot:tableHeader>
                 <tr>
                     <th class="text-center">No.</th>
-                    <th>{{ __('Danh mục') }}</th>
+                    <th>{{ __('Thông tin') }}</th>
                     <th>{{ __('Hình ảnh') }}</th>
                     <th>{{ __('Người tạo') }}</th>
                     <th>{{ __('Tên dự án') }}</th>
@@ -58,9 +58,6 @@
                     <th>{{ __('Thực tế') }}</th>
                     <th>{{ __('Quyên góp') }}</th>
                     <th>{{ __('Tình nguyện viên') }}</th>
-                    <th>{{ __('Thời gian') }}</th>
-                    <th>{{ __('Loại dự án') }}</th>
-                    <th>{{ __('Trạng thái') }}</th>
                     <th class="text-center dt-no-sorting">{{ __('Thao tác') }}</th>
                 </tr>
             </x-slot:tableHeader>
@@ -94,10 +91,25 @@
                         "render": (data, type, row, meta) =>  meta.row + 1 + meta.settings._iDisplayStart,
                     },
                     {
-                        "data": "category",
-                        "class": "text-center",
+                        "data": "id",
                         "render": function (data, type, full) {
-                            return `<span class="badge badge-primary">${data.name}</span>`;
+                            return `
+                                <div class="d-flex">
+                                    <p class="text-start me-1">{{ __('Danh mục') }}:</p>
+                                    <p class="text-primary">${full.category.name}</p>
+                                </div>
+                                <div class="d-flex">
+                                    <p class="text-start me-1">{{ __('Loại dự án') }}:</p>
+                                    <p class="text-primary">${full.type}</p>
+                                </div>
+                                <div class="d-flex align-items-end">
+                                    <p class="text-start me-1">{{ __('Trạng thái') }}:</p>
+                                    <p class="text-primary"><span class="badge badge-${full.status_badge}">${full.status_label}</span></p>
+                                </div>
+                                <div class="d-flex align-items-end">
+                                    <p class="text-start me-1 text-primary">${full.start_date} -> ${full.end_date}</p>
+                                </div>
+                            `;
                         }
                     },
                     {
@@ -179,27 +191,6 @@
 
                             return `<a class="btn btn-success text-nowrap p-1" href="${url}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye p-1 br-6 mb-1"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>
                             </svg> (${data})</a>`;
-                        }
-                    },
-                    {
-                        "data": "id",
-                        "class": "text-center",
-                        "render": function (data, type, full) {
-                            return `${full.start_date} - ${full.end_date}`;
-                        }
-                    },
-                    {
-                        "data": "type",
-                        "class": "text-center",
-                        "render": function (data, type, full) {
-                            return `<span class="badge badge-info">${data}</span>`;
-                        }
-                    },
-                    {
-                        "data": "status_label",
-                        "class": "text-center",
-                        "render": function (data, type, full) {
-                            return `<span class="badge badge-${full.status_badge}">${data}</span>`;
                         }
                     },
                     {

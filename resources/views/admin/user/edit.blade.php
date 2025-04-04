@@ -52,6 +52,13 @@
                 :isRequired="true"
             />
             <x-form.form-input
+                :id="'username'"
+                :label="'Tên tài khoản'"
+                :name="'username'"
+                :value="$user->username"
+                :readonly="true"
+            />
+            <x-form.form-input
                 :id="'email'"
                 :label="'Email'"
                 :name="'email'"
@@ -120,7 +127,6 @@
                 :multiple="false"
                 :placeholder="__('Chọn vai trò')"
                 :values="$userRoles"
-                :isRequired="true"
             />
             <x-form.form-input
                 :id="'address'"

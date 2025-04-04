@@ -16,6 +16,6 @@ class DonationSeeder extends Seeder
             return;
         }
 
-        Donation::factory(10)->create();
+        Donation::factory(10000)->create();
     }
 }
