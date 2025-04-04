@@ -39,7 +39,7 @@ class IndividualAccountRequestController extends Controller
         $individualAccountRequest = $this->individualAccountRequestRepository->find($request->id);
 
         if (!$individualAccountRequest) {
-            return to_route('admin.individual_account_request.index');
+            return to_route('admin.account_request.individual.index');
         }
 
         return to_route('admin.user.create')->with([
@@ -64,9 +64,9 @@ class IndividualAccountRequestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(IndividualAccountRequest $individualAccountRequest)
+    public function show(IndividualAccountRequest $individual)
     {
-        return view('admin.individual_account_request.show', compact('individualAccountRequest'));
+        return view('admin.individual_account_request.show', compact('individual'));
     }
 
     /**
