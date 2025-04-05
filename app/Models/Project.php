@@ -51,13 +51,8 @@ class Project extends Model implements HasMedia
         'type' => ProjectType::class,
     ];
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $appends = [
-        'background_image',
-        'related_images',
-        'front_status',
+    protected $with = [
+        'media',
     ];
 
     /**
@@ -81,8 +76,8 @@ class Project extends Model implements HasMedia
             if (now() > $this->end_date) {
                 return ProjectFrontStatus::FINISHED;
             } else if (
-                $this->donations()->sum('amount') >= $this->donation_target
-                && $this->volunteers_without_canceled()->count() >= $this->volunteer_quantity
+                $this->donations_with_paid->sum('amount') >= $this->donation_target
+                && $this->volunteers_without_canceled->count() >= $this->volunteer_quantity
             ) {
                 return ProjectFrontStatus::GOAL_ACHIEVED;
             }
@@ -153,6 +148,11 @@ class Project extends Model implements HasMedia
         return $this->hasMany(Donation::class);
     }
 
+    /**
+     * Get the paid donations associated with the project.
+     *
+     * @return HasMany<Donation>
+     */
     public function donations_with_paid(): HasMany
     {
         return $this->hasMany(Donation::class)

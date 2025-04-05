@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\Department;
+namespace App\Http\Requests\Api\Category;
 
-use App\Enum\DepartmentStatus;
+use App\Enum\CategoryStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class DepartmentRequest extends FormRequest
+class CategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,7 +28,7 @@ class DepartmentRequest extends FormRequest
             'limit' => 'nullable|integer|min:1',
             'status' => [
                 'nullable',
-                Rule::enum(DepartmentStatus::class),
+                Rule::enum(CategoryStatus::class)
             ],
         ];
     }

@@ -127,4 +127,23 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
             return false;
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toggleStatus($model)
+    {
+        try {
+            DB::beginTransaction();
+
+            $model->update(['status' => !$model->status->value]);
+
+            DB::commit();
+
+            return $model;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
 }

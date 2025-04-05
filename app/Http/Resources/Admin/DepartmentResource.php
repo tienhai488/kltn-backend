@@ -19,6 +19,7 @@ class DepartmentResource extends JsonResource
             'code' => $this->code,
             'name' => $this->name,
             'description' => $this->description,
+            'status' => $this->status,
             'status_label' => $this->status->getLabel(),
             'status_badge' => $this->status->getBadge(),
             'thumbnail_url' => $this->thumbnail_url,

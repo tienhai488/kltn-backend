@@ -243,8 +243,8 @@
                 }
             });
 
-            $('#sType').on('change', function() {
-                switch ($(this).val()) {
+            function handleChangeProjectType(value) {
+                switch (value) {
                     case '{{ App\Enum\ProjectType::DONATION->value }}':
                         $('#donation_target_group').removeClass('d-none');
                         $('#donation_target').prop('disabled', false);
@@ -273,6 +273,12 @@
                         // $('label[for="volunteer_quantity"]').find('strong').removeClass('d-none');
                         break;
                 }
+            }
+
+            handleChangeProjectType(@json(old('type')));
+
+            $('#sType').on('change', function() {
+                handleChangeProjectType($(this).val());
             });
 
             FilePond.registerPlugin(

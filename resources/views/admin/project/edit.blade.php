@@ -250,8 +250,8 @@
                 }
             });
 
-            const toggleFields = () => {
-                switch ($('#sType').val()) {
+            function handleChangeProjectType(value) {
+                switch (value) {
                     case '{{ App\Enum\ProjectType::DONATION->value }}':
                         $('#donation_target_group').removeClass('d-none');
                         $('#donation_target').prop('disabled', false);
@@ -282,9 +282,11 @@
                 }
             }
 
-            toggleFields();
+            handleChangeProjectType(@json(old('type')) ?? @json($project->type->value));
 
-            $('#sType').on('change', toggleFields);
+            $('#sType').on('change', function() {
+                handleChangeProjectType($(this).val());
+            });
 
             FilePond.registerPlugin(
                 FilePondPluginImagePreview,

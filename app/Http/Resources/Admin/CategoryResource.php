@@ -18,6 +18,7 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'icon' => $this->icon,
+            'status' => $this->status,
             'status_label' => $this->status->getLabel(),
             'status_badge' => $this->status->getBadge(),
         ];

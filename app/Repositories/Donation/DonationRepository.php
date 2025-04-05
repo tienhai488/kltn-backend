@@ -62,12 +62,9 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
 
         $query = $this->model->query()->with([
             'user',
-            'user.media',
             'user.roles',
             'project',
-            'project.media',
             'department',
-            'department.media',
         ]);
 
         if ($search) {
@@ -170,12 +167,9 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
 
         $query = $this->model->query()->with([
             'user',
-            'user.media',
             'user.roles',
             'project',
-            'project.media',
             'department',
-            'department.media',
         ]);
 
         if ($keyword) {
@@ -280,8 +274,128 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
     /**
      * {@inheritdoc}
      */
+    public function serverPaginationFilteringForApi($searchParams): LengthAwarePaginator
+    {
+        $limit = Arr::get($searchParams, 'limit', self::ITEM_PER_PAGE);
+
+        $query = $this->donationFilterForApi($searchParams);
+
+        return $query->latest()->paginate($limit);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function donationFilterForApi(array $searchParams): Builder|Donation
+    {
+        $search = Arr::get($searchParams, 'search', '');
+        $keyword = Arr::get($searchParams, 'keyword', '');
+        $userId = Arr::get($searchParams, 'user_id', null);
+        $projectId = Arr::get($searchParams, 'project_id', null);
+        $departmentId = Arr::get($searchParams, 'department_id', null);
+        $isAnonymous = Arr::get($searchParams, 'is_anonymous', null);
+        $userId = Arr::get($searchParams, 'user_id', null);
+        $projectsBelongToUserId = Arr::get($searchParams, 'projects_belong_to_user_id', null);
+        $isStudent = Arr::get($searchParams, 'is_student', null);
+        $status = Arr::get($searchParams, 'status', null);
+        $projectBelongToUserId = Arr::get($searchParams, 'project_belong_to_user_id', null);
+
+        $query = $this->model->query()->with([
+            'user',
+            'user.roles',
+            'user.projects',
+            'user.projects.donations_with_paid',
+            'user.projects.volunteers_without_canceled',
+            'user.roles',
+            'project',
+            'department',
+        ]);
+
+        if ($search) {
+            if (is_array($search)) {
+                $search = $search['value'];
+            }
+
+            $query->whereAny([
+                'account_number',
+                'account_name',
+                'code',
+                'name',
+                'email',
+                'phone_number',
+                'amount',
+                'student_code',
+                'class',
+            ], 'LIKE', '%' . $search . '%');
+        }
+
+        if ($keyword) {
+            if (is_array($keyword)) {
+                $keyword = $keyword['value'];
+            }
+
+            $query->whereAny([
+                'name',
+            ], 'LIKE', '%' . $keyword . '%');
+        }
+
+        if (! is_null($userId)) {
+            $query->where('user_id', $userId);
+        }
+
+        if (! is_null($projectId)) {
+            $query->where('project_id', $projectId);
+        }
+
+        if (! is_null($departmentId)) {
+            $query->where('department_id', $departmentId);
+        }
+
+        if (! is_null($isAnonymous)) {
+            $query->where('is_anonymous', $isAnonymous);
+        }
+
+        if (! is_null($projectsBelongToUserId)) {
+            $query->whereHas('project', function ($query) use ($projectsBelongToUserId) {
+                $query->where('user_id', $projectsBelongToUserId);
+            });
+        }
+
+        if (! is_null($isStudent)) {
+            $query->whereNotNull('student_code')->whereNot('student_code', '');
+        }
+
+        if (! is_null($status)) {
+            $query->where('status', $status);
+        }
+
+        if (! is_null($projectBelongToUserId)) {
+            $query->whereHas('project', function ($query) use ($projectBelongToUserId) {
+                $query->where('user_id', $projectBelongToUserId);
+            });
+        }
+
+        return $query;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function sumAmount()
     {
-        return $this->model->where('status', PaymentStatus::PAID->value)->sum('amount');
+        return $this->model
+            ->where('status', PaymentStatus::PAID->value)
+            ->sum('amount');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count($status = null): int
+    {
+        if (is_null($status)) {
+            return $this->model->count();
+        }
+        return $this->model->where('status', $status)->count();
     }
 }

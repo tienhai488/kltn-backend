@@ -39,6 +39,7 @@ class PaymentMethodRepository extends BaseRepository implements PaymentMethodRep
     {
         $limit = Arr::get($searchParams, 'limit', self::ITEM_PER_PAGE);
         $keyword = Arr::get($searchParams, 'search', '');
+        $status = Arr::get($searchParams, 'status', null);
 
         $query = $this->model->query();
 
@@ -50,6 +51,10 @@ class PaymentMethodRepository extends BaseRepository implements PaymentMethodRep
             $query->whereAny([
                 'name',
             ], 'LIKE', '%' . $keyword . '%');
+        }
+
+        if ($status) {
+            $query->where('status', $status);
         }
 
         return $query->latest()->paginate($limit);

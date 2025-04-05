@@ -152,7 +152,7 @@
                         },
                         error: function(response) {
                             Snackbar.show({
-                                text: '{{ __('Xóa lựa chọn thất bại.') }}',
+                                text: response.responseJSON.message,
                                 textColor: '#fbeced',
                                 backgroundColor: '#e7515a',
                                 actionText: '{{ __('Bỏ qua') }}',

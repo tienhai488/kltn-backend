@@ -61,12 +61,9 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
 
         $query = $this->model->query()->with([
             'user',
-            'user.media',
             'user.roles',
             'project',
-            'project.media',
             'department',
-            'department.media',
         ]);
 
         if ($search) {
@@ -166,12 +163,9 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
 
         $query = $this->model->query()->with([
             'user',
-            'user.media',
             'user.roles',
             'project',
-            'project.media',
             'department',
-            'department.media',
         ]);
 
         if ($keyword) {
@@ -284,6 +278,107 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
     /**
      * {@inheritdoc}
      */
+    public function serverPaginationFilteringForApi($searchParams): LengthAwarePaginator
+    {
+        $limit = Arr::get($searchParams, 'limit', self::ITEM_PER_PAGE);
+
+        $query = $this->filterForApi($searchParams);
+
+        return $query->latest()->paginate($limit);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function filterForApi(array $searchParams): Builder|Volunteer
+    {
+        $search = Arr::get($searchParams, 'search', '');
+        $keyword = Arr::get($searchParams, 'keyword', '');
+        $userId = Arr::get($searchParams, 'user_id', null);
+        $belongToUserId = Arr::get($searchParams, 'belong_to_user_id', null);
+        $projectId = Arr::get($searchParams, 'project_id', null);
+        $departmentId = Arr::get($searchParams, 'department_id', null);
+        $status = Arr::get($searchParams, 'status', null);
+        $projectsBelongToUserId = Arr::get($searchParams, 'projects_belong_to_user_id', null);
+        $isStudent = Arr::get($searchParams, 'is_student', null);
+        $projectBelongToUserId = Arr::get($searchParams, 'project_belong_to_user_id', null);
+
+        $query = $this->model->query()->with([
+            'user',
+            'user.projects',
+            'user.projects.donations_with_paid',
+            'user.projects.volunteers_without_canceled',
+            'user.roles',
+            'project',
+            'department',
+        ]);
+
+        if ($search) {
+            if (is_array($search)) {
+                $search = $search['value'];
+            }
+
+            $query->whereAny([
+                'name',
+                'email',
+                'phone_number',
+                'student_code',
+                'class',
+            ], 'LIKE', '%' . $search . '%');
+        }
+
+        if ($keyword) {
+            if (is_array($keyword)) {
+                $keyword = $keyword['value'];
+            }
+
+            $query->whereAny([
+                'name',
+            ], 'LIKE', '%' . $keyword . '%');
+        }
+
+        if (! is_null($userId)) {
+            $query->where('user_id', $userId);
+        }
+
+        if (! is_null($belongToUserId)) {
+            $query->where('user_id', $belongToUserId);
+        }
+
+        if (! is_null($projectId)) {
+            $query->where('project_id', $projectId);
+        }
+
+        if (! is_null($departmentId)) {
+            $query->where('department_id', $departmentId);
+        }
+
+        if (! is_null($status)) {
+            $query->where('status', $status);
+        }
+
+        if (! is_null($projectsBelongToUserId)) {
+            $query->whereHas('project', function ($query) use ($projectsBelongToUserId) {
+                $query->where('user_id', $projectsBelongToUserId);
+            });
+        }
+
+        if (! is_null($isStudent)) {
+            $query->whereNotNull('student_code')->whereNot('student_code', '');
+        }
+
+        if (! is_null($projectBelongToUserId)) {
+            $query->whereHas('project', function ($query) use ($projectBelongToUserId) {
+                $query->where('user_id', $projectBelongToUserId);
+            });
+        }
+
+        return $query;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function update($model, $data)
     {
         try {
@@ -299,5 +394,16 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
 
             return false;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count($status = null): int
+    {
+        if (is_null($status)) {
+            return $this->model->count();
+        }
+        return $this->model->where('status', '!=', $status)->count();
     }
 }

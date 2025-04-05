@@ -9,7 +9,6 @@ use App\Http\Resources\Api\DonationResource;
 use App\Repositories\Donation\DonationRepositoryInterface;
 use App\Traits\ApiResponses;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * @tags Quyên góp (Donation)
@@ -36,7 +35,7 @@ class DonationController extends Controller
     public function index(DonationRequest $request)
     {
         return $this->okResponse(
-            DonationResource::collection($this->donationRepository->serverPaginationFilteringForAdmin($request->all())),
+            DonationResource::collection($this->donationRepository->serverPaginationFilteringForApi($request->all())),
             __('Danh sách quyên góp')
         );
     }
