@@ -95,14 +95,34 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if ($category->projects()->exists()) {
+            return response()->json([
+                'message' => __('Không thể xóa lựa chọn này vì đã được gán cho các đối tượng khác.'),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         if ($this->categoryRepository->destroy($category)) {
             return response()->json([
-                'message' => __('Xóa danh mục thành công.'),
+                'message' => __('Xóa lựa chọn thành công.'),
             ], Response::HTTP_OK);
         }
 
         return response()->json([
-            'message' => __('Xóa danh mục thất bại.'),
+            'message' => __('Xóa lựa chọn thất bại.'),
         ], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * Toggle the status of the specified resource in storage.
+     */
+    public function toggleStatus(Category $category)
+    {
+        return $this->categoryRepository->toggleStatus($category) ?
+            response()->json([
+                'message' => __('success.update'),
+            ], Response::HTTP_OK)
+            : response()->json([
+                'message' => __('error.update'),
+            ], Response::HTTP_BAD_REQUEST);
     }
 }

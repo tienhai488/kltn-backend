@@ -27,6 +27,14 @@ interface VolunteerRepositoryInterface extends RepositoryInterface
     public function serverPaginationFilteringForStatistic(array $searchParams): LengthAwarePaginator;
 
     /**
+     * Paginating, ordering and searching through pages for server side index table for the Api.
+     *
+     * @param $searchParams
+     * @return LengthAwarePaginator
+     */
+    public function serverPaginationFilteringForApi(array $searchParams): LengthAwarePaginator;
+
+    /**
      * Get data for volunteers filter by conditions
      *
      * @param array $conditions

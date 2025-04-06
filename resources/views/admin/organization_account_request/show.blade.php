@@ -48,7 +48,7 @@
                 <button
                     class="btn btn-primary ms-2"
                     data-bs-toggle="modal"
-                    data-bs-target="#organizationStatusModal"
+                    data-bs-target="#organizationAccountRequestStatusModal"
                 >
                     {{ __('Chỉnh sửa trạng thái') }}
                 </button>

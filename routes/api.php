@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('v1')
-    ->middleware(['api'])
+    ->middleware(['api', 'active.frontend'])
     ->name('api.')
     ->group(function () {
         Route::middleware(['auth:sanctum'])->group(function () {
@@ -52,4 +52,5 @@ Route::prefix('v1')
             Route::post('/ipn', [App\Http\Controllers\MomoPaymentController::class, 'handleIpn']);
         });
         include('v1/api/account_request.php');
+        include('v1/api/payment_method.php');
     });

@@ -95,14 +95,34 @@ class DepartmentController extends Controller
      */
     public function destroy(Department $department)
     {
+        if ($department->users()->exists() || $department->donations()->exists() || $department->volunteers()->exists()) {
+            return response()->json([
+                'message' => __('Không thể xóa lựa chọn này vì đã được gán cho các đối tượng khác.'),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         if ($this->departmentRepository->destroy($department)) {
             return response()->json([
-                'message' => __('Xóa phòng ban thành công.'),
+                'message' => __('Xóa lựa chọn thành công.'),
             ], Response::HTTP_OK);
         }
 
         return response()->json([
-            'message' => __('Xóa phòng ban thất bại.'),
+            'message' => __('Xóa lựa chọn thất bại.'),
         ], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * Toggle the status of the specified resource in storage.
+     */
+    public function toggleStatus(Department $department)
+    {
+        return $this->departmentRepository->toggleStatus($department) ?
+            response()->json([
+                'message' => __('success.update'),
+            ], Response::HTTP_OK)
+            : response()->json([
+                'message' => __('error.update'),
+            ], Response::HTTP_BAD_REQUEST);
     }
 }

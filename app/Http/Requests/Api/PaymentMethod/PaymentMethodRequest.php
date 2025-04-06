@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\Department;
+namespace App\Http\Requests\Api\PaymentMethod;
 
-use App\Enum\DepartmentStatus;
+use App\Enum\ActiveStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class DepartmentRequest extends FormRequest
+class PaymentMethodRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,9 @@ class DepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page' => 'nullable|integer|min:1',
-            'limit' => 'nullable|integer|min:1',
             'status' => [
                 'nullable',
-                Rule::enum(DepartmentStatus::class),
+                Rule::enum(ActiveStatus::class),
             ],
         ];
     }

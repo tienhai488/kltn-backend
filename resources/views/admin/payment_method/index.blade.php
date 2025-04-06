@@ -60,8 +60,7 @@
                     {
                         "data": "name",
                         "render": function (data, type, full) {
-                            let url = @json(asset(':id')).replace('/:id', full.icon_url);
-                            return `<img src="${url}" alt="${data}" class="me-2" width="30" height="30">${data}`;
+                            return `<img src="${full.icon}" alt="${data}" class="me-2" width="30" height="30">${data}`;
                         },
                     },
                     {
@@ -158,9 +157,7 @@
                 e.preventDefault();
                 let id = $(this).data('id');
 
-                let url = `{{ route('admin.payment_method.toggle_status', [
-                    'paymentMethod' => ':id'
-                ]) }}`.replace(':id', id);
+                let url = `{{ route('admin.payment_method.toggle_status', ':id') }}`.replace(':id', id);
 
                 toggleStatus(url);
             });

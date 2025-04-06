@@ -61,16 +61,20 @@ class UserController extends Controller
                 ],
                 'with_count' => [
                     'projects',
-                    'donations',
+                    'donations_with_paid',
                     'volunteers_without_canceled',
                 ],
                 'with_sums' => [
                     [
-                        'relation' => 'donations',
+                        'relation' => 'donations_with_paid',
                         'column' => 'amount',
                     ],
                 ],
-                'with' => ['projects.donations'],
+                'with' => [
+                    'roles',
+                    'projects.donations_with_paid',
+                    'projects.volunteers_without_canceled',
+                ],
             ]),
         ));
     }

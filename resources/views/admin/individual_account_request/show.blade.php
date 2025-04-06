@@ -28,7 +28,7 @@
     <x-custom.breadcrumb
         :breadcrumb-items="[
             __('Yêu cầu tài khoản cá nhân') => '',
-            __('Danh sách yêu cầu tài khoản cá nhân') => route('admin.account_request.organization.index'),
+            __('Danh sách yêu cầu tài khoản cá nhân') => route('admin.account_request.individual.index'),
             __('Chi tiết yêu cầu tài khoản cá nhân') => ''
         ]"/>
     <x-custom.stat-box :id="'organization-management'" :custom-col="'col-lg-12'">
@@ -38,7 +38,7 @@
                 <div class="d-flex">
                     @can(Acl::PERMISSION_USER_ADD)
                 <a
-                    href="{{ route('admin.account_request.organization.create', ['id' => $individual->id]) }}"
+                    href="{{ route('admin.account_request.individual.create', ['id' => $individual->id]) }}"
                     class="btn btn-success"
                 >
                     {{ __('Thêm tài khoản cá nhân') }}
@@ -48,7 +48,7 @@
                 <button
                     class="btn btn-primary ms-2"
                     data-bs-toggle="modal"
-                    data-bs-target="#individualStatusModal"
+                    data-bs-target="#individualAccountRequestStatusModal"
                 >
                     {{ __('Chỉnh sửa trạng thái') }}
                 </button>

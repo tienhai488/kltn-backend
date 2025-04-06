@@ -63,8 +63,7 @@ class RoleController extends Controller
     {
         $this->roleRepository->create($request->validated()) ?
             session()->flash(NotificationType::SUCCESS->value, __('success.role.store'))
-            :
-            session()->flash(NotificationType::ERROR->value, __('error.role.store'));
+            : session()->flash(NotificationType::ERROR->value, __('error.role.store'));
 
         return to_route('admin.role.index');
     }
@@ -97,8 +96,7 @@ class RoleController extends Controller
     {
         $this->roleRepository->update($role, $request->validated()) ?
             session()->flash(NotificationType::SUCCESS->value, __('success.role.update'))
-            :
-            session()->flash(NotificationType::ERROR->value, __('error.role.update'));
+            : session()->flash(NotificationType::ERROR->value, __('error.role.update'));
 
         return to_route('admin.role.index');
     }
@@ -111,12 +109,20 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        if ($this->roleRepository->destroy($role))
+        if ($role->users()->exists()) {
             return response()->json([
-                'message' => __('success.delete'),
+                'message' => __('Không thể xóa lựa chọn này vì đã được gán cho các đối tượng khác.'),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($this->roleRepository->destroy($role)) {
+            return response()->json([
+                'message' => __('Xóa lựa chọn thành công.'),
             ], Response::HTTP_OK);
+        }
+
         return response()->json([
-            'message' => __('error.delete'),
+            'message' => __('Xóa lựa chọn thất bại.'),
         ], Response::HTTP_BAD_REQUEST);
     }
 }

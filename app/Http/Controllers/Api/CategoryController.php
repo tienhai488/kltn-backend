@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Category\CategoryRequest;
 use App\Http\Resources\Api\CategoryResource;
 use App\Repositories\Category\CategoryRepositoryInterface;
 use App\Traits\ApiResponses;
@@ -33,10 +34,10 @@ class CategoryController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(CategoryRequest $request)
     {
         return $this->okResponse(
-            CategoryResource::collection($this->categoryRepository->all()),
+            CategoryResource::collection($this->categoryRepository->serverPaginationFilteringForAdmin($request->all())),
             __('Danh sách danh mục dự án'),
         );
     }

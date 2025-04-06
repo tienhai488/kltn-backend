@@ -35,7 +35,7 @@ class VolunteerController extends Controller
     public function index(VolunteerRequest $request)
     {
         return $this->okResponse(
-            VolunteerResource::collection($this->volunteerRepository->serverPaginationFilteringForAdmin($request->all())),
+            VolunteerResource::collection($this->volunteerRepository->serverPaginationFilteringForApi($request->all())),
             __('Danh sách tình nguyện viên')
         );
     }
@@ -53,6 +53,9 @@ class VolunteerController extends Controller
             'status' => VolunteerStatus::PENDING->value,
         ]));
 
-        return $this->createdResponse(VolunteerResource::make($data), __('Tạo tình nguyện viên thành công'));
+        return $this->createdResponse(
+            VolunteerResource::make($data),
+            __('Tạo tình nguyện viên thành công'),
+        );
     }
 }

@@ -121,17 +121,25 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         $userType = Arr::get($searchParams, 'user_type', null);
 
         $query = $this->model->query()
+            ->with(
+                'user',
+                'user.roles',
+                'user.projects',
+                'user.projects.donations_with_paid',
+                'user.projects.volunteers_without_canceled',
+                'category',
+                'volunteers_without_canceled',
+                'donations_with_paid',
+            )
+            ->withCount([
+                'volunteers_without_canceled',
+                'donations_with_paid',
+            ])
+            ->withSum('donations_with_paid', 'amount')
             ->whereHas('user.roles', function ($q) {
                 $q->whereIn('name', [Acl::ROLE_ORGANIZATION, Acl::ROLE_INDIVIDUAL]);
             })
-            ->whereIn('status', [ProjectStatus::APPROVED, ProjectStatus::PAUSED])
-            ->with('user', 'category')
-            ->withCount([
-                'volunteers',
-                'volunteers_without_canceled',
-                'donations',
-            ])
-            ->withSum('donations', 'amount');
+            ->whereIn('status', [ProjectStatus::APPROVED, ProjectStatus::PAUSED]);
 
         if ($keyword) {
             if (is_array($keyword)) {

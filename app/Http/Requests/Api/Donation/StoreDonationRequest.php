@@ -26,9 +26,6 @@ class StoreDonationRequest extends FormRequest
         return [
             'user_id' => 'nullable|exists:users,id',
             'project_id' => 'required|exists:projects,id',
-            'account_number' => 'required|max:255',
-            'account_name' => 'required|max:255',
-            'code' => 'required|max:255',
             'name' => 'required|max:255',
             'email' => 'nullable|email|max:255',
             'phone_number' => [
@@ -37,7 +34,6 @@ class StoreDonationRequest extends FormRequest
             ],
             'amount' => 'required|numeric|gt:0',
             'is_anonymous' => 'required|boolean',
-            'note' => 'nullable',
             'department_id' => [
                 'nullable',
                 Rule::requiredIf(fn() => !empty($this->student_code) || !empty($this->class)),

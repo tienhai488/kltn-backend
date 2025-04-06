@@ -19,31 +19,94 @@ class ProjectResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            /**
+             * Kiểm tra xem dự án có phải là của tổ chức hay không.
+             */
             'is_organization' => $this->whenLoaded('user', fn() => $this->user->hasRole(Acl::ROLE_ORGANIZATION)),
+            /**
+             * Kiểm tra xem dự án có phải là của cá nhân hay không.
+             */
             'is_individual' => $this->whenLoaded('user', fn() => $this->user->hasRole(Acl::ROLE_INDIVIDUAL)),
+            /**
+             * Trạng thái của dự án.
+             */
             'front_status' => $this->front_status,
+            /**
+             * Trạng thái của dự án.
+             */
             'front_status_label' => $this->front_status->getLabel(),
+            /**
+             * Danh mục của dự án.
+             */
             'category' => CategoryResource::make($this->whenLoaded('category')),
+            /**
+             * Thống tin người tạo dự án.
+             */
             'user' => UserResource::make($this->whenLoaded('user')),
+            /**
+             * Tên dự án.
+             */
             'name' => $this->name,
+            /**
+             * Loại dự án.
+             */
             'type' => $this->type,
+            /**
+             * Ảnh nền của dự án.
+             */
             'background_image' => $this->background_image,
+            /**
+             * Hình ảnh liên quan của dự án.
+             */
             'related_images' => $this->related_images
                 ->map(fn($media) => $media->original_url)
                 ->toArray(),
+            /**
+             * Câu chuyện của dự án.
+             */
             'content' => $this->content,
 
-            'donation_percent' => $this->donations_sum_amount ? round($this->donations_sum_amount / $this->donation_target * 100) : 0,
-            'donations_sum_amount' => $this->donations_sum_amount,
-            'donation_target' => $this->donation_target,
-            'donations_count' => $this->donations_count,
+            /**
+             * Phần trăm đã quyên góp.
+             */
+            'donation_percent' => $this->donations_with_paid_sum_amount && $this->donation_target > 0 ? round($this->donations_with_paid_sum_amount / $this->donation_target * 100) : 0,
+            /**
+             * Tổng số tiền tiền đã quyên góp.
+             */
+            'donations_with_paid_sum_amount' => $this->donations_with_paid_sum_amount ?? 0,
+            /**
+             * Mục tiêu quyên góp dự án.
+             */
+            'donation_target' => $this->donation_target ?? 0,
+            /**
+             * Số lượt đã quyên góp.
+             */
+            'donations_with_paid_count' => $this->donations_with_paid_count ?? 0,
 
-            'volunteer_percent' => $this->volunteers_without_canceled_count ? round($this->volunteers_without_canceled_count / $this->volunteer_quantity * 100) : 0,
+            /**
+             * Phần trăm tình nguyện viên đã tham gia.
+             */
+            'volunteer_percent' => $this->volunteers_without_canceled_count && $this->volunteer_quantity > 0 ? round($this->volunteers_without_canceled_count / $this->volunteer_quantity * 100) : 0,
+            /**
+             * Số lượng tình nguyện viên đã đăng ký.
+             */
             'volunteers_without_canceled_count' => $this->volunteers_without_canceled_count ?? 0,
-            'volunteer_quantity' => $this->volunteer_quantity,
+            /**
+             * Mục tiêu tình nguyện viên dự án.
+             */
+            'volunteer_quantity' => $this->volunteer_quantity ?? 0,
 
+            /**
+             * Thời gian còn lại.
+             */
             'diff_date' => $this->getDiffAttribute(),
+            /**
+             * Thời gian bắt đầu của dự án.
+             */
             'start_date' => $this->start_date,
+            /**
+             * Thời gian kết thúc của dự án.
+             */
             'end_date' => $this->end_date,
         ];
     }
