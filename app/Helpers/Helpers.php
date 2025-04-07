@@ -75,6 +75,21 @@ if (!function_exists('generateUsername')) {
     }
 }
 
+if (!function_exists('generateSlug')) {
+
+    /**
+     * Generate a slug from given name and id.
+     *
+     * @param string $name
+     * @param $id
+     * @return string
+     */
+    function generateSlug(string $name, $id): string
+    {
+        return Illuminate\Support\Str::slug($name) . '-' . hash("crc32b", (string)$id);
+    }
+}
+
 if (!function_exists('layoutConfig')) {
     function layoutConfig()
     {
