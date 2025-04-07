@@ -46,7 +46,7 @@ class UpdateProfileRequest extends FormRequest
                 'max:255',
             ],
             'phone_number' => [
-                'nullable',
+                'required',
                 Rule::unique('users')->ignore(auth()->id()),
                 new PhoneNumber,
             ],
@@ -56,17 +56,15 @@ class UpdateProfileRequest extends FormRequest
             'tiktok' => 'nullable',
             'department_id' => [
                 'nullable',
-                'required_with:class,student_code',
+                Rule::requiredIf(fn() => !empty($this->student_code) || !empty($this->class)),
                 'exists:departments,id',
             ],
             'class' => [
-                'nullable',
-                'required_with:department_id,student_code',
+                Rule::requiredIf(fn() => !empty($this->department_id)),
                 'max:255',
             ],
             'student_code' => [
-                'nullable',
-                'required_with:department_id,class',
+                Rule::requiredIf(fn() => !empty($this->department_id)),
                 'max:255',
             ],
         ];
