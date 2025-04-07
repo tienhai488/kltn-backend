@@ -11,10 +11,10 @@ class ProjectSlugSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Project::whereNull('slug')->chunk(100)->each(function ($projects) {
-            foreach ($projects as $project) {
+        \App\Models\Project::whereNull('slug')->chunk(100, function ($chunkedProjects) {
+            $chunkedProjects->each(function ($project) {
                 $project->update(['slug' => generateSlug($project->name, $project->id)]);
-            }
+            });
         });
     }
 }
