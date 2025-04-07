@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\Donation;
 
 use App\Enum\AnonymousStatus;
+use App\Enum\PaymentStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -54,6 +55,10 @@ class DonationRequest extends FormRequest
                 'integer',
                 'min:1',
                 'exists:users,id',
+            ],
+            'status' => [
+                'nullable',
+                Rule::enum(PaymentStatus::class),
             ],
         ];
     }
