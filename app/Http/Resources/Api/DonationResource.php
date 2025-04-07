@@ -29,6 +29,7 @@ class DonationResource extends JsonResource
             'status' => $this->status,
             'status_label' => $this->status->getLabel(),
             'status_badge' => $this->status->getBadge(),
+            'payment_method_code' => $this->payment_method_code,
             'is_anonymous' => $this->is_anonymous,
             'anonymous_status_label' => $this->is_anonymous->getLabel(),
             'anonymous_status_badge' => $this->is_anonymous->getBadge(),
