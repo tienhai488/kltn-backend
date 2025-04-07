@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\Donation;
 
+use App\Enum\PaymentMethodCode;
 use App\Rules\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -32,7 +33,7 @@ class StoreDonationRequest extends FormRequest
                 'nullable',
                 new PhoneNumber,
             ],
-            'amount' => 'required|numeric|gt:0',
+            'amount' => 'required|numeric|min:10000',
             'is_anonymous' => 'required|boolean',
             'department_id' => [
                 'nullable',
@@ -46,6 +47,10 @@ class StoreDonationRequest extends FormRequest
             'student_code' => [
                 Rule::requiredIf(fn() => !empty($this->department_id)),
                 'max:255',
+            ],
+            'payment_method_code' => [
+                'required',
+                Rule::enum(PaymentMethodCode::class),
             ],
         ];
     }
