@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enum\ActiveStatus;
 use App\Enum\AnonymousStatus;
+use App\Enum\PaymentMethodCode;
 use App\Enum\PaymentStatus;
 use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,6 +34,7 @@ class Donation extends Model
         'department_id',
         'class',
         'student_code',
+        'payment_method_code',
     ];
 
     /**
@@ -41,6 +43,7 @@ class Donation extends Model
     protected $casts = [
         'status' => PaymentStatus::class,
         'is_anonymous' => AnonymousStatus::class,
+        'payment_method_code' => PaymentMethodCode::class,
     ];
 
     /**

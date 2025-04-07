@@ -2,13 +2,33 @@
 
 namespace App\Services;
 
-use App\Enum\ActiveStatus;
+use App\DTOs\VNPayApiConfigDTO;
+use App\Enum\PaymentMethodCode;
+use App\Enum\PaymentStatus;
 use App\Models\Donation;
+use App\Repositories\Donation\DonationRepositoryInterface;
+use App\Repositories\PaymentMethod\PaymentMethodRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class VNPayService
 {
+    protected $apiConfig;
+
+    public function __construct(
+        protected PaymentMethodRepositoryInterface $paymentMethodRepository,
+        protected DonationRepositoryInterface $donationRepository,
+    ) {
+        $paymentMethod = $this->paymentMethodRepository->advancedGetFirst([
+            'conditions' => [
+                'where' => [
+                    'code' => PaymentMethodCode::VNPAY->value,
+                ],
+            ],
+        ]);
+        $this->apiConfig = VNPayApiConfigDTO::fromArray($paymentMethod->api_config ?? []);
+    }
+
     /**
      * Tạo URL thanh toán VNPay
      *
@@ -17,16 +37,16 @@ class VNPayService
      */
     public function createPaymentUrl($data)
     {
-        $vnp_Url = config('vnpay.vnp_Url');
-        $vnp_HashSecret = config('vnpay.vnp_HashSecret');
-        $vnp_TmnCode = config('vnpay.vnp_TmnCode');
-        $vnp_ReturnUrl = config('vnpay.vnp_ReturnUrl');
+        $vnp_Url = $this->apiConfig->vnpUrl;
+        $vnp_HashSecret = $this->apiConfig->vnpHashSecret;
+        $vnp_TmnCode = $this->apiConfig->vnpTmnCode;
+        $vnp_ReturnUrl = route('payment_method.vnpay.return');
 
-        $vnp_TxnRef = $data['donation_id']; // Mã đơn hàng
-        $vnp_OrderInfo = $data['order_desc']; // Thông tin đơn hàng
+        $vnp_TxnRef = '#' . $data['donation_id']; // Mã đơn hàng
+        $vnp_OrderInfo = $data['order_desc'] ?? 'Thanh toán đơn hàng'; // Thông tin đơn hàng
         $vnp_OrderType = $data['order_type'] ?? 'other'; // Loại hàng hóa
         $vnp_Amount = $data['amount'] * 100; // Số tiền * 100
-        $vnp_Locale = $data['language'] ?? 'vn'; // Ngôn ngữ
+        $vnp_Locale = 'vn'; // Ngôn ngữ
         $vnp_IpAddr = $data['ip_addr']; // Địa chỉ IP
         $vnp_BankCode = $data['bank_code'] ?? ''; // Mã ngân hàng (tùy chọn)
 
@@ -77,13 +97,27 @@ class VNPayService
      * Xử lý dữ liệu trả về từ VNPay
      *
      * @param array $vnpayData
-     * @return array
      */
     public function processReturnUrl($vnpayData)
     {
-        $vnp_HashSecret = config('vnpay.vnp_HashSecret');
+        // {
+        //     "vnp_Amount": "4032400",
+        //     "vnp_BankCode": "NCB",
+        //     "vnp_BankTranNo": "VNP14892673",
+        //     "vnp_CardType": "ATM",
+        //     "vnp_OrderInfo": "Thanh toán đơn hàng",
+        //     "vnp_PayDate": "20250406222110",
+        //     "vnp_ResponseCode": "00",
+        //     "vnp_TmnCode": "P8ANVBP7",
+        //     "vnp_TransactionNo": "14892673",
+        //     "vnp_TransactionStatus": "00",
+        //     "vnp_TxnRef": "#25",
+        //     "vnp_SecureHash": "531bcd7cd775fa1bc3f182a7d453591d47add76cbecf8300f83e4dc24be305eb2307433c5b882eb118d8cba3081e7758a8b36850ae096fd39b5881a56771934b"
+        //   }
+
+        $vnp_HashSecret = $this->apiConfig->vnpHashSecret;
         $vnp_SecureHash = $vnpayData['vnp_SecureHash'];
-        $donation_id = $vnpayData['vnp_TxnRef'];
+        $donation_id = str_replace('#', '', $vnpayData['vnp_TxnRef']);
 
         // Xóa vnp_SecureHash để tạo chuỗi hash mới
         unset($vnpayData['vnp_SecureHash']);
@@ -105,46 +139,59 @@ class VNPayService
         // Tạo chuỗi hash mới để so sánh
         $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
 
-        // Kiểm tra hash và mã phản hồi
-        if ($secureHash == $vnp_SecureHash) {
-            if ($vnpayData['vnp_ResponseCode'] == '00') {
-                // Thanh toán thành công, cập nhật trạng thái đơn hàng
-                $this->updateDonationStatus($donation_id, ActiveStatus::ACTIVE);
-                return [
-                    'success' => true,
-                    'message' => 'Thanh toán thành công',
-                    'donation_id' => $donation_id
-                ];
-            } else {
-                // Thanh toán thất bại
-                return [
+        if ($secureHash != $vnp_SecureHash) {
+            return redirect()->away($this->apiConfig->vnpReturnUrl)
+                ->with([
+                    'success' => false,
+                    'message' => 'Chữ ký không hợp lệ',
+                    'donation_id' => $donation_id,
+                ]);
+        }
+
+        if ($vnpayData['vnp_ResponseCode'] != '00') {
+            return redirect()->away($this->apiConfig->vnpReturnUrl)
+                ->with([
                     'success' => false,
                     'message' => 'Thanh toán không thành công',
                     'donation_id' => $donation_id,
-                    'response_code' => $vnpayData['vnp_ResponseCode']
-                ];
-            }
-        } else {
-            // Chữ ký không hợp lệ
-            return [
-                'success' => false,
-                'message' => 'Chữ ký không hợp lệ',
-                'donation_id' => $donation_id
-            ];
+                    'response_code' => $vnpayData['vnp_ResponseCode'],
+                ]);
         }
+
+        $this->updateDonation($donation_id, $vnpayData);
+
+        return redirect()->away($this->apiConfig->vnpReturnUrl)
+            ->with([
+                'success' => true,
+                'message' => 'Thanh toán thành công',
+                'donation_id' => $donation_id
+            ]);
     }
 
-    private function updateDonationStatus($donationId, $status)
+    /**
+     * Update donation status after payment success.
+     *
+     * @param int $donationId
+     * @param array $data
+     */
+    private function updateDonation($donationId, $data)
     {
         try {
             $donation = Donation::findOrFail($donationId);
-            $donation->update(['status' => $status]);
+
+            $dataUpdate = [
+                'status' => PaymentStatus::PAID->value,
+                'amount' => $data['vnp_Amount'] / 100,
+                'payment_method_code' => PaymentMethodCode::VNPAY->value,
+            ];
+
+            $this->donationRepository->update($donation, $dataUpdate);
 
             // Ghi log thành công
-            Log::info("Đã cập nhật trạng thái đơn hàng {$donationId} thành {$status->value}");
+            Log::info("Cập nhật đơn hàng {$donationId} thành công với dữ liệu: " . json_encode($data));
         } catch (\Exception $e) {
             // Ghi log lỗi
-            Log::error("Lỗi cập nhật trạng thái đơn hàng {$donationId}: " . $e->getMessage());
+            Log::error("Lỗi cập nhật đơn hàng {$donationId}: " . $e->getMessage());
         }
     }
 }
