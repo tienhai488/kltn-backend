@@ -3,8 +3,10 @@
 namespace App\Repositories\Volunteer;
 
 use App\Enum\PriceRangeFilter;
+use App\Enum\VolunteerStatus;
 use App\Models\Volunteer;
 use App\Repositories\BaseRepository;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
@@ -405,5 +407,30 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
             return $this->model->count();
         }
         return $this->model->where('status', '!=', $status)->count();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getChartVolunteerData(
+        array $range,
+        $projectId = null,
+    ): array {
+        $startDate = Carbon::createFromFormat('d/m/Y', $range[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', end($range))->endOfDay();
+
+        $query = $this->model->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y") as date, count(*) as count')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereNot('status', VolunteerStatus::CANCELED->value);
+
+        if ($projectId) {
+            $query->where('project_id', $projectId);
+        }
+
+        return $query
+            ->groupBy('date')
+            ->get()
+            ->keyBy('date')
+            ->toArray();
     }
 }

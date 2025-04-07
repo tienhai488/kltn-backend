@@ -103,6 +103,10 @@
         </div>
     </div>
 
+    <livewire:admin.dashboard.partials.chart-donation lazy />
+
+    <livewire:admin.dashboard.partials.chart-volunteer lazy />
+
     <x-custom.stat-box :id="'general-settings-box'" :custom-col="'col-lg-12'">
         <x-slot:boxTitle>
             {{ __('Danh sách thông tin') }}

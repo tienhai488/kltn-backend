@@ -6,6 +6,7 @@ use App\Enum\PaymentStatus;
 use App\Enum\PriceRangeFilter;
 use App\Models\Donation;
 use App\Repositories\BaseRepository;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
@@ -397,5 +398,30 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
             return $this->model->count();
         }
         return $this->model->where('status', $status)->count();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getChartDonationData(
+        array $range,
+        $projectId = null,
+    ): array {
+        $startDate = Carbon::createFromFormat('d/m/Y', $range[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', end($range))->endOfDay();
+
+        $query = $this->model->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y") as date, sum(amount) as sum_amount')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->where('status', PaymentStatus::PAID->value);
+
+        if ($projectId) {
+            $query->where('project_id', $projectId);
+        }
+
+        return $query
+            ->groupBy('date')
+            ->get()
+            ->keyBy('date')
+            ->toArray();
     }
 }

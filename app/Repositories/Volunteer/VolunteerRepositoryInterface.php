@@ -41,4 +41,9 @@ interface VolunteerRepositoryInterface extends RepositoryInterface
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getVolunteerData(array $conditions);
+
+    public function getChartVolunteerData(
+        array $range,
+        $projectId = null,
+    ): array;
 }

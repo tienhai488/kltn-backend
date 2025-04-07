@@ -46,4 +46,9 @@ interface DonationRepositoryInterface extends RepositoryInterface
      * Calculate the total amount of all donations.
      */
     public function sumAmount();
+
+    public function getChartDonationData(
+        array $range,
+        $projectId = null,
+    ): array;
 }
