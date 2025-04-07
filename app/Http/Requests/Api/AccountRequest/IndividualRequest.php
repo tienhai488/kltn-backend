@@ -67,4 +67,26 @@ class IndividualRequest extends FormRequest
             'related_images' => 'nullable|array',
         ];
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string> An associative array mapping attribute names to their human-readable labels.
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => __('họ và tên'),
+            'birth' => __('ngày sinh'),
+            'email' => __('email'),
+            'phone_number' => __('số điện thoại'),
+            'club_name' => __('tên clb'),
+            'field' => __('lĩnh vực hoạt động của clb'),
+            'website' => __('website'),
+            'address' => __('địa chỉ'),
+            'username' => __('tên tài khoản'),
+            'information' => __('thông tin khác'),
+            'related_images' => __('hình ảnh minh chứng'),
+        ];
+    }
 }
