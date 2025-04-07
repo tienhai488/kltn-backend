@@ -47,6 +47,7 @@ class ProjectResource extends JsonResource
              * Tên dự án.
              */
             'name' => $this->name,
+            'slug' => $this->slug,
             /**
              * Loại dự án.
              */

@@ -7,16 +7,18 @@ use App\Enum\ProjectFrontStatus;
 use App\Enum\ProjectStatus;
 use App\Enum\ProjectType;
 use App\Enum\VolunteerStatus;
+use App\Observers\ProjectObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Vite;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+#[ObservedBy([ProjectObserver::class])]
 class Project extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
@@ -32,6 +34,7 @@ class Project extends Model implements HasMedia
         'category_id',
         'user_id',
         'name',
+        'slug',
         'donation_target',
         'volunteer_quantity',
         'start_date',
