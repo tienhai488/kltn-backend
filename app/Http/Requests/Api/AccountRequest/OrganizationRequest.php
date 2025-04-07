@@ -64,4 +64,26 @@ class OrganizationRequest extends FormRequest
             'related_images' => 'nullable|array',
         ];
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string> An associative array mapping attribute names to their human-readable labels.
+     */
+    public function attributes()
+    {
+        return [
+            'name' => __('tên tổ chức'),
+            'birth' => __('ngày thành lập'),
+            'website' => __('website'),
+            'field' => __('lĩnh vực hoạt động'),
+            'address' => __('địa chỉ'),
+            'username' => __('tên đăng nhập'),
+            'information' => __('thông tin tổ chức'),
+            'representative_name' => __('tên người đại diện'),
+            'representative_phone_number' => __('số điện thoại người đại diện'),
+            'representative_email' => __('email người đại diện'),
+            'related_images' => __('hình ảnh minh chứng'),
+        ];
+    }
 }

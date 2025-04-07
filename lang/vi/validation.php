@@ -142,7 +142,6 @@ return [
     'attributes'           => [
         'address'               => 'địa chỉ',
         'age'                   => 'tuổi',
-        'amount'                => 'lượng tiền',
         'available'             => 'có sẵn',
         'area_id'               => 'khu vực',
         'bank_name'             => 'tên ngân hàng',
@@ -285,6 +284,7 @@ return [
         'account_number'        => 'số tài khoản',
         'account_name'          => 'tên tài khoản',
         'is_anonymous'          => 'ẩn danh',
+        'amount'                => 'số tiền',
     ],
 
 ];
