@@ -24,6 +24,8 @@ class DepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'page' => 'nullable|integer|min:1',
+            'limit' => 'nullable|integer|min:1',
             'status' => [
                 'nullable',
                 Rule::enum(DepartmentStatus::class),

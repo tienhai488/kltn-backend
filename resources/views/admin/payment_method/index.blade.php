@@ -60,8 +60,7 @@
                     {
                         "data": "name",
                         "render": function (data, type, full) {
-                            let url = @json(asset(':id')).replace('/:id', full.icon_url);
-                            return `<img src="${url}" alt="${data}" class="me-2" width="30" height="30">${data}`;
+                            return `<img src="${full.icon}" alt="${data}" class="me-2" width="30" height="30">${data}`;
                         },
                     },
                     {
@@ -85,6 +84,7 @@
                         "orderable": false,
                         "render": function (data, type, full) {
                             let urlEdit = `{{ route('admin.payment_method.edit', ':id') }}`.replace(':id', data);
+                            let urlSetting = `{{ route('admin.payment_method.setting', ':id') }}`.replace(':id', data);
 
                             return `
                                 <ul class="table-controls d-flex justify-content-center">
@@ -108,6 +108,17 @@
                                             <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z">
                                             </path>
                                         </svg>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="${urlSetting}"
+                                            class="bs-tooltip"
+                                            data-bs-placement="top"
+                                            data-original-title="{{ __('Cài đặt') }}"
+                                            title="{{ __('Cài đặt') }}"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings p-1 br-6 mb-1"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                                         </a>
                                     </li>
                                     @endcan
@@ -158,9 +169,7 @@
                 e.preventDefault();
                 let id = $(this).data('id');
 
-                let url = `{{ route('admin.payment_method.toggle_status', [
-                    'paymentMethod' => ':id'
-                ]) }}`.replace(':id', id);
+                let url = `{{ route('admin.payment_method.toggle_status', ':id') }}`.replace(':id', id);
 
                 toggleStatus(url);
             });

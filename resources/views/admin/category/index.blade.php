@@ -90,10 +90,14 @@
                         "data": "name",
                     },
                     {
-                        "data": "status_label",
-                        "class": "text-center",
+                        "data": "status",
+                        "className": "text-center",
                         "render": function (data, type, full) {
-                            return `<span class="badge badge-${full.status_badge}">${data}</span>`;
+                            let isChecked = data ? 'checked' : '';
+                            return `<div class="form-check form-switch form-check-inline form-switch-primary">
+                                <input class="form-check-input toggle-status" type="checkbox" role="switch" id="status" ${isChecked} data-id="${full.id}" data-name="status">
+                                <label class="form-check-label" for="status"></label>
+                            </div>`;
                         }
                     },
                     {
@@ -125,7 +129,18 @@
 
     <!--  BEGIN CUSTOM SCRIPTS FILE  -->
     <x-slot:footerFiles>
+        @include('includes.toggle-status')
         <script src="{{ asset('plugins/tomSelect/tom-select.base.js') }}"></script>
+        <script>
+            $(document).on('change', '.toggle-status', function(e) {
+                e.preventDefault();
+                let id = $(this).data('id');
+
+                let url = `{{ route('admin.category.toggle_status', ':id') }}`.replace(':id', id);
+
+                toggleStatus(url);
+            });
+        </script>
     </x-slot:footerFiles>
     <!--  END CUSTOM SCRIPTS FILE  -->
 </x-base-layout>

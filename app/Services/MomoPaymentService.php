@@ -2,14 +2,18 @@
 
 namespace App\Services;
 
-use App\Enum\ActiveStatus as EnumActiveStatus;
+use App\DTOs\MomoApiConfigDTO;
+use App\Enum\PaymentMethodCode;
+use App\Enum\PaymentStatus;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use App\Enums\ActiveStatus;
-use App\Models\Donation;
+use App\Repositories\Donation\DonationRepositoryInterface;
+use App\Repositories\PaymentMethod\PaymentMethodRepositoryInterface;
+use Carbon\Carbon;
 
 class MomoPaymentService
 {
+    protected $apiConfig;
     protected $endpoint;
     protected $partnerCode;
     protected $accessKey;
@@ -18,19 +22,39 @@ class MomoPaymentService
     protected $notifyUrl;
     protected $requestType;
 
-    public function __construct()
-    {
-        $this->endpoint = config('momo.endpoint');
-        $this->partnerCode = config('momo.partner_code');
-        $this->accessKey = config('momo.access_key');
-        $this->secretKey = config('momo.secret_key');
-        $this->returnUrl = env('APP_URL') . '/api/v1/payment/momo/return';
-        $this->notifyUrl = env('APP_URL') . '/api/v1/payment/momo/ipn';
+    public function __construct(
+        protected PaymentMethodRepositoryInterface $paymentMethodRepository,
+        protected DonationRepositoryInterface $donationRepository,
+    ) {
+        $paymentMethod = $this->paymentMethodRepository->advancedGetFirst([
+            'conditions' => [
+                'where' => [
+                    'code' => PaymentMethodCode::MOMO->value,
+                ],
+            ],
+        ]);
+        $this->apiConfig = MomoApiConfigDTO::fromArray($paymentMethod->api_config ?? []);
+        $this->endpoint = $this->apiConfig->endpoint;
+        $this->partnerCode = $this->apiConfig->partnerCode;
+        $this->accessKey = $this->apiConfig->accessKey;
+        $this->secretKey = $this->apiConfig->secretKey;
+        $this->returnUrl = route('payment_method.momo.return');
+        $this->notifyUrl = route('api.payment_method.momo.ipn');
         $this->requestType = config('momo.request_type');
+        // $this->notifyUrl = "https://030f-116-110-41-181.ngrok-free.app/api/v1/payment-method/momo/ipn";
     }
 
-    public function createPayment($orderId, $amount, $orderInfo)
+    /**
+     * Tạo URL thanh toán MoMo.
+     *
+     * @param int $orderId
+     * @param int $amount
+     * @return array
+     */
+    public function createPayment($orderId, $amount)
     {
+        $orderInfo = '#' . $orderId;
+        $orderId = $orderId . '_' . Carbon::now()->format('YmdHis');
         $requestId = time() . "";
         $rawHash = "accessKey=" . $this->accessKey . "&amount=" . $amount . "&extraData=&ipnUrl=" . $this->notifyUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $this->partnerCode . "&redirectUrl=" . $this->returnUrl . "&requestId=" . $requestId . "&requestType=" . $this->requestType;
 
@@ -38,7 +62,7 @@ class MomoPaymentService
 
         $requestData = [
             'partnerCode' => $this->partnerCode,
-            'partnerName' => "Test",
+            'partnerName' => 'MomoTest',
             'storeId' => "MomoTestStore",
             'requestId' => $requestId,
             'amount' => $amount,
@@ -70,10 +94,15 @@ class MomoPaymentService
         }
     }
 
+    /**
+     * Process the return URL from MoMo to process the payment result.
+     *
+     * @param array $momoData
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function processReturnUrl($momoData)
     {
-        Log::info('Momo Return Data', ['data' => $momoData]);
-
         $orderId = $momoData['orderId'] ?? null;
         $requestId = $momoData['requestId'] ?? null;
         $amount = $momoData['amount'] ?? 0;
@@ -99,81 +128,118 @@ class MomoPaymentService
         $calculatedSignature = hash_hmac('sha256', $rawHash, $this->secretKey);
 
         // Check if signature is valid
-        if ($calculatedSignature !== $signature) {
-            Log::error('Momo Payment: Invalid signature', [
-                'calculated' => $calculatedSignature,
-                'received' => $signature
+        if ($calculatedSignature != $signature) {
+            return redirect()->away($this->apiConfig->returnUrl)->with([
+                'success' => false,
+                'message' => 'Chữ ký không hợp lệ',
+                'donation_id' => $orderId
+            ]);
+        }
+
+        $orderId = explode('_', $momoData['orderId'])[0] ?? null;
+
+        // Find the donation/order
+        $donation = $this->donationRepository->find($orderId);
+
+        if (!$donation) {
+            return redirect()->away($this->apiConfig->returnUrl)->with([
+                'success' => false,
+                'message' => 'Không tìm thấy đơn hàng',
+                'donation_id' => $orderId,
+            ]);
+        }
+
+        if ($resultCode != 0) {
+            return redirect()->away($this->apiConfig->returnUrl)->with([
+                'success' => false,
+                'message' => 'Thanh toán không thành công: ' . $message,
+                'donation_id' => $donation->id,
+                'order_id' => $orderId,
+                'result_code' => $resultCode
+            ]);
+        }
+
+        return redirect()->away($this->apiConfig->returnUrl)->with([
+            'success' => true,
+            'message' => 'Thanh toán thành công',
+            'donation_id' => $donation->id,
+            'order_id' => $orderId
+        ]);
+    }
+
+    /**
+     * Xử lý IPN trả về từ MoMo.
+     */
+    public function processIpn($momoData)
+    {
+        Log::info('Momo IPN Request', ['request' => $momoData]);
+
+        $orderId = $momoData['orderId'] ?? null;
+        $requestId = $momoData['requestId'] ?? null;
+        $amount = $momoData['amount'] ?? 0;
+        $orderInfo = $momoData['orderInfo'] ?? '';
+        $orderType = $momoData['orderType'] ?? '';
+        $transId = $momoData['transId'] ?? '';
+        $resultCode = $momoData['resultCode'] ?? 99;
+        $message = $momoData['message'] ?? '';
+        $payType = $momoData['payType'] ?? '';
+        $responseTime = $momoData['responseTime'] ?? 0;
+        $extraData = $momoData['extraData'] ?? '';
+        $signature = $momoData['signature'] ?? '';
+
+        // Build raw hash data for verification
+        $rawHash = "accessKey=" . $this->accessKey . "&amount=" . $amount . "&extraData=" . $extraData .
+            "&message=" . $message . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo .
+            "&orderType=" . $orderType . "&partnerCode=" . $this->partnerCode .
+            "&payType=" . $payType . "&requestId=" . $requestId .
+            "&responseTime=" . $responseTime . "&resultCode=" . $resultCode .
+            "&transId=" . $transId;
+
+        // Generate signature for comparison
+        $calculatedSignature = hash_hmac('sha256', $rawHash, $this->secretKey);
+
+        Log::info('Momo IPN Signature Verification', [
+            'calculated_signature' => $calculatedSignature,
+            'signature' => $signature,
+        ]);
+
+        // Check if signature is valid
+        if ($calculatedSignature != $signature) {
+            Log::error('Momo IPN Signature Verification Failed', [
+                'calculated_signature' => $calculatedSignature,
+                'signature' => $signature,
+                'donation_id' => $orderId,
             ]);
 
             return [
                 'success' => false,
                 'message' => 'Chữ ký không hợp lệ',
-                'order_id' => $orderId
+                'donation_id' => $orderId
             ];
         }
 
+        $orderId = explode('_', $momoData['orderId'])[0] ?? null;
+
         // Find the donation/order
-        $donation = Donation::find('id', $orderId);
+        $donation = $this->donationRepository->find($orderId);
 
         if (!$donation) {
-            Log::error('Momo Payment: Order not found', ['order_id' => $orderId]);
+            Log::error('Momo IPN Donation Not Found', [
+                'donation_id' => $orderId,
+            ]);
+
             return [
                 'success' => false,
                 'message' => 'Không tìm thấy đơn hàng',
-                'order_id' => $orderId
+                'donation_id' => $orderId
             ];
         }
 
-        // // Verify payment amount
-        // if ($donation->amount != $amount) {
-        //     Log::error('Momo Payment: Amount mismatch', [
-        //         'expected' => $donation->amount,
-        //         'received' => $amount
-        //     ]);
-
-        //     return [
-        //         'success' => false,
-        //         'message' => 'Số tiền thanh toán không khớp',
-        //         'order_id' => $orderId
-        //     ];
-        // }
-
-        // Check payment result
-        if ($resultCode == 0) {
-            // Payment successful
-            // $donation->payment_status = ActiveStatus::ACTIVE;
-            // $donation->transaction_id = $transId;
-            // $donation->payment_method = 'momo';
-            // $donation->payment_date = now();
-            // $donation->save();
-
-            $donation->update([
-                'status' => EnumActiveStatus::ACTIVE,
-                'amount' => $amount,
-            ]);
-
-            Log::info('Momo Payment: Payment successful', [
-                'order_id' => $orderId,
-                'trans_id' => $transId
-            ]);
-
-            return [
-                'success' => true,
-                'message' => 'Thanh toán thành công',
+        if ($resultCode != 0) {
+            Log::error('Momo IPN Payment Failed', [
                 'donation_id' => $donation->id,
-                'order_id' => $orderId
-            ];
-        } else {
-            // // Payment failed
-            // $donation->payment_status = ActiveStatus::INACTIVE;
-            // $donation->transaction_id = $transId;
-            // $donation->payment_method = 'momo';
-            // $donation->save();
-
-            Log::error('Momo Payment: Payment failed', [
                 'order_id' => $orderId,
                 'result_code' => $resultCode,
-                'message' => $message
             ]);
 
             return [
@@ -184,48 +250,23 @@ class MomoPaymentService
                 'result_code' => $resultCode
             ];
         }
-    }
 
-    public function verifyIpn($requestData)
-    {
-        try {
-            // Extract signature from request
-            $receivedSignature = $requestData['signature'];
-            Log::info('Received IPN data', ['requestData' => $requestData]);
+        $this->donationRepository->update($donation, [
+            'status' => PaymentStatus::PAID->value,
+            'payment_method_code' => PaymentMethodCode::MOMO->value,
+            'amount' => $amount,
+        ]);
 
-            // Build raw hash data
-            $rawHash = "accessKey=" . $this->accessKey . "&amount=" . $requestData['amount'] . "&extraData=" . $requestData['extraData'] . "&orderId=" . $requestData['orderId'] . "&orderInfo=" . $requestData['orderInfo'] . "&orderType=" . $requestData['orderType'] . "&partnerCode=" . $requestData['partnerCode'] . "&payType=" . $requestData['payType'] . "&requestId=" . $requestData['requestId'];
-            Log::info('Raw hash data', ['rawHash' => $rawHash]);
+        Log::info('Momo IPN Payment Successful', [
+            'donation_id' => $donation->id,
+            'order_id' => $orderId,
+        ]);
 
-            // Generate signature
-            $signature = hash_hmac('sha256', $rawHash, $this->secretKey);
-            Log::info('Generated signature', ['signature' => $signature]);
-
-            // Verify signature
-            if ($signature === $receivedSignature) {
-                Log::info('Signature verified successfully');
-                return [
-                    'status' => 'success',
-                    'message' => 'Signature Verified',
-                    'data' => $requestData
-                ];
-            }
-
-            Log::warning('Signature verification failed', [
-                'calculated' => $signature,
-                'received' => $receivedSignature
-            ]);
-
-            return [
-                'status' => 'error',
-                'message' => 'Invalid Signature',
-            ];
-        } catch (\Exception $e) {
-            Log::error('Error verifying IPN', ['error' => $e->getMessage()]);
-            return [
-                'status' => 'error',
-                'message' => 'An error occurred during signature verification',
-            ];
-        }
+        return [
+            'success' => true,
+            'message' => 'Thanh toán thành công',
+            'donation_id' => $donation->id,
+            'order_id' => $orderId,
+        ];
     }
 }

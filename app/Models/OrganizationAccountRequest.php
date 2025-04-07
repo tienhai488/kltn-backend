@@ -43,8 +43,8 @@ class OrganizationAccountRequest extends Model implements HasMedia
     /**
      * {@inheritdoc}
      */
-    protected $appends = [
-        'related_images',
+    protected $with = [
+        'media',
     ];
 
     /**

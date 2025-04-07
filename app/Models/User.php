@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Acl\Acl;
 use App\Enum\Gender;
+use App\Enum\PaymentStatus;
 use App\Enum\UserStatus;
 use App\Enum\UserType;
 use App\Enum\VolunteerStatus;
@@ -43,6 +44,12 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         'gender',
         'address',
         'description',
+        'department_id',
+        'class',
+        'student_code',
+        'tiktok',
+        'facebook',
+        'youtube',
     ];
 
     /**
@@ -67,9 +74,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     /**
      * {@inheritdoc}
      */
-    protected $appends = [
-        'avatar_url',
-        'type',
+    protected $with = [
+        'media',
     ];
 
     /**
@@ -120,6 +126,17 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     }
 
     /**
+     * Get the donations associated with the user that are paid.
+     *
+     * @return HasMany
+     */
+    public function donations_with_paid(): HasMany
+    {
+        return $this->hasMany(Donation::class)
+            ->where('status', PaymentStatus::PAID->value);
+    }
+
+    /**
      * Get the volunteers associated with the user.
      *
      * @return HasMany
@@ -149,7 +166,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     {
         return Attribute::make(
             fn($value) => $this->projects->sum(function ($project) {
-                return $project->donations->sum('amount');
+                return $project->donations_with_paid->sum('amount');
             })
         );
     }
@@ -163,7 +180,21 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     {
         return Attribute::make(
             fn($value) => $this->projects->sum(function ($project) {
-                return $project->donations->count();
+                return $project->donations_with_paid->count();
+            })
+        );
+    }
+
+    /**
+     * Get the total count of all volunteers for all projects created by the user.
+     *
+     * @return Attribute
+     */
+    public function projectsVolunteersCount(): Attribute
+    {
+        return Attribute::make(
+            fn($value) => $this->projects->sum(function ($project) {
+                return $project->volunteers_without_canceled->count();
             })
         );
     }

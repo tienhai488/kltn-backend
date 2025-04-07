@@ -106,13 +106,17 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         $type = Arr::get($searchParams, 'type', null);
 
         $query = $this->model->query()
-            ->with(['roles', 'projects.donations'])
+            ->with([
+                'roles',
+                'projects.donations_with_paid',
+                'projects.volunteers_without_canceled',
+            ])
             ->withCount([
                 'projects',
-                'donations',
+                'donations_with_paid',
                 'volunteers_without_canceled',
             ])
-            ->withSum('donations', 'amount');
+            ->withSum('donations_with_paid', 'amount');
 
         if ($keyword) {
             if (is_array($keyword)) {

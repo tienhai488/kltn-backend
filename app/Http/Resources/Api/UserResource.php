@@ -27,33 +27,43 @@ class UserResource extends JsonResource
             'gender' => $this->gender,
             'address' => $this->address,
             'avatar_url' => $this->avatar_url,
+            /**
+             * Giới thiệu.
+             */
             'description' => $this->description,
             'facebook' => $this->facebook,
             'youtube' => $this->youtube,
             'tiktok' => $this->tiktok,
+            /**
+             * Loại người dùng.
+             */
             'type' => $this->type,
             /**
-             * Số dự án đã tạo.
+             * Số dự án đã tạo (Tổ chức/ Cá nhân).
              */
             'projects_count' => $this->projects_count,
             /**
-             * Tổng số tiền mà các dự án đã tạo đã nhận được.
+             * Tổng số tiền mà các dự án đã tạo đã nhận được (Tổ chức/ Cá nhân).
              */
             'projects_donations_sum_amount' => $this->projects_donations_sum_amount,
             /**
-             * Tổng số lượt ủng hộ.
+             * Tổng số lượt ủng hộ (Tổ chức/ Cá nhân).
              */
             'projects_donations_count' => $this->projects_donations_count,
             /**
-             * Số lượt quyên góp.
+             * Tổng số lượt tham gia tình nguyện (Tổ chức/ Cá nhân).
              */
-            'donations_count' => $this->donations_count,
+            'projects_volunteers_count' => $this->projects_volunteers_count,
             /**
-             * Tổng số tiền đã quyên góp.
+             * Số lượt quyên góp (Cá nhân).
              */
-            'donations_sum_amount' => $this->donations_sum_amount,
+            'donations_with_paid_count' => $this->donations_with_paid_count,
             /**
-             * Số dự án đã tham gia tình nguyện.
+             * Số tiền đã quyên góp (Cá nhân).
+             */
+            'donations_with_paid_sum_amount' => $this->donations_with_paid_sum_amount,
+            /**
+             * Số lượt tham gia tình nguyện (Cá nhân).
              */
             'volunteers_without_canceled_count' => $this->volunteers_without_canceled_count,
         ];

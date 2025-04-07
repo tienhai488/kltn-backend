@@ -7,16 +7,18 @@ use App\Enum\ProjectFrontStatus;
 use App\Enum\ProjectStatus;
 use App\Enum\ProjectType;
 use App\Enum\VolunteerStatus;
+use App\Observers\ProjectObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Vite;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+#[ObservedBy([ProjectObserver::class])]
 class Project extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
@@ -32,6 +34,7 @@ class Project extends Model implements HasMedia
         'category_id',
         'user_id',
         'name',
+        'slug',
         'donation_target',
         'volunteer_quantity',
         'start_date',
@@ -51,13 +54,8 @@ class Project extends Model implements HasMedia
         'type' => ProjectType::class,
     ];
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $appends = [
-        'background_image',
-        'related_images',
-        'front_status',
+    protected $with = [
+        'media',
     ];
 
     /**
@@ -81,8 +79,8 @@ class Project extends Model implements HasMedia
             if (now() > $this->end_date) {
                 return ProjectFrontStatus::FINISHED;
             } else if (
-                $this->donations()->sum('amount') >= $this->donation_target
-                && $this->volunteers_without_canceled()->count() >= $this->volunteer_quantity
+                $this->donations_with_paid->sum('amount') >= $this->donation_target
+                && $this->volunteers_without_canceled->count() >= $this->volunteer_quantity
             ) {
                 return ProjectFrontStatus::GOAL_ACHIEVED;
             }
@@ -193,6 +191,11 @@ class Project extends Model implements HasMedia
         return $this->hasMany(Donation::class);
     }
 
+    /**
+     * Get the paid donations associated with the project.
+     *
+     * @return HasMany<Donation>
+     */
     public function donations_with_paid(): HasMany
     {
         return $this->hasMany(Donation::class)

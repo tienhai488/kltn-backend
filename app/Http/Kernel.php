@@ -71,5 +71,6 @@ class Kernel extends HttpKernel
         'check_user_status' => \App\Http\Middleware\CheckUserStatus::class,
         'api_key' => \App\Http\Middleware\AuthorizeApiKey::class,
         'active' => \App\Http\Middleware\CheckUserIsActive::class,
+        'active.frontend' => \App\Http\Middleware\CheckUserIsActiveInFrontend::class,
     ];
 }

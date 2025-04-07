@@ -41,7 +41,7 @@ class UpdateProjectRequest extends FormRequest
             'content' => 'required|string',
             'donation_target' => [
                 'required_if:type,' . ProjectType::DONATION->value . ',' . ProjectType::BOTH->value . ',' . '',
-                'numeric',
+                'integer',
                 'gt:0',
             ],
             'volunteer_quantity' => [
@@ -77,8 +77,8 @@ class UpdateProjectRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'donation_target' => (float) str_replace(',', '', $this->donation_target),
-            'volunteer_quantity' => (float) str_replace(',', '', $this->volunteer_quantity),
+            'donation_target' => str_replace(',', '', $this->donation_target),
+            'volunteer_quantity' => str_replace(',', '', $this->volunteer_quantity),
         ]);
     }
 }
