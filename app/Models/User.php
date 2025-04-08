@@ -21,6 +21,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[ObservedBy([UserObserver::class])]
@@ -155,6 +156,17 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     {
         return $this->hasMany(Volunteer::class)
             ->where('status', '!=', VolunteerStatus::CANCELED->value);
+    }
+
+    /**
+     * Get the department that the user belongs to.
+     *
+     * @return BelongsTo
+     */
+
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
     }
 
     /**

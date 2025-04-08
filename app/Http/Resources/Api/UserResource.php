@@ -27,6 +27,9 @@ class UserResource extends JsonResource
             'gender' => $this->gender,
             'address' => $this->address,
             'avatar_url' => $this->avatar_url,
+            'department' => $this->whenLoaded('department'),
+            'class' => $this->class,
+            'student_code' => $this->student_code,
             /**
              * Giới thiệu.
              */

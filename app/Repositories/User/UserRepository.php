@@ -107,6 +107,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         $query = $this->model->query()
             ->with([
+                'department',
                 'roles',
                 'projects.donations_with_paid',
                 'projects.volunteers_without_canceled',
