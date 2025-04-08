@@ -49,8 +49,8 @@ class DonationController extends Controller
      */
     public function store(StoreDonationRequest $request)
     {
-        $data = $this->donationRepository->create($request->validated());
+        $donation = $this->donationRepository->create($request->validated());
 
-        return $this->createdResponse(DonationResource::make($data), __('Tạo quyên góp thành công'));
+        return $this->createdResponse(DonationResource::make($donation), __('Tạo quyên góp thành công'));
     }
 }
