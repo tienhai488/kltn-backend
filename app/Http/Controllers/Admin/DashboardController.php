@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enum\UserType;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\DonationResource;
 use App\Http\Resources\Admin\ProjectResource;
@@ -40,7 +39,9 @@ class DashboardController extends Controller
             'donations',
             'volunteers_without_canceled',
         ]);
-        $users = $this->userRepository->all();
+        $users = $this->userRepository->getUsers();
+        $members = $this->userRepository->getMembers();
+
         $categories = $this->categoryRepository->all();
         $projects = $this->projectRepository->advancedGet([
             'conditions' => [
@@ -53,6 +54,7 @@ class DashboardController extends Controller
         return view('admin.dashboard.index', compact(
             'user',
             'users',
+            'members',
             'projects',
             'categories',
         ));

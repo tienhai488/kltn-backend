@@ -369,4 +369,25 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             return $e->getMessage();
         }
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMembers()
+    {
+        return $this->model->whereHas('roles', function ($query) {
+            $query->whereIn('name', [
+                Acl::ROLE_ORGANIZATION,
+                Acl::ROLE_INDIVIDUAL,
+            ]);
+        })->get();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getUsers()
+    {
+        return $this->model->whereDoesntHave('roles')->get();
+    }
 }

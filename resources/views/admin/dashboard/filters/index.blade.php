@@ -52,7 +52,7 @@
                 :is-filter="true"
             />
         </div>
-        <div class="col-md-4">
+        {{-- <div class="col-md-4">
             <x-form.form-select
                 :id="'project_frontend_status'"
                 :label="__('Trạng thái dự án khi được chấp nhận')"
@@ -64,6 +64,19 @@
                 :placeholder="__('Chọn trạng thái')"
                 :is-filter="true"
             />
+        </div> --}}
+        <div class="col-md-4">
+            <x-form.form-select
+                :id="'user_id'"
+                :label="__('Người dùng (Tổ chức/ Cá nhân)')"
+                :data-values="$members"
+                :select-value-attribute="'id'"
+                :select-value-label="'name'"
+                :name="'user_id'"
+                :multiple="false"
+                :placeholder="__('Chọn người dùng')"
+                :is-filter="true"
+            />
         </div>
         <div class="col-md-4">
             <x-form.form-select
@@ -72,7 +85,7 @@
                 :data-values="$users"
                 :select-value-attribute="'id'"
                 :select-value-label="'name'"
-                :name="'donation_volunterdonation_volunteer_user_id'"
+                :name="'donation_volunteer_user_id'"
                 :multiple="false"
                 :placeholder="__('Chọn người dùng')"
                 :is-filter="true"
@@ -160,14 +173,14 @@
         }
 
         const processChange = debounce(() => {
-            // $('#sProjectTable').DataTable().ajax.reload();
-            // $('#sDonationTable').DataTable().ajax.reload();
-            // $('#sVolunteerTable').DataTable().ajax.reload();
+            $('#sProjectTable').DataTable().ajax.reload();
+            $('#sDonationTable').DataTable().ajax.reload();
+            $('#sVolunteerTable').DataTable().ajax.reload();
 
             Livewire.dispatch('initFilter');
             Livewire.dispatch('filterDataForStatistic', {
                 search: $('.search-form-control').val(),
-                userId: @json($user->id),
+                userId: $('#user_id').val(),
                 projectCategoryId: $('#project_category_id').val(),
                 projectId: $('#project_id').val(),
                 projectType: $('#project_type').val(),
@@ -178,6 +191,7 @@
                 fromDate: $('#from_date').val(),
                 toDate: $('#to_date').val(),
                 donationPriceRange: $('#donation_price_range').val(),
+                belongToUserId: $('#donation_volunteer_user_id').val(),
             });
         });
 

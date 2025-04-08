@@ -180,8 +180,8 @@
                     }
                 };
 
-                let lineChart = new ApexCharts(document.querySelector("#chart-donation"), options);
-                lineChart.render();
+                let chartDonation = new ApexCharts(document.querySelector("#chart-donation"), options);
+                chartDonation.render();
 
                 function debounce(func, timeout = 500) {
                     let timer;
@@ -193,13 +193,13 @@
                     };
                 }
 
-                const processChange = debounce(() => updateLineChart());
+                const processChange = debounce(() => updateChartDonation());
 
-                let updateLineChart = () => {
+                let updateChartDonation = () => {
                     let range = getFilteredDateRange(filterStartDateInput.value, filterEndDateInput.value);
 
                     if(!range.length){
-                        lineChart.updateOptions({
+                        chartDonation.updateOptions({
                             series: [{
                                 data: range,
                             }],
@@ -218,7 +218,7 @@
                     $wire.getData(range, projectId).then(data => {
                         if (data) {
                             let chartData = range.map(date => data[date] ? Math.round(data[date].sum_amount) : 0);
-                            lineChart.updateOptions({
+                            chartDonation.updateOptions({
                                 series: [{
                                     data: [...chartData],
                                 }],
@@ -254,7 +254,7 @@
                     });
                 }
 
-                updateLineChart();
+                updateChartDonation();
             });
         });
     </script>

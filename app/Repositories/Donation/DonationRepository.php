@@ -5,6 +5,7 @@ namespace App\Repositories\Donation;
 use App\Enum\PaymentStatus;
 use App\Enum\PriceRangeFilter;
 use App\Models\Donation;
+use App\Models\Project;
 use App\Repositories\BaseRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -421,7 +422,7 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getChartDonationData(
         array $range,
@@ -443,5 +444,54 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
             ->get()
             ->keyBy('date')
             ->toArray();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChartDonationKpiData(Project $project)
+    {
+        $startDate = Carbon::parse($project->start_date)->startOfDay();
+        $endDate = Carbon::parse($project->end_date)->endOfDay();
+
+        $donations = $this->model
+            ->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y") as date, SUM(amount) as sum_amount')
+            ->where('project_id', $project->id)
+            ->whereBetween('created_at', [$project->start_date, $project->end_date])
+            ->whereIn('status', [PaymentStatus::PAID->value])
+            ->groupBy('date')
+            ->get()
+            ->keyBy('date')
+            ->toArray();
+
+        $sumAmount = 0;
+
+        $allDates = [];
+        for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
+            if ($date->gt(Carbon::now())) {
+                break;
+            }
+
+            $formattedDate = $date->format('d/m/Y');
+            $sumAmount += $donations[$formattedDate]['sum_amount'] ?? 0;
+            $allDates[$formattedDate] = [
+                'date' => $formattedDate,
+                'sumAmount' => $sumAmount,
+            ];
+        }
+
+        return array_values($allDates);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTotalAmountByProject(Project $project)
+    {
+        return $this->model
+            ->where('project_id', $project->id)
+            ->where('status', PaymentStatus::PAID->value)
+            ->whereBetween('created_at', [$project->start_date, $project->end_date])
+            ->sum('amount');
     }
 }

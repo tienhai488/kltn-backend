@@ -4,6 +4,7 @@ namespace App\Repositories\Volunteer;
 
 use App\Enum\PriceRangeFilter;
 use App\Enum\VolunteerStatus;
+use App\Models\Project;
 use App\Models\Volunteer;
 use App\Repositories\BaseRepository;
 use Carbon\Carbon;
@@ -432,5 +433,54 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
             ->get()
             ->keyBy('date')
             ->toArray();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getChartVolunteerKpiData(Project $project)
+    {
+        $startDate = Carbon::parse($project->start_date)->startOfDay();
+        $endDate = Carbon::parse($project->end_date)->endOfDay();
+
+        $donations = $this->model
+            ->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y") as date, count(*) as count')
+            ->where('project_id', $project->id)
+            ->whereBetween('created_at', [$project->start_date, $project->end_date])
+            ->whereNot('status', VolunteerStatus::CANCELED->value)
+            ->groupBy('date')
+            ->get()
+            ->keyBy('date')
+            ->toArray();
+
+        $count = 0;
+
+        $allDates = [];
+        for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
+            if ($date->gt(Carbon::now())) {
+                break;
+            }
+
+            $formattedDate = $date->format('d/m/Y');
+            $count += $donations[$formattedDate]['count'] ?? 0;
+            $allDates[$formattedDate] = [
+                'date' => $formattedDate,
+                'count' => $count,
+            ];
+        }
+
+        return array_values($allDates);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCountByProject(Project $project)
+    {
+        return $this->model
+            ->where('project_id', $project->id)
+            ->whereNot('status', VolunteerStatus::CANCELED->value)
+            ->whereBetween('created_at', [$project->start_date, $project->end_date])
+            ->count();
     }
 }

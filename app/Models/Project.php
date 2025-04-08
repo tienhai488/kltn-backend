@@ -118,14 +118,14 @@ class Project extends Model implements HasMedia
     public function totalAmount(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->type == ProjectType::VOLUNTEER ? 0 : $this->donations_with_paid()->sum('amount'),
+            get: fn() => $this->donations_with_paid()->sum('amount') ?? 0,
         );
     }
 
     public function volunteersCount(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->type == ProjectType::DONATION ? 0 : $this->volunteers_without_canceled()->count(),
+            get: fn() => $this->volunteers_without_canceled()->count() ?? 0,
         );
     }
 
