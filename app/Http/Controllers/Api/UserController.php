@@ -75,7 +75,7 @@ class UserController extends Controller
                     'projects.donations_with_paid',
                     'projects.volunteers_without_canceled',
                 ],
-            ]),
+            ])->loadMissing('department'),
         ));
     }
 

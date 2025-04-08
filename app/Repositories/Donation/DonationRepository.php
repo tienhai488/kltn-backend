@@ -9,6 +9,7 @@ use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 /**
  * The repository for Donation Model
@@ -376,6 +377,25 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
         }
 
         return $query;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function create($data)
+    {
+        try {
+            DB::beginTransaction();
+
+            $model = $this->model->create($data);
+
+            DB::commit();
+
+            return $model;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
     }
 
     /**

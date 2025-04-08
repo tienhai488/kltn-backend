@@ -48,7 +48,7 @@ class AuthController extends Controller
 
             return $this->okResponse([
                 'token' => $token,
-                'user' => new UserResource($user),
+                'user' => new UserResource($user->loadMissing('department')),
             ]);
         }
 
