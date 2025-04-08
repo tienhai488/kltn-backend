@@ -160,7 +160,16 @@ class VNPayService
 
         $this->updateDonation($donation_id, $vnpayData);
 
-        return redirect()->away($this->apiConfig->vnpReturnUrl)
+        $donation = $this->donationRepository->find($donation_id)?->loadMissing('project');
+
+        // {:project_id}, {:project_slug}, {:donation_id}
+        return redirect()->away(
+            str_replace(
+                ['{:project_id}', '{:project_slug}', '{:donation_id}'],
+                [$donation->project->id, $donation->project->slug, $donation->id],
+                $this->apiConfig->vnpReturnUrl
+            )
+        )
             ->with([
                 'success' => true,
                 'message' => 'Thanh toán thành công',

@@ -60,7 +60,7 @@
             <div class="col-md-6">
                 <x-form.form-input
                     :id="'vnpReturnUrl'"
-                    :label="__('Đường dẫn trả về sau khi thanh toán')"
+                    :label="__('Đường dẫn trả về sau khi thanh toán (Bạn có thể dùng các biến sau: {:project_id}, {:project_slug}, {:donation_id})')"
                     :name="'vnpReturnUrl'"
                     :placeholder="__('Đường dẫn trả về sau khi thanh toán')"
                     :isRequired="true"

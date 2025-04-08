@@ -41,7 +41,7 @@ class MomoPaymentService
         $this->returnUrl = route('payment_method.momo.return');
         $this->notifyUrl = route('api.payment_method.momo.ipn');
         $this->requestType = config('momo.request_type');
-        // $this->notifyUrl = "https://030f-116-110-41-181.ngrok-free.app/api/v1/payment-method/momo/ipn";
+        // $this->notifyUrl = "https://40ef-116-110-41-181.ngrok-free.app/api/v1/payment-method/momo/ipn";
     }
 
     /**
@@ -139,7 +139,7 @@ class MomoPaymentService
         $orderId = explode('_', $momoData['orderId'])[0] ?? null;
 
         // Find the donation/order
-        $donation = $this->donationRepository->find($orderId);
+        $donation = $this->donationRepository->find($orderId)?->loadMissing('project');
 
         if (!$donation) {
             return redirect()->away($this->apiConfig->returnUrl)->with([
@@ -159,7 +159,12 @@ class MomoPaymentService
             ]);
         }
 
-        return redirect()->away($this->apiConfig->returnUrl)->with([
+        // {:project_id}, {:project_slug}, {:donation_id}
+        return redirect()->away(str_replace(
+            ['{:project_id}', '{:project_slug}', '{:donation_id}'],
+            [$donation->project->id, $donation->project->slug, $donation->id],
+            $this->apiConfig->returnUrl
+        ))->with([
             'success' => true,
             'message' => 'Thanh toán thành công',
             'donation_id' => $donation->id,
