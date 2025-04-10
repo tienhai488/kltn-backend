@@ -28,7 +28,7 @@ class UpdateSettingPaymentMethodRequest extends FormRequest
                 'vnpTmnCode' => 'required|string|max:255',
                 'vnpHashSecret' => 'required|string|max:255',
                 'vnpUrl' => 'required|url|max:255',
-                'vnpReturnUrl' => 'required|url|max:255',
+                'vnpReturnUrl' => 'required|string|max:255',
             ];
         }
 
@@ -38,7 +38,7 @@ class UpdateSettingPaymentMethodRequest extends FormRequest
                 'partnerCode' => 'required|string|max:255',
                 'accessKey' => 'required|string|max:255',
                 'secretKey' => 'required|string|max:255',
-                'returnUrl' => 'required|url|max:255',
+                'returnUrl' => 'required|string|max:255',
             ];
         }
 

@@ -49,6 +49,7 @@ class VNPayController extends Controller
         // Chuẩn bị dữ liệu cho VNPay
         $paymentData = [
             'donation_id' => $donation->id,
+            'donation' => $donation->loadMissing('project'),
             'amount' => round($donation->amount),
             'ip_addr' => $request->ip()
         ];
