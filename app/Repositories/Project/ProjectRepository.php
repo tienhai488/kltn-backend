@@ -119,6 +119,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         $projectId = Arr::get($searchParams, 'project_id', null);
         $userId = Arr::get($searchParams, 'user_id', null);
         $userType = Arr::get($searchParams, 'user_type', null);
+        $projectSlug = Arr::get($searchParams, 'project_slug', null);
 
         $query = $this->model->query()
             ->with(
@@ -186,6 +187,10 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
             } else {
                 $query->whereDoesntHave('user.roles');
             }
+        }
+
+        if (! is_null($projectSlug)) {
+            $query->where('slug', $projectSlug);
         }
 
         return $query;

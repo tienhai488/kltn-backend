@@ -300,6 +300,7 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
         $isStudent = Arr::get($searchParams, 'is_student', null);
         $status = Arr::get($searchParams, 'status', null);
         $projectBelongToUserId = Arr::get($searchParams, 'project_belong_to_user_id', null);
+        $projectSlug = Arr::get($searchParams, 'project_slug', null);
 
         $query = $this->model->query()->with([
             'user',
@@ -373,6 +374,12 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
         if (! is_null($projectBelongToUserId)) {
             $query->whereHas('project', function ($query) use ($projectBelongToUserId) {
                 $query->where('user_id', $projectBelongToUserId);
+            });
+        }
+
+        if (! is_null($projectSlug)) {
+            $query->whereHas('project', function ($query) use ($projectSlug) {
+                $query->where('slug', $projectSlug);
             });
         }
 
