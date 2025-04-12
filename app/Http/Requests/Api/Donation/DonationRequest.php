@@ -33,6 +33,10 @@ class DonationRequest extends FormRequest
                 'min:1',
                 'exists:projects,id',
             ],
+            'project_slug' => [
+                'nullable',
+                'exists:projects,slug',
+            ],
             'user_id' => [
                 'nullable',
                 'integer',
