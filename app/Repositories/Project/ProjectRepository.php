@@ -119,6 +119,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         $projectId = Arr::get($searchParams, 'project_id', null);
         $userId = Arr::get($searchParams, 'user_id', null);
         $userType = Arr::get($searchParams, 'user_type', null);
+        $projectSlug = Arr::get($searchParams, 'project_slug', null);
 
         $query = $this->model->query()
             ->with(
@@ -186,6 +187,10 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
             } else {
                 $query->whereDoesntHave('user.roles');
             }
+        }
+
+        if (! is_null($projectSlug)) {
+            $query->where('slug', $projectSlug);
         }
 
         return $query;
@@ -334,39 +339,41 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
      */
     public function create($data)
     {
-        try {
-            DB::beginTransaction();
+        // try {
+        DB::beginTransaction();
 
-            $data['user_id'] = auth()->id();
-            $project = $this->model->create($data);
+        $data['user_id'] = auth()->id();
+        $data['donation_target'] = (int) $data['donation_target'];
+        $data['volunteer_quantity'] = (int) $data['volunteer_quantity'];
+        $project = $this->model->create($data);
 
-            $backgroundImage = json_decode($data['background_image'], true);
-            $project->addMediaFromBase64($backgroundImage['data'])
-                ->usingFileName(uniqid('project-') . '.jpg')
-                ->toMediaCollection(Project::PROJECT_BACKGROUND_IMAGE);
+        $backgroundImage = json_decode($data['background_image'], true);
+        $project->addMediaFromBase64($backgroundImage['data'])
+            ->usingFileName(uniqid('project-') . '.jpg')
+            ->toMediaCollection(Project::PROJECT_BACKGROUND_IMAGE);
 
-            if (!empty($data['images'])) {
-                foreach ($data['images'] as $path) {
-                    if (!empty($path)) {
-                        $fullPath = storage_path('app/public/' . json_decode($path, true));
-                        if (file_exists($fullPath)) {
-                            $project->addMedia($fullPath)
-                                ->usingFileName(uniqid('project-') . '.jpg')
-                                ->toMediaCollection(Project::PROJECT_RELATED_IMAGES);
-                        }
+        if (!empty($data['images'])) {
+            foreach ($data['images'] as $path) {
+                if (!empty($path)) {
+                    $fullPath = storage_path('app/public/' . json_decode($path, true));
+                    if (file_exists($fullPath)) {
+                        $project->addMedia($fullPath)
+                            ->usingFileName(uniqid('project-') . '.jpg')
+                            ->toMediaCollection(Project::PROJECT_RELATED_IMAGES);
                     }
                 }
-                Storage::disk('public')->deleteDirectory('uploads');
             }
-
-            DB::commit();
-
-            return $project;
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return $e->getMessage();
+            Storage::disk('public')->deleteDirectory('uploads');
         }
+
+        DB::commit();
+
+        return $project;
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+
+        //     return $e->getMessage();
+        // }
     }
 
     /**
@@ -374,40 +381,42 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
      */
     public function update($model, $data)
     {
-        try {
-            DB::beginTransaction();
+        // try {
+        DB::beginTransaction();
 
-            $model->update($data);
+        $data['donation_target'] = (int) $data['donation_target'];
+        $data['volunteer_quantity'] = (int) $data['volunteer_quantity'];
+        $model->update($data);
 
-            $model->clearMediaCollection(Project::PROJECT_BACKGROUND_IMAGE);
-            $backgroundImage = json_decode($data['background_image'], true);
-            $model->addMediaFromBase64($backgroundImage['data'])
-                ->usingFileName(uniqid('project-') . '.jpg')
-                ->toMediaCollection(Project::PROJECT_BACKGROUND_IMAGE);
+        $model->clearMediaCollection(Project::PROJECT_BACKGROUND_IMAGE);
+        $backgroundImage = json_decode($data['background_image'], true);
+        $model->addMediaFromBase64($backgroundImage['data'])
+            ->usingFileName(uniqid('project-') . '.jpg')
+            ->toMediaCollection(Project::PROJECT_BACKGROUND_IMAGE);
 
-            $model->clearMediaCollection(Project::PROJECT_RELATED_IMAGES);
-            if (!empty($data['images'])) {
-                foreach ($data['images'] as $path) {
-                    if (!empty($path)) {
-                        $fullPath = storage_path('app/public/' . json_decode($path, true));
-                        if (file_exists($fullPath)) {
-                            $model->addMedia($fullPath)
-                                ->usingFileName(uniqid('project-') . '.jpg')
-                                ->toMediaCollection(Project::PROJECT_RELATED_IMAGES);
-                        }
+        $model->clearMediaCollection(Project::PROJECT_RELATED_IMAGES);
+        if (!empty($data['images'])) {
+            foreach ($data['images'] as $path) {
+                if (!empty($path)) {
+                    $fullPath = storage_path('app/public/' . json_decode($path, true));
+                    if (file_exists($fullPath)) {
+                        $model->addMedia($fullPath)
+                            ->usingFileName(uniqid('project-') . '.jpg')
+                            ->toMediaCollection(Project::PROJECT_RELATED_IMAGES);
                     }
                 }
-                Storage::disk('public')->deleteDirectory('uploads');
             }
-
-            DB::commit();
-
-            return $model;
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return false;
+            Storage::disk('public')->deleteDirectory('uploads');
         }
+
+        DB::commit();
+
+        return $model;
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+
+        //     return false;
+        // }
     }
 
     /**
