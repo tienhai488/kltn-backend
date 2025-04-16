@@ -104,6 +104,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         $status = Arr::get($searchParams, 'status', null);
         $departmentId = Arr::get($searchParams, 'department_id', null);
         $type = Arr::get($searchParams, 'type', null);
+        $username = Arr::get($searchParams, 'username', null);
 
         $query = $this->model->query()
             ->with([
@@ -154,6 +155,10 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             } else {
                 $query->whereDoesntHave('roles');
             }
+        }
+
+        if (! is_null($username)) {
+            $query->where('username', $username);
         }
 
         return $query;

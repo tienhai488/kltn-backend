@@ -42,6 +42,7 @@ class UserRequest extends FormRequest
                 'nullable',
                 Rule::enum(UserStatus::class),
             ],
+            'username' => 'nullable|exists:users,username',
         ];
     }
 }
