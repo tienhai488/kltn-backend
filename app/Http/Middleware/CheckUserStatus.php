@@ -24,7 +24,7 @@ class CheckUserStatus
                     NotificationType::ERROR->value,
                     __('Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ.')
                 );
-                return to_route('auth.login.show-form');
+                return to_route('auth.login.show_form');
             }
         }
 
