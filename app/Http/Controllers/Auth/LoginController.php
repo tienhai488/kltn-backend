@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Acl\Acl;
 use App\Enum\UserStatus;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -59,6 +60,26 @@ class LoginController extends Controller
     protected function credentials(Request $request)
     {
         return array_merge($request->only($this->username(), 'password'), ['status' => UserStatus::ACTIVE->value]);
+    }
+
+    /**
+     * Get the post register / login redirect path.
+     *
+     * @return string
+     */
+    public function redirectPath()
+    {
+        $redirectName = 'auth.login';
+
+        if (auth()->check()) {
+            if (auth()->user()->hasAnyRole([Acl::ROLE_SUPER_ADMIN, Acl::ROLE_ADMIN])) {
+                $redirectName = 'admin.dashboard.index';
+            } else if (auth()->user()->hasAnyRole([Acl::ROLE_ORGANIZATION, Acl::ROLE_INDIVIDUAL])) {
+                $redirectName = 'member.dashboard.index';
+            }
+        }
+
+        return route($redirectName);
     }
 
     /**

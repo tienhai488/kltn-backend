@@ -31,7 +31,11 @@ class RolePermissionSeeder extends Seeder
 
         $superAdminRole->givePermissionTo(Acl::permissions());
         $adminRole->givePermissionTo(Acl::permissions([Acl::PERMISSION_ROLE_LIST]));
-        $individualRole->givePermissionTo([]);
-        $organizationRole->givePermissionTo([]);
+        $individualRole->givePermissionTo([
+            Acl::PERMISSION_VIEW_MENU_DASHBOARD,
+        ]);
+        $organizationRole->givePermissionTo([
+            Acl::PERMISSION_VIEW_MENU_DASHBOARD,
+        ]);
     }
 }
