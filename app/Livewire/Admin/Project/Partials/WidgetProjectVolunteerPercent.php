@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\Dashboard\Partials;
+namespace App\Livewire\Admin\Project\Partials;
 
 use App\Repositories\Project\ProjectRepositoryInterface;
 use Livewire\Attributes\On;
@@ -62,6 +62,6 @@ class WidgetProjectVolunteerPercent extends Component
 
     public function render()
     {
-        return view('livewire.admin.dashboard.partials.widget-project-volunteer-percent');
+        return view('livewire.admin.project.partials.widget-project-volunteer-percent');
     }
 }

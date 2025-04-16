@@ -37,6 +37,11 @@ class WidgetProjectAmountPercent extends Component
             return;
         }
 
+        if (empty($this->project->donation_target)) {
+            $this->percent = 0;
+            return;
+        }
+
         $this->percent = round(($this->project->total_amount / $this->project->donation_target) * 100);
     }
 

@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Livewire\Admin\Dashboard\Partials;
+namespace App\Livewire\Admin\Project\Partials;
 
 use App\Repositories\Project\ProjectRepositoryInterface;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class WidgetProjectVolunteerPercent extends Component
+class WidgetProjectTimePercent extends Component
 {
     protected $projectRepository;
     public $projectId;
     public $project;
     public $percent;
-    public $filtersApplied = false; // Track if this is the first event call
+    public $filtersApplied = false;
 
     #[On('initFilter')]
     public function boot(
@@ -37,12 +37,7 @@ class WidgetProjectVolunteerPercent extends Component
             return;
         }
 
-        if (empty($this->project->volunteer_quantity)) {
-            $this->percent = 0;
-            return;
-        }
-
-        $this->percent = round($this->project->volunteers_count / $this->project->volunteer_quantity * 100);
+        $this->percent = $this->project->time_percent;
     }
 
     #[On('filterDataForStatistic')]
@@ -62,6 +57,6 @@ class WidgetProjectVolunteerPercent extends Component
 
     public function render()
     {
-        return view('livewire.admin.dashboard.partials.widget-project-volunteer-percent');
+        return view('livewire.admin.project.partials.widget-project-time-percent');
     }
 }

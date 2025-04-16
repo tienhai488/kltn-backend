@@ -43,13 +43,14 @@ class DashboardController extends Controller
         $members = $this->userRepository->getMembers();
 
         $categories = $this->categoryRepository->all();
-        $projects = $this->projectRepository->advancedGet([
-            'conditions' => [
-                'where' => [
-                    'user_id' => $user->id,
-                ],
-            ],
-        ]);
+        $projects = $this->projectRepository->all();
+        // $projects = $this->projectRepository->advancedGet([
+        //     'conditions' => [
+        //         'where' => [
+        //             'user_id' => $user->id,
+        //         ],
+        //     ],
+        // ]);
 
         return view('admin.dashboard.index', compact(
             'user',
