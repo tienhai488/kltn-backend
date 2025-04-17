@@ -38,7 +38,7 @@
 
     <!--  BEGIN CUSTOM SCRIPTS FILE  -->
     <x-slot:footerFiles>
-        @include('admin.setting.partials.editor')
+        @include('includes.editor')
     </x-slot:footerFiles>
     <!--  END CUSTOM SCRIPTS FILE  -->
 </x-base-layout>

@@ -55,8 +55,8 @@
                     <th>{{ __('Dự án') }}</th>
                     <th>{{ __('T/t chuyển khoản') }}</th>
                     <th>{{ __('T/t người chuyển') }}</th>
-                    <th>{{ __('Chế độ') }}</th>
                     <th>{{ __('T/t sinh viên') }}</th>
+                    <th>{{ __('Chế độ') }}</th>
                     <th class="text-center dt-no-sorting">{{ __('Thao tác') }}</th>
                 </tr>
             </x-slot:tableHeader>
@@ -73,9 +73,11 @@
                         d.page = d.start / d.length + 1;
 
                         d.user_id = $('#user_id').val() || searchParams.get('user_id');
+                        d.projects_belong_to_user_id = $('#projects_belong_to_user_id').val() || searchParams.get('projects_belong_to_user_id');
                         d.project_id = $('#project_id').val() || searchParams.get('project_id');
                         d.department_id = $('#department_id').val() || searchParams.get('department_id');
                         d.is_anonymous = $('#is_anonymous').val() || searchParams.get('is_anonymous');
+                        d.payment_status = $('#payment_status').val() || searchParams.get('payment_status');
                     },
                     "dataSrc": function(res) {
                         res.draw = drawDT;
@@ -92,13 +94,50 @@
                     {
                         "data": "user",
                         "render": function (data, type, full) {
-                            return data?.name ?? 'N/A';
+                            return `
+                                <div class="d-flex">
+                                    <p class="text-start me-1">{{ __('Tên') }}:</p>
+                                    <p class="text-primary">${data.name}</p>
+                                </div>
+                                <div class="d-flex">
+                                    <p class="text-start me-1">{{ __('Email') }}:</p>
+                                    <p class="text-primary">${data.email}</p>
+                                </div>
+                                <div class="d-flex">
+                                    <p class="text-start me-1">{{ __('Số điện thoại') }}:</p>
+                                    <p class="text-primary">${data.phone_number ?? 'N/A'}</p>
+                                </div>
+                            `;
                         }
                     },
                     {
                         "data": "project",
                         "render": function (data, type, full) {
-                            return data.name;
+                            return `
+                                <div class="d-flex">
+                                    <p class="text-start me-1">{{ __('Tên dự án') }}:</p>
+                                    <p class="text-primary">${data.name}</p>
+                                </div>
+                                <div class="d-flex">
+                                    <p class="text-start me-1">{{ __('Người tạo') }}:</p>
+                                    <p class="text-primary">${data.user.name}</p>
+                                </div>
+                                <div class="d-flex">
+                                    <p class="text-start me-1">{{ __('Danh mục') }}:</p>
+                                    <p class="text-primary">${data.category.name}</p>
+                                </div>
+                                <div class="d-flex">
+                                    <p class="text-start me-1">{{ __('Loại dự án') }}:</p>
+                                    <p class="text-primary">${data.type}</p>
+                                </div>
+                                <div class="d-flex align-items-end">
+                                    <p class="text-start me-1">{{ __('Trạng thái') }}:</p>
+                                    <p class="text-primary"><span class="badge badge-${data.status_badge}">${data.status_label}</span></p>
+                                </div>
+                                <div class="d-flex align-items-end">
+                                    <p class="text-start me-1 text-primary">${data.start_date} -> ${data.end_date}</p>
+                                </div>
+                            `;
                         }
                     },
                     {
@@ -153,13 +192,6 @@
                     },
                     {
                         "data": "id",
-                        "class": "text-center",
-                        "render": function (data, type, full) {
-                            return `<span class="badge badge-${full.anonymous_status_badge}">${full.anonymous_status_label}</span>`;
-                        }
-                    },
-                    {
-                        "data": "id",
                         "render": function (data, type, full) {
                             return `
                                 <div class="d-flex">
@@ -175,6 +207,13 @@
                                     <p class="text-primary">${full.student_code ?? 'N/A'}</p>
                                 </div>
                             `;
+                        }
+                    },
+                    {
+                        "data": "id",
+                        "class": "text-center",
+                        "render": function (data, type, full) {
+                            return `<span class="badge badge-${full.anonymous_status_badge}">${full.anonymous_status_label}</span>`;
                         }
                     },
                     {
@@ -202,20 +241,24 @@
     <x-slot:footerFiles>
         <script src="{{ asset('plugins/tomSelect/tom-select.base.js') }}"></script>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                $('#exportButton').on('click', function() {
+            function handleExport(isStudent = false) {
                     const userId = $('#user_id').val() || null;
+                    const projectsBelongToUserId = $('#projects_belong_to_user_id').val() || null;
                     const projectId = $('#project_id').val() || null;
                     const departmentId = $('#department_id').val() || null;
                     const isAnonymous = $('#is_anonymous').val() || null;
+                    const paymentStatus = $('#payment_status').val() || null;
 
-                    let exportUrl = "{{ route('admin.donation.export') }}";
+                    let exportUrl = @json(route('admin.donation.export'));
                     const params = new URLSearchParams();
 
                     if (userId) params.append('user_id', userId);
+                    if (projectsBelongToUserId) params.append('projects_belong_to_user_id', projectsBelongToUserId);
                     if (projectId) params.append('project_id', projectId);
                     if (departmentId) params.append('department_id', departmentId);
                     if (isAnonymous) params.append('is_anonymous', isAnonymous);
+                    if (paymentStatus) params.append('payment_status', paymentStatus);
+                    params.append('is_student', isStudent);
                     params.append('limit', 9999);
 
                     const queryString = params.toString();
@@ -224,42 +267,9 @@
                     }
 
                     window.open(exportUrl, '_blank');
-                });
+            }
 
-                $('#studentExportButton').on('click', function() {
-                    const userId = $('#user_id').val() || null;
-                    const projectId = $('#project_id').val() || null;
-                    const departmentId = $('#department_id').val() || null;
-                    const isAnonymous = $('#is_anonymous').val() || null;
-
-                    let exportUrl = "{{ route('admin.donation.export') }}";
-                    const params = new URLSearchParams();
-
-                    if (userId) params.append('user_id', userId);
-                    if (projectId) params.append('project_id', projectId);
-                    if (departmentId) params.append('department_id', departmentId);
-                    if (isAnonymous) params.append('is_anonymous', isAnonymous);
-                    params.append('is_student', true);
-                    params.append('limit', 9999);
-
-                    const queryString = params.toString();
-                    if (queryString) {
-                        exportUrl += '?' + queryString;
-                    }
-
-                    window.open(exportUrl, '_blank');
-                });
-
-                $('#project_id').on('change', function() {
-                    if ($(this).val()) {
-                        $('#exportButton').removeClass('d-none').prop('disabled', false);
-                        $('#studentExportButton').removeClass('d-none').prop('disabled', false);
-                    } else {
-                        $('#exportButton').addClass('d-none').prop('disabled', true);
-                        $('#studentExportButton').addClass('d-none').prop('disabled', true);
-                    }
-                });
-
+            function handleChangeInput() {
                 if ($('#project_id').val()) {
                     $('#exportButton').removeClass('d-none').prop('disabled', false);
                     $('#studentExportButton').removeClass('d-none').prop('disabled', false);
@@ -267,6 +277,22 @@
                     $('#exportButton').addClass('d-none').prop('disabled', true);
                     $('#studentExportButton').addClass('d-none').prop('disabled', true);
                 }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                $('#exportButton').on('click', function() {
+                    handleExport();
+                });
+
+                $('#studentExportButton').on('click', function() {
+                    handleExport(true);
+                });
+
+                $('#project_id').on('change', function() {
+                    handleChangeInput();
+                });
+
+                handleChangeInput();
             });
         </script>
     </x-slot:footerFiles>

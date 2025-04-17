@@ -38,7 +38,7 @@ class ProjectController extends Controller
             return ProjectResource::collection($projects);
         }
 
-        $users = $this->userRepository->all();
+        $users = $this->userRepository->getMembers();
         $categories = $this->categoryRepository->all();
 
         return view('admin.project.index', compact('users', 'categories'));

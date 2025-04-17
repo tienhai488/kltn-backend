@@ -16,7 +16,7 @@
         <div class="col-md-6">
             <x-form.form-select
                 :id="'sUser'"
-                :label="__('Người dùng')"
+                :label="__('Người dùng (Cá nhân / Tổ chức)')"
                 :data-values="$users"
                 :select-value-attribute="'id'"
                 :select-value-label="'name'"

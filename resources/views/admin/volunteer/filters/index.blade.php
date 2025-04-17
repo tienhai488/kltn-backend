@@ -3,11 +3,24 @@
         <div class="col-md-6">
             <x-form.form-select
                 :id="'user_id'"
-                :label="__('Người dùng')"
+                :label="__('Người dùng (Tình nguyện nguyện)')"
                 :data-values="$users"
                 :select-value-attribute="'id'"
                 :select-value-label="'name'"
                 :name="'user_id'"
+                :multiple="false"
+                :placeholder="__('Chọn người dùng')"
+                :is-filter="true"
+            />
+        </div>
+        <div class="col-md-6">
+            <x-form.form-select
+                :id="'projects_belong_to_user_id'"
+                :label="__('Cá nhân / Tổ chức (Tạo dự án)')"
+                :data-values="$members"
+                :select-value-attribute="'id'"
+                :select-value-label="'name'"
+                :name="'projects_belong_to_user_id'"
                 :multiple="false"
                 :placeholder="__('Chọn người dùng')"
                 :is-filter="true"

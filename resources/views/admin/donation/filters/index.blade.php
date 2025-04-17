@@ -3,11 +3,24 @@
         <div class="col-md-6">
             <x-form.form-select
                 :id="'user_id'"
-                :label="__('Người dùng')"
+                :label="__('Người dùng (Quyên góp)')"
                 :data-values="$users"
                 :select-value-attribute="'id'"
                 :select-value-label="'name'"
                 :name="'user_id'"
+                :multiple="false"
+                :placeholder="__('Chọn người dùng')"
+                :is-filter="true"
+            />
+        </div>
+        <div class="col-md-6">
+            <x-form.form-select
+                :id="'projects_belong_to_user_id'"
+                :label="__('Cá nhân / Tổ chức (Tạo dự án)')"
+                :data-values="$members"
+                :select-value-attribute="'id'"
+                :select-value-label="'name'"
+                :name="'projects_belong_to_user_id'"
                 :multiple="false"
                 :placeholder="__('Chọn người dùng')"
                 :is-filter="true"
@@ -36,6 +49,19 @@
                 :name="'department_id'"
                 :multiple="false"
                 :placeholder="__('Chọn phòng ban')"
+                :is-filter="true"
+            />
+        </div>
+        <div class="col-md-6">
+            <x-form.form-select
+                :id="'payment_status'"
+                :label="__('Trạng thái thanh toán')"
+                :data-values="App\Enum\PaymentStatus::options(true)"
+                :select-value-attribute="'value'"
+                :select-value-label="'label'"
+                :name="'payment_status'"
+                :multiple="false"
+                :placeholder="__('Chọn trạng thái thanh toán')"
                 :is-filter="true"
             />
         </div>
