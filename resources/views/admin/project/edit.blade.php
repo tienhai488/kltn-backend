@@ -349,12 +349,9 @@
                 }
             );
 
-            @if($project->related_images)
-            const data = @json($project->related_images);
-
-            relatedImages.addFiles(Object.entries(data).map(([key, value]) => {
-                return value.original_url;
-            }));
+            @if($project->related_image_paths)
+            const data = @json($project->related_image_paths);
+            relatedImages.addFiles(data);
             @endif
         </script>
     </x-slot:footerFiles>

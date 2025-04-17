@@ -338,13 +338,25 @@
                 }
             );
 
-            @if($project->related_images)
-            const data = @json($project->related_images);
-
-            relatedImages.addFiles(Object.entries(data).map(([key, value]) => {
-                return value.original_url;
-            }));
+            // [
+            //     "/storage/2/project-6800907ee6b78.jpg",
+            //     "/storage/3/project-6800907ee9515.jpg",
+            //     "/storage/4/project-6800907eecaa1.jpg",
+            //     "/storage/5/project-6800907eefd0a.jpg",
+            //     "/storage/6/project-6800907ef2695.jpg"
+            // ]
+            @if($project->related_image_paths)
+            const data = @json($project->related_image_paths);
+            relatedImages.addFiles(data);
             @endif
+
+            // @if($project->related_images)
+            // const data = @json($project->related_images);
+
+            // relatedImages.addFiles(Object.entries(data).map(([key, value]) => {
+            //     return value.original_url;
+            // }));
+            // @endif
         </script>
     </x-slot:footerFiles>
     <!--  END CUSTOM SCRIPTS FILE  -->
