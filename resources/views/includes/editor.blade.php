@@ -3,7 +3,7 @@
     ClassicEditor
     .create(document.querySelector('#editorContent'), {
         simpleUpload: {
-            uploadUrl: '{{ route('admin.editor_upload', ['_token' => csrf_token()]) }}'
+            uploadUrl: '{{ route('editor_upload', ['_token' => csrf_token()]) }}'
         },
     })
     @if (isset($isEdit) && !$isEdit)

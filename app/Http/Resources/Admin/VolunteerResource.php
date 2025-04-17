@@ -17,7 +17,7 @@ class VolunteerResource extends JsonResource
         return [
             'id' => $this->id,
             'user' => $this->whenLoaded('user'),
-            'project' => $this->whenLoaded('project'),
+            'project' => ProjectResource::make($this->whenLoaded('project')),
             'department' => $this->whenLoaded('department'),
             'name' => $this->name,
             'email' => $this->email,
@@ -25,8 +25,8 @@ class VolunteerResource extends JsonResource
             'note' => $this->note,
             'student_code' => $this->student_code,
             'class' => $this->class,
-            'status_label' => $this->status->getLabel(),
-            'status_badge' => $this->status->getBadge(),
+            'status_label' => $this->status?->getLabel(),
+            'status_badge' => $this->status?->getBadge(),
         ];
     }
 }

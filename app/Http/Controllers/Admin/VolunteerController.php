@@ -36,10 +36,11 @@ class VolunteerController extends Controller
         }
 
         $users = $this->userRepository->all();
+        $members = $this->userRepository->getMembers();
         $projects = $this->projectRepository->all();
         $departments = $this->departmentRepository->all();
 
-        return view('admin.volunteer.index', compact('users', 'projects', 'departments'));
+        return view('admin.volunteer.index', compact('users', 'members', 'projects', 'departments'));
     }
 
     /**

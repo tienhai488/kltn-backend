@@ -306,6 +306,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         try {
             DB::beginTransaction();
 
+            $data['status'] = UserStatus::ACTIVE->value;
             $model = $this->model->create($data);
 
             DB::commit();
@@ -373,5 +374,26 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             DB::rollBack();
             return $e->getMessage();
         }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMembers()
+    {
+        return $this->model->whereHas('roles', function ($query) {
+            $query->whereIn('name', [
+                Acl::ROLE_ORGANIZATION,
+                Acl::ROLE_INDIVIDUAL,
+            ]);
+        })->get();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getUsers()
+    {
+        return $this->model->whereDoesntHave('roles')->get();
     }
 }

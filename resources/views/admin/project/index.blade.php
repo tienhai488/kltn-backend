@@ -50,10 +50,9 @@
             <x-slot:tableHeader>
                 <tr>
                     <th class="text-center">No.</th>
-                    <th>{{ __('Thông tin') }}</th>
                     <th>{{ __('Hình ảnh') }}</th>
+                    <th>{{ __('Thông tin') }}</th>
                     <th>{{ __('Người tạo') }}</th>
-                    <th>{{ __('Tên dự án') }}</th>
                     <th>{{ __('Mục tiêu') }}</th>
                     <th>{{ __('Thực tế') }}</th>
                     <th>{{ __('Quyên góp') }}</th>
@@ -91,9 +90,22 @@
                         "render": (data, type, row, meta) =>  meta.row + 1 + meta.settings._iDisplayStart,
                     },
                     {
+                        "data": "background_image",
+                        "class": "text-center",
+                        "render": function (data, type, full) {
+                            return `<div class="avatar me-3">
+                                <img src="${data}" alt="Image" width="64" height="64">
+                            </div>`;
+                        }
+                    },
+                    {
                         "data": "id",
                         "render": function (data, type, full) {
                             return `
+                                <div class="d-flex">
+                                    <p class="text-start me-1">{{ __('Tên dự án') }}:</p>
+                                    <p class="text-primary">${full.name}</p>
+                                </div>
                                 <div class="d-flex">
                                     <p class="text-start me-1">{{ __('Danh mục') }}:</p>
                                     <p class="text-primary">${full.category.name}</p>
@@ -110,15 +122,6 @@
                                     <p class="text-start me-1 text-primary">${full.start_date} -> ${full.end_date}</p>
                                 </div>
                             `;
-                        }
-                    },
-                    {
-                        "data": "background_image",
-                        "class": "text-center",
-                        "render": function (data, type, full) {
-                            return `<div class="avatar me-3">
-                                <img src="${data}" alt="Image" width="64" height="64">
-                            </div>`;
                         }
                     },
                     {
@@ -139,9 +142,6 @@
                                 </div>
                             `;
                         }
-                    },
-                    {
-                        "data": "name",
                     },
                     {
                         "data": "id",

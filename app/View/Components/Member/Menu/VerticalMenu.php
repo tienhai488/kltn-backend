@@ -49,42 +49,42 @@ class VerticalMenu extends Component
             [
                 'title' => __('Hệ Thống'),
             ],
-            // [
-            //     'title' => __('Dự án'),
-            //     'url' => route('admin.project.index'),
-            //     'icon' => 'folder-plus',
-            //     'active' => Route::is([
-            //         'admin.project.*',
-            //     ]),
-            //     'show' => checkPermissions([Acl::PERMISSION_PROJECT_LIST]),
-            //     'child' => [
-            //         //
-            //     ],
-            // ],
-            // [
-            //     'title' => __('Quyên góp'),
-            //     'url' => route('admin.donation.index'),
-            //     'icon' => 'dollar-sign',
-            //     'active' => Route::is([
-            //         'admin.donation.*',
-            //     ]),
-            //     'show' => checkPermissions([Acl::PERMISSION_DONATION_LIST]),
-            //     'child' => [
-            //         //
-            //     ],
-            // ],
-            // [
-            //     'title' => __('Tình nguyện viên'),
-            //     'url' => route('admin.volunteer.index'),
-            //     'icon' => 'user-check',
-            //     'active' => Route::is([
-            //         'admin.volunteer.*',
-            //     ]),
-            //     'show' => checkPermissions([Acl::PERMISSION_VOLUNTEER_LIST]),
-            //     'child' => [
-            //         //
-            //     ],
-            // ],
+            [
+                'title' => __('Dự án'),
+                'url' => route('member.project.index'),
+                'icon' => 'folder-plus',
+                'active' => Route::is([
+                    'member.project.*',
+                ]),
+                'show' => checkPermissions([Acl::PERMISSION_PROJECT_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
+            [
+                'title' => __('Quyên góp'),
+                'url' => route('member.donation.index'),
+                'icon' => 'dollar-sign',
+                'active' => Route::is([
+                    'member.donation.*',
+                ]),
+                'show' => checkPermissions([Acl::PERMISSION_DONATION_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
+            [
+                'title' => __('Tình nguyện viên'),
+                'url' => route('member.volunteer.index'),
+                'icon' => 'user-check',
+                'active' => Route::is([
+                    'member.volunteer.*',
+                ]),
+                'show' => checkPermissions([Acl::PERMISSION_VOLUNTEER_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
         ]);
     }
 

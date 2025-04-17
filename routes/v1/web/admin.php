@@ -14,7 +14,6 @@ Route::prefix('')->name('admin.')->group(function () {
     include 'admin/project.php';
     include 'admin/donation.php';
     include 'admin/volunteer.php';
-    include 'admin/editor_upload.php';
     include 'admin/setting.php';
     include 'admin/payment_method.php';
 });

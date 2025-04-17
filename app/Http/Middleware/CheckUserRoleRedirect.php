@@ -22,12 +22,8 @@ class CheckUserRoleRedirect
         if (auth()->check()) {
             if (auth()->user()->hasAnyRole([Acl::ROLE_SUPER_ADMIN, Acl::ROLE_ADMIN]) && ! Route::is(['admin.*'])) {
                 $redirectName = 'admin.dashboard.index';
-            }
-
-            if (auth()->user()->hasAnyRole([Acl::ROLE_ORGANIZATION, Acl::ROLE_INDIVIDUAL]) && ! Route::is(['member.*'])) {
-                if ($redirectName) {
-                    $redirectName = 'member.dashboard';
-                }
+            } else if (auth()->user()->hasAnyRole([Acl::ROLE_ORGANIZATION, Acl::ROLE_INDIVIDUAL]) && ! Route::is(['member.*'])) {
+                $redirectName = 'member.dashboard.index';
             }
         } else {
             $redirectName = 'auth.login.show_form';

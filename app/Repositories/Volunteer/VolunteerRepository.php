@@ -63,6 +63,8 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
             'user',
             'user.roles',
             'project',
+            'project.category',
+            'project.user',
             'department',
         ]);
 

@@ -17,7 +17,7 @@ class DonationResource extends JsonResource
         return [
             'id' => $this->id,
             'user' => $this->whenLoaded('user'),
-            'project' => $this->whenLoaded('project'),
+            'project' => ProjectResource::make($this->whenLoaded('project')),
             'department' => $this->whenLoaded('department'),
             'account_number' => $this->account_number,
             'account_name' => $this->account_name,
@@ -27,15 +27,15 @@ class DonationResource extends JsonResource
             'phone_number' => $this->phone_number,
             'amount' => customFormatPrice($this->amount),
             'is_anonymous' => $this->is_anonymous,
-            'anonymous_status_label' => $this->is_anonymous->getLabel(),
-            'anonymous_status_badge' => $this->is_anonymous->getBadge(),
+            'anonymous_status_label' => $this->is_anonymous?->getLabel(),
+            'anonymous_status_badge' => $this->is_anonymous?->getBadge(),
             'note' => $this->note,
             'student_code' => $this->student_code,
             'class' => $this->class,
             'created_at' => customFormatDate($this->created_at),
             'status' => $this->status,
-            'status_label' => $this->status->getLabel(),
-            'status_badge' => $this->status->getBadge(),
+            'status_label' => $this->status?->getLabel(),
+            'status_badge' => $this->status?->getBadge(),
         ];
     }
 }

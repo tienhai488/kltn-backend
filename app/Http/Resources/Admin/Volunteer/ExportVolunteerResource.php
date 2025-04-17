@@ -25,9 +25,9 @@ class ExportVolunteerResource extends JsonResource
             'note' => $this->note,
             'student_code' => $this->student_code,
             'class' => $this->class,
-            'status_label' => $this->status->getLabel(),
-            'status_label_for_export' => $this->status->getLabelForExport(),
-            'status_badge' => $this->status->getBadge(),
+            'status_label' => $this->status?->getLabel(),
+            'status_label_for_export' => $this->status?->getLabelForExport(),
+            'status_badge' => $this->status?->getBadge(),
         ];
     }
 }

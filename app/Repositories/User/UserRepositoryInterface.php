@@ -77,4 +77,18 @@ interface UserRepositoryInterface extends RepositoryInterface
      * @return bool
      */
     public function updateAvatar(User $model, $data);
+
+    /**
+     * Retrieve all users who have roles of either organization or individual.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getMembers();
+
+    /**
+     * Retrieve all users who do not have any assigned roles.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getUsers();
 }
