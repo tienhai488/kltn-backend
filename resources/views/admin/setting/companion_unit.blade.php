@@ -94,12 +94,9 @@
                 }
             );
 
-            @if($companionUnit->images)
-                const data = JSON.parse('{!! json_encode($companionUnit->images) !!}');
-
-                companionUnits.addFiles(Object.entries(data).map(([key, value]) => {
-                    return value.original_url;
-                }));
+            @if($companionUnit->image_paths)
+            const data = @json($companionUnit->image_paths);
+            companionUnits.addFiles(data);
             @endif
         </script>
     </x-slot:footerFiles>

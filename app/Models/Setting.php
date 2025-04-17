@@ -6,6 +6,7 @@ use App\Enum\SettingStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -64,6 +65,20 @@ class Setting extends Model implements HasMedia
     {
         return Attribute::make(
             get: fn() => $this->getMedia(self::IMAGES_COLLECTION) ?: [],
+        );
+    }
+
+    /**
+     * Get the image paths associated with the model.
+     *
+     * @return array
+     */
+    public function imagePaths(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->getMedia(self::IMAGES_COLLECTION)
+                ->map(fn($image) => Str::after($image->getUrl(), config('app.url')))
+                ->toArray(),
         );
     }
 }
