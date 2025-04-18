@@ -65,19 +65,19 @@
                 :is-filter="true"
             />
         </div> --}}
-        <div class="col-md-4">
+        {{-- <div class="col-md-4">
             <x-form.form-select
                 :id="'donation_volunteer_user_id'"
                 :label="__('Người dùng (Quyên góp/ Tình nguyện viên)')"
                 :data-values="$users"
                 :select-value-attribute="'id'"
                 :select-value-label="'name'"
-                :name="'donation_volunterdonation_volunteer_user_id'"
+                :name="'donation_volunteer_user_id'"
                 :multiple="false"
                 :placeholder="__('Chọn người dùng')"
                 :is-filter="true"
             />
-        </div>
+        </div> --}}
         <div class="col-md-4">
             <x-form.form-select
                 :id="'donation_status'"
@@ -172,7 +172,7 @@
                 projectId: @json($project->id),
                 projectType: @json($project->type->value),
                 projectStatus: @json($project->status->value),
-                donationVolunteerUserId: $('#donation_volunteer_user_id').val(),
+                donationVolunteerUserId: null,
                 donationStatus: $('#donation_status').val(),
                 volunteerStatus: $('#volunteer_status').val(),
                 fromDate: $('#from_date').val(),

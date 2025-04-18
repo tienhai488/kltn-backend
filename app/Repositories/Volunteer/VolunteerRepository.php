@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -277,7 +278,13 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
      */
     public function getVolunteerData(array $conditions)
     {
-        return $this->filterForStatistic($conditions)->get();
+        $cacheKey = 'volunteer_data_' . md5(json_encode($conditions));
+
+        $ttlSeconds = 30;
+
+        // return Cache::remember($cacheKey, $ttlSeconds, function () use ($conditions) {
+        return $this->filterForStatistic($conditions)->latest()->get();
+        // });
     }
 
     /**
@@ -426,22 +433,31 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
         array $range,
         $projectId = null,
     ): array {
-        $startDate = Carbon::createFromFormat('d/m/Y', $range[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', end($range))->endOfDay();
+        $cacheKey = 'chart_volunteer_' . md5(json_encode([
+            'range' => $range,
+            'projectId' => $projectId,
+        ]));
 
-        $query = $this->model->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y") as date, count(*) as count')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->whereNot('status', VolunteerStatus::CANCELED->value);
+        $ttlSeconds = 30;
 
-        if ($projectId) {
-            $query->where('project_id', $projectId);
-        }
+        return Cache::remember($cacheKey, $ttlSeconds, function () use ($range, $projectId) {
+            $startDate = Carbon::createFromFormat('d/m/Y', $range[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', end($range))->endOfDay();
 
-        return $query
-            ->groupBy('date')
-            ->get()
-            ->keyBy('date')
-            ->toArray();
+            $query = $this->model->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y") as date, count(*) as count')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->whereNot('status', VolunteerStatus::CANCELED->value);
+
+            if ($projectId) {
+                $query->where('project_id', $projectId);
+            }
+
+            return $query
+                ->groupBy('date')
+                ->get()
+                ->keyBy('date')
+                ->toArray();
+        });
     }
 
     /**
@@ -449,36 +465,44 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
      */
     public function getChartVolunteerKpiData(Project $project)
     {
-        $startDate = Carbon::parse($project->start_date)->startOfDay();
-        $endDate = Carbon::parse($project->end_date)->endOfDay();
+        $cacheKey = 'chart_volunteer_kpi_' . md5(json_encode([
+            'projectId' => $project->id,
+        ]));
 
-        $donations = $this->model
-            ->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y") as date, count(*) as count')
-            ->where('project_id', $project->id)
-            ->whereBetween('created_at', [$project->start_date, $project->end_date])
-            ->whereNot('status', VolunteerStatus::CANCELED->value)
-            ->groupBy('date')
-            ->get()
-            ->keyBy('date')
-            ->toArray();
+        $ttlSeconds = 30;
 
-        $count = 0;
+        return Cache::remember($cacheKey, $ttlSeconds, function () use ($project) {
+            $startDate = Carbon::parse($project->start_date)->startOfDay();
+            $endDate = Carbon::parse($project->end_date)->endOfDay();
 
-        $allDates = [];
-        for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
-            if ($date->gt(Carbon::now())) {
-                break;
+            $donations = $this->model
+                ->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y") as date, count(*) as count')
+                ->where('project_id', $project->id)
+                // ->whereBetween('created_at', [$project->start_date, $project->end_date])
+                ->whereNot('status', VolunteerStatus::CANCELED->value)
+                ->groupBy('date')
+                ->get()
+                ->keyBy('date')
+                ->toArray();
+
+            $count = 0;
+
+            $allDates = [];
+            for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
+                if ($date->gt($endDate)) {
+                    break;
+                }
+
+                $formattedDate = $date->format('d/m/Y');
+                $count += $donations[$formattedDate]['count'] ?? 0;
+                $allDates[$formattedDate] = [
+                    'date' => $formattedDate,
+                    'count' => $count,
+                ];
             }
 
-            $formattedDate = $date->format('d/m/Y');
-            $count += $donations[$formattedDate]['count'] ?? 0;
-            $allDates[$formattedDate] = [
-                'date' => $formattedDate,
-                'count' => $count,
-            ];
-        }
-
-        return array_values($allDates);
+            return array_values($allDates);
+        });
     }
 
     /**
@@ -489,7 +513,7 @@ class VolunteerRepository extends BaseRepository implements VolunteerRepositoryI
         return $this->model
             ->where('project_id', $project->id)
             ->whereNot('status', VolunteerStatus::CANCELED->value)
-            ->whereBetween('created_at', [$project->start_date, $project->end_date])
+            // ->whereBetween('created_at', [$project->start_date, $project->end_date])
             ->count();
     }
 }

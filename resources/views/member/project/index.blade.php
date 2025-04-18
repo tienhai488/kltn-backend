@@ -177,7 +177,7 @@
                         "data": "donations_count",
                         "class": "text-center",
                         "render": function (data, type, full) {
-                            let url = `{{ route('admin.donation.index') }}?project_id=${full.id}`;
+                            let url = `{{ route('member.donation.index') }}?project_id=${full.id}`;
 
                             return `<a class="btn btn-success text-nowrap p-1" href="${url}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye p-1 br-6 mb-1"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>
                             </svg> (${data})</a>`;
@@ -187,7 +187,7 @@
                         "data": "volunteers_count",
                         "class": "text-center",
                         "render": function (data, type, full) {
-                            let url = `{{ route('admin.volunteer.index') }}?project_id=${full.id}`;
+                            let url = `{{ route('member.volunteer.index') }}?project_id=${full.id}`;
 
                             return `<a class="btn btn-success text-nowrap p-1" href="${url}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye p-1 br-6 mb-1"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>
                             </svg> (${data})</a>`;
@@ -201,9 +201,18 @@
                             let urlShow = `{{ route('member.project.show', ':id') }}`.replace(':id', data);
                             let urlEdit = `{{ route('member.project.edit', ':id') }}`.replace(':id', data);
                             let urlDestroy = `{{ route('member.project.destroy', ':id') }}`.replace(':id', data);
+                            let urlStatistic = `{{ route('member.project.statistic', ':id') }}`.replace(':id', data);
 
                             return `
                                 <ul class="table-controls d-flex justify-content-center">
+                                    <li>
+                                        <a href="${urlStatistic}" data-bs-toggle="tooltip" data-bs-placement="top"
+                                           title="{{ __('Thống kê') }}" data-original-title="{{ __('Thống kê') }}"
+                                           class="bs-tooltip"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart p-1 br-6 mb-1"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+                                        </a>
+                                    </li>
                                     <x-table.actions.show-action
                                         :permission="Acl::PERMISSION_PROJECT_LIST"
                                         :url="'${urlShow}'"

@@ -1,6 +1,6 @@
 <div class="col-lg-12 p-4">
     <div id="filterBody" class="row align-items-center">
-        <div class="col-md-4">
+        {{-- <div class="col-md-4">
             <x-form.form-select
                 :id="'project_category_id'"
                 :label="__('Danh mục dự án')"
@@ -12,8 +12,8 @@
                 :placeholder="__('Chọn danh mục')"
                 :is-filter="true"
             />
-        </div>
-        <div class="col-md-4">
+        </div> --}}
+        {{-- <div class="col-md-4">
             <x-form.form-select
                 :id="'project_id'"
                 :label="__('Dự án')"
@@ -25,8 +25,8 @@
                 :placeholder="__('Chọn dự án')"
                 :is-filter="true"
             />
-        </div>
-        <div class="col-md-4">
+        </div> --}}
+        {{-- <div class="col-md-4">
             <x-form.form-select
                 :id="'project_type'"
                 :label="__('Loại dự án')"
@@ -38,8 +38,8 @@
                 :placeholder="__('Chọn loại dự án')"
                 :is-filter="true"
             />
-        </div>
-        <div class="col-md-4">
+        </div> --}}
+        {{-- <div class="col-md-4">
             <x-form.form-select
                 :id="'project_status'"
                 :label="__('Trạng thái dự án')"
@@ -51,7 +51,7 @@
                 :placeholder="__('Chọn trạng thái')"
                 :is-filter="true"
             />
-        </div>
+        </div> --}}
         {{-- <div class="col-md-4">
             <x-form.form-select
                 :id="'project_frontend_status'"
@@ -117,29 +117,25 @@
                 :is-filter="true"
             />
         </div>
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-4">
-                    <x-form.form-date-picker
-                        :id="'from_date'"
-                        :label="__('Ngày bắt đầu')"
-                        :name="'from_date'"
-                        :maxDate="''"
-                        :placeholder="__('Ngày bắt đầu')"
-                        :isRequired="false"
-                    />
-                </div>
-                <div class="col-md-4">
-                    <x-form.form-date-picker
-                        :id="'to_date'"
-                        :label="__('Ngày kết thúc')"
-                        :name="'to_date'"
-                        :maxDate="''"
-                        :placeholder="__('Ngày kết thúc')"
-                        :isRequired="false"
-                    />
-                </div>
-            </div>
+        <div class="col-md-4">
+            <x-form.form-date-picker
+                :id="'from_date'"
+                :label="__('Ngày bắt đầu')"
+                :name="'from_date'"
+                :maxDate="''"
+                :placeholder="__('Ngày bắt đầu')"
+                :isRequired="false"
+            />
+        </div>
+        <div class="col-md-4">
+            <x-form.form-date-picker
+                :id="'to_date'"
+                :label="__('Ngày kết thúc')"
+                :name="'to_date'"
+                :maxDate="''"
+                :placeholder="__('Ngày kết thúc')"
+                :isRequired="false"
+            />
         </div>
     </div>
     <hr>
@@ -171,11 +167,11 @@
             Livewire.dispatch('initFilter');
             Livewire.dispatch('filterDataForStatistic', {
                 search: $('.search-form-control').val(),
-                userId: @json($user->id),
-                projectCategoryId: $('#project_category_id').val(),
-                projectId: $('#project_id').val(),
-                projectType: $('#project_type').val(),
-                projectStatus: $('#project_status').val(),
+                userId: @json($project->user_id),
+                projectCategoryId: @json($project->category_id),
+                projectId: @json($project->id),
+                projectType: @json($project->type->value),
+                projectStatus: @json($project->status->value),
                 donationVolunteerUserId: $('#donation_volunteer_user_id').val(),
                 donationStatus: $('#donation_status').val(),
                 volunteerStatus: $('#volunteer_status').val(),

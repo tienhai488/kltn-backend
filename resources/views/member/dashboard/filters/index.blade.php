@@ -65,6 +65,19 @@
                 :is-filter="true"
             />
         </div> --}}
+        {{-- <div class="col-md-4">
+            <x-form.form-select
+                :id="'user_id'"
+                :label="__('Người dùng (Tổ chức/ Cá nhân)')"
+                :data-values="$members"
+                :select-value-attribute="'id'"
+                :select-value-label="'name'"
+                :name="'user_id'"
+                :multiple="false"
+                :placeholder="__('Chọn người dùng')"
+                :is-filter="true"
+            />
+        </div>
         <div class="col-md-4">
             <x-form.form-select
                 :id="'donation_volunteer_user_id'"
@@ -77,7 +90,7 @@
                 :placeholder="__('Chọn người dùng')"
                 :is-filter="true"
             />
-        </div>
+        </div> --}}
         <div class="col-md-4">
             <x-form.form-select
                 :id="'donation_status'"
@@ -117,29 +130,25 @@
                 :is-filter="true"
             />
         </div>
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-4">
-                    <x-form.form-date-picker
-                        :id="'from_date'"
-                        :label="__('Ngày bắt đầu')"
-                        :name="'from_date'"
-                        :maxDate="''"
-                        :placeholder="__('Ngày bắt đầu')"
-                        :isRequired="false"
-                    />
-                </div>
-                <div class="col-md-4">
-                    <x-form.form-date-picker
-                        :id="'to_date'"
-                        :label="__('Ngày kết thúc')"
-                        :name="'to_date'"
-                        :maxDate="''"
-                        :placeholder="__('Ngày kết thúc')"
-                        :isRequired="false"
-                    />
-                </div>
-            </div>
+        <div class="col-md-4">
+            <x-form.form-date-picker
+                :id="'from_date'"
+                :label="__('Ngày bắt đầu')"
+                :name="'from_date'"
+                :maxDate="''"
+                :placeholder="__('Ngày bắt đầu')"
+                :isRequired="false"
+            />
+        </div>
+        <div class="col-md-4">
+            <x-form.form-date-picker
+                :id="'to_date'"
+                :label="__('Ngày kết thúc')"
+                :name="'to_date'"
+                :maxDate="''"
+                :placeholder="__('Ngày kết thúc')"
+                :isRequired="false"
+            />
         </div>
     </div>
     <hr>
@@ -171,17 +180,18 @@
             Livewire.dispatch('initFilter');
             Livewire.dispatch('filterDataForStatistic', {
                 search: $('.search-form-control').val(),
-                userId: @json($user->id),
+                userId: @json(auth()->id()),
                 projectCategoryId: $('#project_category_id').val(),
                 projectId: $('#project_id').val(),
                 projectType: $('#project_type').val(),
                 projectStatus: $('#project_status').val(),
-                donationVolunteerUserId: $('#donation_volunteer_user_id').val(),
+                donationVolunteerUserId: null,
                 donationStatus: $('#donation_status').val(),
                 volunteerStatus: $('#volunteer_status').val(),
                 fromDate: $('#from_date').val(),
                 toDate: $('#to_date').val(),
                 donationPriceRange: $('#donation_price_range').val(),
+                belongToUserId: null,
             });
         });
 

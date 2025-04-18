@@ -44,6 +44,36 @@ class ProjectController extends Controller
     }
 
     /**
+     * Display a statistic of the resource.
+     */
+    public function statistic(Request $request, Project $project)
+    {
+        if ($project->user_id != auth()->id()) {
+            abort(404);
+        }
+
+        $users = $this->userRepository->all();
+        $categories = $this->categoryRepository->all();
+        $projects = $this->projectRepository->advancedGet([
+            'conditions' => [
+                'where' => [
+                    'user_id' => $project->user_id,
+                ],
+            ],
+        ]);
+
+        return view(
+            'member.project.statistic',
+            compact(
+                'project',
+                'categories',
+                'projects',
+                'users',
+            ),
+        );
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()

@@ -1,7 +1,7 @@
 <x-member.base-layout :scrollspy="false">
 
     <x-slot:pageTitle>
-        {{ __('Dashboard') }}
+        {{ __('Thống kê thông tin của dự án') }}
     </x-slot:pageTitle>
 
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
@@ -49,7 +49,8 @@
 
     <x-custom.breadcrumb
         :breadcrumb-items="[
-            'Dashboard' => ''
+            'Dự án' => route('member.project.index'),
+            'Thống kê thông tin của dự án' => ''
         ]"
     />
 
@@ -60,18 +61,18 @@
                     {{ __('Bộ lọc') }}
                 </x-slot:boxTitle>
 
-                @include('member.dashboard.filters.index')
+                @include('member.project.filters.statistic')
             </x-custom.stat-box>
 
             <div class="row layout-top-spacing widget-statistic">
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-                    <livewire:admin.dashboard.partials.widget-project-amount-percent lazy />
+                    <livewire:admin.project.partials.widget-project-amount-percent lazy />
                 </div>
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-                    <livewire:admin.dashboard.partials.widget-project-volunteer-percent lazy />
+                    <livewire:admin.project.partials.widget-project-volunteer-percent lazy />
                 </div>
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-                    <livewire:admin.dashboard.partials.widget-project-time-percent lazy />
+                    <livewire:admin.project.partials.widget-project-time-percent lazy />
                 </div>
             </div>
 
@@ -79,43 +80,25 @@
 
             <div class="row widget-statistic">
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.dashboard.partials.widget-common-projects-donations-sum-amount lazy />
+                    <livewire:admin.project.partials.widget-projects-dontions-sum-amount lazy />
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.dashboard.partials.widget-common-projects-count lazy />
+                    <livewire:admin.project.partials.widget-projects-donations-count lazy />
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.dashboard.partials.widget-common-projects-donations-count lazy />
-                </div>
-                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.dashboard.partials.widget-common-projects-volunteers-count lazy />
-                </div>
-                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.dashboard.partials.widget-user-donations-sum-amount lazy />
-                </div>
-                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.dashboard.partials.widget-user-donations-projects-count lazy />
-                </div>
-                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.dashboard.partials.widget-user-donations-count lazy />
-                </div>
-                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.dashboard.partials.widget-user-volunteers-projects-count lazy />
-                </div>
-                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.dashboard.partials.widget-user-volunteers-count lazy />
+                    <livewire:admin.project.partials.widget-projects-volunteers-count lazy />
                 </div>
             </div>
         </div>
     </div>
 
-    <livewire:admin.dashboard.partials.chart-donation lazy />
+    <livewire:admin.project.partials.chart-donation lazy />
 
-    <livewire:admin.dashboard.partials.chart-volunteer lazy />
+    <livewire:admin.project.partials.chart-volunteer lazy />
 
-    <livewire:admin.dashboard.partials.chart-donation-kpi lazy />
+    <livewire:admin.project.partials.chart-donation-kpi lazy />
 
-    <livewire:admin.dashboard.partials.chart-volunteer-kpi lazy />
+    <livewire:admin.project.partials.chart-volunteer-kpi lazy />
 
     <x-custom.stat-box :id="'general-settings-box'" :custom-col="'col-lg-12'">
         <x-slot:boxTitle>
@@ -167,11 +150,11 @@
                                     d.limit = d.length;
                                     d.page = d.start / d.length + 1;
 
-                                    d.user_id = @json(auth()->id());
-                                    d.project_category_id = $('#project_category_id').val() || searchParams.get('project_category_id');
-                                    d.project_id = $('#project_id').val() || searchParams.get('project_id');
-                                    d.project_type = $('#project_type').val() || searchParams.get('project_type');
-                                    d.project_status = $('#project_status').val() || searchParams.get('project_status');
+                                    d.user_id = @json($project->user_id);
+                                    d.project_category_id = @json($project->category_id);
+                                    d.project_id = @json($project->id);
+                                    d.project_type = @json($project->type->value);
+                                    d.project_status = @json($project->status->value);
                                     d.donation_volunteer_user_id = null;
                                     d.donation_status = $('#donation_status').val() || searchParams.get('donation_status');
                                     d.volunteer_status = $('#volunteer_status').val() || searchParams.get('volunteer_status');
@@ -328,11 +311,11 @@
                                     d.limit = d.length;
                                     d.page = d.start / d.length + 1;
 
-                                    d.user_id = @json(auth()->id());
-                                    d.project_category_id = $('#project_category_id').val() || searchParams.get('project_category_id');
-                                    d.project_id = $('#project_id').val() || searchParams.get('project_id');
-                                    d.project_type = $('#project_type').val() || searchParams.get('project_type');
-                                    d.project_status = $('#project_status').val() || searchParams.get('project_status');
+                                    d.user_id = @json($project->user_id);
+                                    d.project_category_id = @json($project->category_id);
+                                    d.project_id = @json($project->id);
+                                    d.project_type = @json($project->type->value);
+                                    d.project_status = @json($project->status->value);
                                     d.donation_volunteer_user_id = null;
                                     d.donation_status = $('#donation_status').val() || searchParams.get('donation_status');
                                     d.volunteer_status = $('#volunteer_status').val() || searchParams.get('volunteer_status');
@@ -473,11 +456,11 @@
                                     d.limit = d.length;
                                     d.page = d.start / d.length + 1;
 
-                                    d.user_id = @json(auth()->id());
-                                    d.project_category_id = $('#project_category_id').val() || searchParams.get('project_category_id');
-                                    d.project_id = $('#project_id').val() || searchParams.get('project_id');
-                                    d.project_type = $('#project_type').val() || searchParams.get('project_type');
-                                    d.project_status = $('#project_status').val() || searchParams.get('project_status');
+                                    d.user_id = @json($project->user_id);
+                                    d.project_category_id = @json($project->category_id);
+                                    d.project_id = @json($project->id);
+                                    d.project_type = @json($project->type->value);
+                                    d.project_status = @json($project->status->value);
                                     d.donation_volunteer_user_id = null;
                                     d.donation_status = $('#donation_status').val() || searchParams.get('donation_status');
                                     d.volunteer_status = $('#volunteer_status').val() || searchParams.get('volunteer_status');

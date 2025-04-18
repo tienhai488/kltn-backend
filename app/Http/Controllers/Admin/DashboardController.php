@@ -44,13 +44,6 @@ class DashboardController extends Controller
 
         $categories = $this->categoryRepository->all();
         $projects = $this->projectRepository->all();
-        // $projects = $this->projectRepository->advancedGet([
-        //     'conditions' => [
-        //         'where' => [
-        //             'user_id' => $user->id,
-        //         ],
-        //     ],
-        // ]);
 
         return view('admin.dashboard.index', compact(
             'user',

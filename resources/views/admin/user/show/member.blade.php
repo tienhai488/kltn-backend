@@ -65,6 +65,18 @@
                 @include('admin.user.filters.show.member')
             </x-custom.stat-box>
 
+            <div class="row layout-top-spacing widget-statistic">
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+                    <livewire:admin.dashboard.partials.widget-project-amount-percent lazy />
+                </div>
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+                    <livewire:admin.dashboard.partials.widget-project-volunteer-percent lazy />
+                </div>
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+                    <livewire:admin.dashboard.partials.widget-project-time-percent lazy />
+                </div>
+            </div>
+
             <p class="text-center mt-3">Các số liệu dưới đây có thể được lọc theo thời gian.</p>
 
             <div class="row widget-statistic">
@@ -83,6 +95,14 @@
             </div>
         </div>
     </div>
+
+    <livewire:admin.dashboard.partials.chart-donation lazy />
+
+    <livewire:admin.dashboard.partials.chart-volunteer lazy />
+
+    <livewire:admin.dashboard.partials.chart-donation-kpi lazy />
+
+    <livewire:admin.dashboard.partials.chart-volunteer-kpi lazy />
 
     <x-custom.stat-box :id="'general-settings-box'" :custom-col="'col-lg-12'">
         <x-slot:boxTitle>

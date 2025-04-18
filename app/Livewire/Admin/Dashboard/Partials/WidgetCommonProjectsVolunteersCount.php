@@ -56,7 +56,7 @@ class WidgetCommonProjectsVolunteersCount extends Component
             'donation_price_range' => $this->donationPriceRange,
         ];
 
-        $this->productsVolunteersCount = $this->projectRepository->getProjectData($conditions)->sum('volunteers_count');
+        $this->productsVolunteersCount = $this->projectRepository->getProjectData($conditions)->sum('volunteers_without_canceled_count');
     }
 
     #[On('filterDataForStatistic')]
