@@ -18,27 +18,18 @@ class CheckUserRoleRedirect
     public function handle(Request $request, Closure $next): Response
     {
         $redirectName = null;
+
         if (auth()->check()) {
             if (auth()->user()->hasAnyRole([Acl::ROLE_SUPER_ADMIN, Acl::ROLE_ADMIN]) && ! Route::is(['admin.*'])) {
-                $redirectName = 'admin.dashboard';
-            }
-
-            if (auth()->user()->hasRole(Acl::ROLE_SUPERVISOR) && ! Route::is(['supervisor.*'])) {
-                if (!$redirectName) {
-                    $redirectName = 'supervisor.dashboard';
-                }
-            }
-
-            if (auth()->user()->hasRole(Acl::ROLE_STAFF) && ! Route::is(['staff.*'])) {
-                if ($redirectName) {
-                    $redirectName = 'staff.dashboard';
-                }
+                $redirectName = 'admin.dashboard.index';
+            } else if (auth()->user()->hasAnyRole([Acl::ROLE_ORGANIZATION, Acl::ROLE_INDIVIDUAL]) && ! Route::is(['member.*'])) {
+                $redirectName = 'member.dashboard.index';
             }
         } else {
-            $redirectName = 'auth.login.show-form';
+            $redirectName = 'auth.login.show_form';
         }
 
-        if (isset($redirectName) && $redirectName) {
+        if (!empty($redirectName)) {
             return to_route($redirectName);
         }
 

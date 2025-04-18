@@ -19,7 +19,7 @@ class CheckUserIsActive
         if (auth()->user()->status != UserStatus::ACTIVE) {
             auth()->logout();
 
-            return to_route('auth.login.show-form');
+            return to_route('auth.login.show_form');
         }
 
         return $next($request);

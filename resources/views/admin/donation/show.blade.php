@@ -4,17 +4,12 @@
     </x-slot:pageTitle>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     <x-slot:headerFiles>
-        <link rel="stylesheet" type="text/css" href="{{asset('plugins/sweetalerts2/sweetalerts2.css')}}">
-        @vite([
-            'resources/scss/light/plugins/sweetalerts2/custom-sweetalert.scss',
-            'resources/scss/dark/plugins/sweetalerts2/custom-sweetalert.scss',
-        ])
     </x-slot:headerFiles>
     <!-- END GLOBAL MANDATORY STYLES -->
     <x-custom.breadcrumb
         :breadcrumb-items="[
             __('quyên góp') => '',
-            __('Danh sách quyên góp') => route('admin.volunteer.index'),
+            __('Danh sách quyên góp') => route('admin.donation.index'),
             __('Chi tiết quyên góp') => ''
         ]"/>
     <x-custom.stat-box :id="'contact-management'" :custom-col="'col-lg-12'">
@@ -116,7 +111,6 @@
 
     <!--  BEGIN CUSTOM SCRIPTS FILE  -->
     <x-slot:footerFiles>
-        <script src="{{ asset('plugins/sweetalerts2/sweetalerts2.min.js') }}"></script>
     </x-slot:footerFiles>
     <!--  END CUSTOM SCRIPTS FILE  -->
 </x-base-layout>

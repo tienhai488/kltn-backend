@@ -190,7 +190,7 @@
 
     <!--  BEGIN CUSTOM SCRIPTS FILE  -->
     <x-slot:footerFiles>
-        @include('admin.project.partials.editor')
+        @include('includes.editor')
         <script src="{{ asset('plugins/filepond/filepond.min.js') }}"></script>
         <script src="{{ asset('plugins/filepond/FilePondPluginFileValidateType.min.js') }}"></script>
         <script src="{{ asset('plugins/filepond/FilePondPluginImageExifOrientation.min.js') }}"></script>

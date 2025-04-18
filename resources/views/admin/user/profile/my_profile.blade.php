@@ -315,10 +315,8 @@
                 }
             );
 
-            @if (auth()->user()->getFirstMediaUrl(App\Enum\UserAvatar::COLLECTION->value))
-                userAvatar.addFile(
-                    '{{ Storage::url(auth()->user()->getFirstMedia(App\Enum\UserAvatar::COLLECTION->value)->getPathRelativeToRoot()) }}'
-                );
+            @if (auth()->user()->avatar_url)
+                userAvatar.addFile(@json(auth()->user()->avatar_url));
             @endif
 
             $(function() {
@@ -352,10 +350,8 @@
                 appendAvatar();
 
                 function appendAvatar() {
-                    @if (auth()->user()->getFirstMediaUrl(App\Enum\UserAvatar::COLLECTION->value))
-                        userAvatar.addFile(
-                            '{{ auth()->user()->avatar_url }}'
-                        );
+                    @if (auth()->user()->avatar_url)
+                        userAvatar.addFile(@json(auth()->user()->avatar_url));
                     @endif
                 }
             });

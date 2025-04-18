@@ -62,11 +62,14 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
         $isStudent = Arr::get($searchParams, 'is_student', null);
         $status = Arr::get($searchParams, 'status', null);
         $projectBelongToUserId = Arr::get($searchParams, 'project_belong_to_user_id', null);
+        $paymentStatus = Arr::get($searchParams, 'payment_status', null);
 
         $query = $this->model->query()->with([
             'user',
             'user.roles',
             'project',
+            'project.category',
+            'project.user',
             'department',
         ]);
 
@@ -132,6 +135,10 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
             $query->whereHas('project', function ($query) use ($projectBelongToUserId) {
                 $query->where('user_id', $projectBelongToUserId);
             });
+        }
+
+        if (! is_null($paymentStatus)) {
+            $query->where('status', $paymentStatus);
         }
 
         return $query;

@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Vite;
+use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -153,6 +154,20 @@ class Project extends Model implements HasMedia
         $percentage = round(($elapsedDuration / $totalDuration) * 100);
 
         return $percentage;
+    }
+
+    /**
+     * Retrieve the paths of related images for the project, excluding the base app URL.
+     *
+     * @return Attribute
+     */
+    public function relatedImagePaths(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->getMedia(self::PROJECT_RELATED_IMAGES)
+                ->map(fn($image) => Str::after($image->getUrl(), config('app.url')))
+                ->toArray(),
+        );
     }
 
     /**

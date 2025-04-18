@@ -29,8 +29,8 @@ class ProjectResource extends JsonResource
             'end_date' => customFormatDate($this->end_date),
             'content' => $this->content,
             'type' => $this->type,
-            'status_label' => $this->status->getLabel(),
-            'status_badge' => $this->status->getBadge(),
+            'status_label' => $this->status?->getLabel(),
+            'status_badge' => $this->status?->getBadge(),
             'background_image' => $this->background_image,
         ];
     }

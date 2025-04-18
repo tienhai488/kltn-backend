@@ -199,7 +199,7 @@
 
     <!--  BEGIN CUSTOM SCRIPTS FILE  -->
     <x-slot:footerFiles>
-        @include('admin.project.partials.editor')
+        @include('includes.editor')
         <script src="{{ asset('plugins/filepond/filepond.min.js') }}"></script>
         <script src="{{ asset('plugins/filepond/FilePondPluginFileValidateType.min.js') }}"></script>
         <script src="{{ asset('plugins/filepond/FilePondPluginImageExifOrientation.min.js') }}"></script>
@@ -349,12 +349,9 @@
                 }
             );
 
-            @if($project->related_images)
-            const data = JSON.parse('{!! json_encode($project->related_images) !!}');
-
-            relatedImages.addFiles(Object.entries(data).map(([key, value]) => {
-                return value.original_url;
-            }));
+            @if($project->related_image_paths)
+            const data = @json($project->related_image_paths);
+            relatedImages.addFiles(data);
             @endif
         </script>
     </x-slot:footerFiles>
