@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Donation;
 
+use App\Models\Project;
 use App\Repositories\RepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -46,4 +47,32 @@ interface DonationRepositoryInterface extends RepositoryInterface
      * Calculate the total amount of all donations.
      */
     public function sumAmount();
+
+    /**
+     * Get chart donation data by range date
+     *
+     * @param array $range
+     * @param int|null $projectId
+     * @return array
+     */
+    public function getChartDonationData(
+        array $range,
+        $projectId = null,
+    ): array;
+
+    /**
+     * Get chart donation kpi data by project
+     *
+     * @param Project $project
+     * @return array
+     */
+    public function getChartDonationKpiData(Project $project);
+
+    /**
+     * Get total amount of donations by project
+     *
+     * @param Project $project
+     * @return int
+     */
+    public function getTotalAmountByProject(Project $project);
 }

@@ -5,10 +5,13 @@ namespace App\Repositories\Donation;
 use App\Enum\PaymentStatus;
 use App\Enum\PriceRangeFilter;
 use App\Models\Donation;
+use App\Models\Project;
 use App\Repositories\BaseRepository;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -276,7 +279,13 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
      */
     public function getDonationData(array $conditions)
     {
-        return $this->filterForStatistic($conditions)->get();
+        $cacheKey = 'donation_data_' . md5(json_encode($conditions));
+
+        $ttlSeconds = 30;
+
+        // return Cache::remember($cacheKey, $ttlSeconds, function () use ($conditions) {
+        return $this->filterForStatistic($conditions)->latest()->get();
+        // });
     }
 
     /**
@@ -431,5 +440,96 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
             return $this->model->count();
         }
         return $this->model->where('status', $status)->count();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChartDonationData(
+        array $range,
+        $projectId = null,
+    ): array {
+        $cacheKey = 'chart_donation_' . md5(json_encode([
+            'range'     => $range,
+            'projectId' => $projectId,
+        ]));
+
+        $ttlSeconds = 30;
+
+        return Cache::remember($cacheKey, $ttlSeconds, function () use ($range, $projectId) {
+            $startDate = Carbon::createFromFormat('d/m/Y', $range[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', end($range))->endOfDay();
+
+            $query = $this->model->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y") as date, sum(amount) as sum_amount')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->where('status', PaymentStatus::PAID->value);
+
+            if ($projectId) {
+                $query->where('project_id', $projectId);
+            }
+
+            return $query
+                ->groupBy('date')
+                ->get()
+                ->keyBy('date')
+                ->toArray();
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChartDonationKpiData(Project $project)
+    {
+        $cacheKey = 'chart_donation_kpi_' . md5(json_encode([
+            'projectId' => $project->id,
+        ]));
+
+        $ttlSeconds = 30;
+
+        return Cache::remember($cacheKey, $ttlSeconds, function () use ($project) {
+            $startDate = Carbon::parse($project->start_date)->startOfDay();
+            $endDate = Carbon::parse($project->end_date)->endOfDay();
+
+            $donations = $this->model
+                ->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y") as date, SUM(amount) as sum_amount')
+                ->where('project_id', $project->id)
+                // ->whereBetween('created_at', [$project->start_date, $project->end_date])
+                ->whereIn('status', [PaymentStatus::PAID->value])
+                ->groupBy('date')
+                ->get()
+                ->keyBy('date')
+                ->toArray();
+
+            $sumAmount = 0;
+
+            $allDates = [];
+            for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
+                if ($date->gt($endDate)) {
+                    break;
+                }
+
+                $formattedDate = $date->format('d/m/Y');
+                $sumAmount += $donations[$formattedDate]['sum_amount'] ?? 0;
+                $allDates[$formattedDate] = [
+                    'date' => $formattedDate,
+                    'sumAmount' => $sumAmount,
+                ];
+            }
+
+            return array_values($allDates);
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTotalAmountByProject(Project $project)
+    {
+        return $this->model
+            ->where('project_id', $project->id)
+            ->where('status', PaymentStatus::PAID->value)
+            // ->whereBetween('created_at', [$project->start_date, $project->end_date])
+            ->sum('amount');
     }
 }

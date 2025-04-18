@@ -52,7 +52,7 @@
                 :is-filter="true"
             />
         </div>
-        <div class="col-md-4">
+        {{-- <div class="col-md-4">
             <x-form.form-select
                 :id="'project_frontend_status'"
                 :label="__('Trạng thái dự án khi được chấp nhận')"
@@ -64,7 +64,7 @@
                 :placeholder="__('Chọn trạng thái')"
                 :is-filter="true"
             />
-        </div>
+        </div> --}}
         <div class="col-md-4">
             <x-form.form-select
                 :id="'donation_volunteer_user_id'"
@@ -72,7 +72,7 @@
                 :data-values="$users"
                 :select-value-attribute="'id'"
                 :select-value-label="'name'"
-                :name="'donation_volunterdonation_volunteer_user_id'"
+                :name="'donation_volunteer_user_id'"
                 :multiple="false"
                 :placeholder="__('Chọn người dùng')"
                 :is-filter="true"
@@ -117,25 +117,29 @@
                 :is-filter="true"
             />
         </div>
-        <div class="col-md-4">
-            <x-form.form-date-picker
-                :id="'from_date'"
-                :label="__('Ngày bắt đầu')"
-                :name="'from_date'"
-                :maxDate="''"
-                :placeholder="__('Ngày bắt đầu')"
-                :isRequired="false"
-            />
-        </div>
-        <div class="col-md-4">
-            <x-form.form-date-picker
-                :id="'to_date'"
-                :label="__('Ngày kết thúc')"
-                :name="'to_date'"
-                :maxDate="''"
-                :placeholder="__('Ngày kết thúc')"
-                :isRequired="false"
-            />
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-4">
+                    <x-form.form-date-picker
+                        :id="'from_date'"
+                        :label="__('Ngày bắt đầu')"
+                        :name="'from_date'"
+                        :maxDate="''"
+                        :placeholder="__('Ngày bắt đầu')"
+                        :isRequired="false"
+                    />
+                </div>
+                <div class="col-md-4">
+                    <x-form.form-date-picker
+                        :id="'to_date'"
+                        :label="__('Ngày kết thúc')"
+                        :name="'to_date'"
+                        :maxDate="''"
+                        :placeholder="__('Ngày kết thúc')"
+                        :isRequired="false"
+                    />
+                </div>
+            </div>
         </div>
     </div>
     <hr>

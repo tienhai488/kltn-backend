@@ -11,6 +11,7 @@ use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -331,7 +332,13 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
      */
     public function getProjectData(array $conditions)
     {
+        $cacheKey = 'project_data_' . md5(json_encode($conditions));
+
+        $ttlSeconds = 30;
+
+        // return Cache::remember($cacheKey, $ttlSeconds, function () use ($conditions) {
         return $this->filterForStatistic($conditions)->get();
+        // });
     }
 
     /**

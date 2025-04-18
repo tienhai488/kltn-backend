@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Volunteer;
 
+use App\Models\Project;
 use App\Repositories\RepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -41,4 +42,25 @@ interface VolunteerRepositoryInterface extends RepositoryInterface
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getVolunteerData(array $conditions);
+
+    public function getChartVolunteerData(
+        array $range,
+        $projectId = null,
+    ): array;
+
+    /**
+     * Get chart volunteer kpi data by project
+     *
+     * @param Project $project
+     * @return array
+     */
+    public function getChartVolunteerKpiData(Project $project);
+
+    /**
+     * Get count of volunteers by project.
+     *
+     * @param \App\Models\Project $project
+     * @return int
+     */
+    public function getCountByProject(Project $project);
 }

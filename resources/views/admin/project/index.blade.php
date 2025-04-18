@@ -201,9 +201,18 @@
                             let urlShow = `{{ route('admin.project.show', ':id') }}`.replace(':id', data);
                             let urlEdit = `{{ route('admin.project.edit', ':id') }}`.replace(':id', data);
                             let urlDestroy = `{{ route('admin.project.destroy', ':id') }}`.replace(':id', data);
+                            let urlStatistic = `{{ route('admin.project.statistic', ':id') }}`.replace(':id', data);
 
                             return `
                                 <ul class="table-controls d-flex justify-content-center">
+                                    <li>
+                                        <a href="${urlStatistic}" data-bs-toggle="tooltip" data-bs-placement="top"
+                                           title="{{ __('Thống kê') }}" data-original-title="{{ __('Thống kê') }}"
+                                           class="bs-tooltip"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart p-1 br-6 mb-1"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+                                        </a>
+                                    </li>
                                     <x-table.actions.show-action
                                         :permission="Acl::PERMISSION_PROJECT_LIST"
                                         :url="'${urlShow}'"

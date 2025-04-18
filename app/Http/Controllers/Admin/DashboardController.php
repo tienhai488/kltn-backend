@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\DonationResource;
 use App\Http\Resources\Admin\ProjectResource;
 use App\Http\Resources\Admin\VolunteerResource;
+use App\Repositories\Category\CategoryRepositoryInterface;
 use App\Repositories\Donation\DonationRepositoryInterface;
 use App\Repositories\Project\ProjectRepositoryInterface;
+use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Volunteer\VolunteerRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -17,6 +19,8 @@ class DashboardController extends Controller
         protected ProjectRepositoryInterface $projectRepository,
         protected DonationRepositoryInterface $donationRepository,
         protected VolunteerRepositoryInterface $volunteerRepository,
+        protected UserRepositoryInterface $userRepository,
+        protected CategoryRepositoryInterface $categoryRepository,
     ) {
         //
     }
@@ -26,7 +30,28 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('admin.dashboard.index');
+        $user = auth()->user();
+
+        $user->load([
+            'projects' => function ($query) {
+                $query->with('donations');
+            },
+            'donations',
+            'volunteers_without_canceled',
+        ]);
+        $users = $this->userRepository->getUsers();
+        $members = $this->userRepository->getMembers();
+
+        $categories = $this->categoryRepository->all();
+        $projects = $this->projectRepository->all();
+
+        return view('admin.dashboard.index', compact(
+            'user',
+            'users',
+            'members',
+            'projects',
+            'categories',
+        ));
     }
 
     /**
