@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
         <title>{{ config('app.name') }} | {{ $pageTitle }}</title>
@@ -40,6 +41,8 @@
             'resources/scss/light/assets/custom.scss',
             'resources/scss/dark/assets/custom.scss',
         ])
+
+        @livewireStyles
     </head>
     <body @class([
         // 'layout-dark' => $isDark,
@@ -142,5 +145,7 @@
         @vite(['resources/assets/js/custom.js'])
 
         @vite(['resources/js/app.js'])
+
+        @livewireScripts
     </body>
 </html>

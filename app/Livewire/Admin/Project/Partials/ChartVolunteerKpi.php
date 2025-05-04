@@ -14,7 +14,7 @@ class ChartVolunteerKpi extends Component
     public $project;
     public $volunteersCount;
 
-    #[On('initFilter')]
+    // #[On('initFilter')]
     public function boot(
         ProjectRepositoryInterface $projectRepository,
         VolunteerRepositoryInterface $volunteerRepository,
@@ -39,7 +39,7 @@ class ChartVolunteerKpi extends Component
         ];
     }
 
-    #[On('filterDataForStatistic')]
+    // #[On('filterDataForStatistic')]
     public function filterData(
         $projectId,
     ) {

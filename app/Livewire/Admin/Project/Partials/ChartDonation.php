@@ -11,7 +11,6 @@ class ChartDonation extends Component
     protected $donationRepository;
     public $projectId;
 
-    #[On('initFilter')]
     public function boot(
         DonationRepositoryInterface $donationRepository,
     ) {

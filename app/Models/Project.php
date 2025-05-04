@@ -170,6 +170,16 @@ class Project extends Model implements HasMedia
         );
     }
 
+    // calculate remaining days
+    public function getRemainingDaysAttribute(): int
+    {
+        if ($this->end_date <= now()) {
+            return 0;
+        }
+
+        return now()->diffInDays($this->end_date);
+    }
+
     /**
      * =====================================
      * Relationships

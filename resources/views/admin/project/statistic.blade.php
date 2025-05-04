@@ -96,9 +96,9 @@
 
     <livewire:admin.project.partials.chart-volunteer lazy />
 
-    <livewire:admin.project.partials.chart-donation-kpi lazy />
+    {{-- <livewire:admin.project.partials.chart-donation-kpi lazy />
 
-    <livewire:admin.project.partials.chart-volunteer-kpi lazy />
+    <livewire:admin.project.partials.chart-volunteer-kpi lazy /> --}}
 
     <x-custom.stat-box :id="'general-settings-box'" :custom-col="'col-lg-12'">
         <x-slot:boxTitle>
@@ -552,12 +552,6 @@
         <script src="{{asset('plugins/apex/apexcharts.min.js')}}"></script>
         <script src="{{ asset('plugins/flatpickr/flatpickr.js') }}"></script>
         <script src="{{ asset('plugins/flatpickr/l10n/vn.js') }}"></script>
-        @vite([
-            'resources/assets/js/widgets/_wSix.js',
-            'resources/assets/js/widgets/_wChartThree.js',
-            'resources/assets/js/widgets/_wHybridOne.js',
-            'resources/assets/js/widgets/_wActivityFive.js',
-        ])
     </x-slot:footerFiles>
     <!--  END CUSTOM SCRIPTS FILE  -->
 </x-base-layout>

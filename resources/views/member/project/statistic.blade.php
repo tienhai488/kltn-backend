@@ -66,13 +66,19 @@
 
             <div class="row layout-top-spacing widget-statistic">
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-                    <livewire:admin.project.partials.widget-project-amount-percent lazy />
+                    <div id="project-partials-widget-project-amount-percent" wire:ignore>
+                        <livewire:admin.project.partials.widget-project-amount-percent lazy />
+                    </div>
                 </div>
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-                    <livewire:admin.project.partials.widget-project-volunteer-percent lazy />
+                    <div id="project-partials-widget-project-volunteer-percent" wire:ignore>
+                        <livewire:admin.project.partials.widget-project-volunteer-percent lazy />
+                    </div>
                 </div>
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-                    <livewire:admin.project.partials.widget-project-time-percent lazy />
+                    <div id="project-partials-widget-project-time-percent" wire:ignore>
+                        <livewire:admin.project.partials.widget-project-time-percent lazy />
+                    </div>
                 </div>
             </div>
 
@@ -80,25 +86,55 @@
 
             <div class="row widget-statistic">
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.project.partials.widget-projects-dontions-sum-amount lazy />
+                    <div id="project-partials-widget-projects-dontions-sum-amount" wire:ignore>
+                        <livewire:admin.project.partials.widget-projects-dontions-sum-amount lazy />
+                    </div>
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.project.partials.widget-projects-donations-count lazy />
+                    <div id="project-partials-widget-projects-donations-count" wire:ignore>
+                        <livewire:admin.project.partials.widget-projects-donations-count lazy />
+                    </div>
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.project.partials.widget-projects-volunteers-count lazy />
+                    <div id="project-partials-widget-projects-volunteers-count" wire:ignore>
+                        <livewire:admin.project.partials.widget-projects-volunteers-count lazy />
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <livewire:admin.project.partials.chart-donation lazy />
+    <div class="row layout-top-spacing">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div id="dashboard-partials-chart-donation" wire:ignore>
+                <livewire:admin.dashboard.partials.chart-donation lazy />
+            </div>
+        </div>
+    </div>
 
-    <livewire:admin.project.partials.chart-volunteer lazy />
+    <div class="row layout-top-spacing">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div id="dashboard-partials-chart-volunteer" wire:ignore>
+                <livewire:admin.dashboard.partials.chart-volunteer lazy />
+            </div>
+        </div>
+    </div>
 
-    <livewire:admin.project.partials.chart-donation-kpi lazy />
+    {{-- <div class="row layout-top-spacing">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div id="dashboard-partials-chart-donation-kpi" wire:ignore>
+                <livewire:admin.dashboard.partials.chart-donation-kpi lazy />
+            </div>
+        </div>
+    </div>
 
-    <livewire:admin.project.partials.chart-volunteer-kpi lazy />
+    <div class="row layout-top-spacing">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div id="dashboard-partials-chart-volunteer-kpi" wire:ignore>
+                <livewire:admin.dashboard.partials.chart-volunteer-kpi lazy />
+            </div>
+        </div>
+    </div> --}}
 
     <x-custom.stat-box :id="'general-settings-box'" :custom-col="'col-lg-12'">
         <x-slot:boxTitle>
@@ -552,12 +588,24 @@
         <script src="{{asset('plugins/apex/apexcharts.min.js')}}"></script>
         <script src="{{ asset('plugins/flatpickr/flatpickr.js') }}"></script>
         <script src="{{ asset('plugins/flatpickr/l10n/vn.js') }}"></script>
-        @vite([
-            'resources/assets/js/widgets/_wSix.js',
-            'resources/assets/js/widgets/_wChartThree.js',
-            'resources/assets/js/widgets/_wHybridOne.js',
-            'resources/assets/js/widgets/_wActivityFive.js',
-        ])
+        <!-- CSRF handling script for AJAX requests -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Setup CSRF token for all AJAX requests
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': @json(csrf_token()),
+                    }
+                });
+
+                // Handle session timeouts
+                $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+                    if (jqxhr.status === 419) {
+                        location.reload();
+                    }
+                });
+            });
+        </script>
     </x-slot:footerFiles>
     <!--  END CUSTOM SCRIPTS FILE  -->
 </x-member.base-layout>

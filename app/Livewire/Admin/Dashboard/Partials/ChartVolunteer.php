@@ -3,7 +3,6 @@
 namespace App\Livewire\Admin\Dashboard\Partials;
 
 use App\Repositories\Volunteer\VolunteerRepositoryInterface;
-use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ChartVolunteer extends Component
@@ -11,7 +10,6 @@ class ChartVolunteer extends Component
     protected $volunteerRepository;
     public $projectId;
 
-    #[On('initFilter')]
     public function boot(
         VolunteerRepositoryInterface $volunteerRepository,
     ) {

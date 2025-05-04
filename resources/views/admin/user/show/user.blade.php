@@ -69,19 +69,29 @@
 
             <div class="row widget-statistic">
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.user.partials.widget-donations-sum-amount lazy />
+                    <div id="user-partials-widget-donations-sum-amount" wire:ignore>
+                        <livewire:admin.user.partials.widget-donations-sum-amount lazy />
+                    </div>
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.user.partials.widget-donations-projects-count lazy />
+                    <div id="user-partials-widget-donations-projects-count" wire:ignore>
+                        <livewire:admin.user.partials.widget-donations-projects-count lazy />
+                    </div>
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.user.partials.widget-donations-count lazy />
+                    <div id="user-partials-widget-donations-count" wire:ignore>
+                        <livewire:admin.user.partials.widget-donations-count lazy />
+                    </div>
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.user.partials.widget-volunteers-projects-count lazy />
+                    <div id="user-partials-widget-volunteers-projects-count" wire:ignore>
+                        <livewire:admin.user.partials.widget-volunteers-projects-count lazy />
+                    </div>
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 layout-spacing">
-                    <livewire:admin.user.partials.widget-volunteers-count lazy />
+                    <div id="user-partials-widget-volunteers-count" wire:ignore>
+                        <livewire:admin.user.partials.widget-volunteers-count lazy />
+                    </div>
                 </div>
             </div>
         </div>
@@ -539,12 +549,24 @@
         <script src="{{asset('plugins/apex/apexcharts.min.js')}}"></script>
         <script src="{{ asset('plugins/flatpickr/flatpickr.js') }}"></script>
         <script src="{{ asset('plugins/flatpickr/l10n/vn.js') }}"></script>
-        @vite([
-            'resources/assets/js/widgets/_wSix.js',
-            'resources/assets/js/widgets/_wChartThree.js',
-            'resources/assets/js/widgets/_wHybridOne.js',
-            'resources/assets/js/widgets/_wActivityFive.js',
-        ])
+        <!-- CSRF handling script for AJAX requests -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Setup CSRF token for all AJAX requests
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': @json(csrf_token()),
+                    }
+                });
+
+                // Handle session timeouts
+                $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+                    if (jqxhr.status === 419) {
+                        location.reload();
+                    }
+                });
+            });
+        </script>
     </x-slot:footerFiles>
     <!--  END CUSTOM SCRIPTS FILE  -->
 </x-base-layout>
