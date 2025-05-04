@@ -97,15 +97,15 @@
                             return `
                                 <div class="d-flex">
                                     <p class="text-start me-1">{{ __('Tên') }}:</p>
-                                    <p class="text-primary">${data.name}</p>
+                                    <p class="text-primary">${data?.name}</p>
                                 </div>
                                 <div class="d-flex">
                                     <p class="text-start me-1">{{ __('Email') }}:</p>
-                                    <p class="text-primary">${data.email}</p>
+                                    <p class="text-primary">${data?.email}</p>
                                 </div>
                                 <div class="d-flex">
                                     <p class="text-start me-1">{{ __('Số điện thoại') }}:</p>
-                                    <p class="text-primary">${data.phone_number ?? 'N/A'}</p>
+                                    <p class="text-primary">${data?.phone_number ?? 'N/A'}</p>
                                 </div>
                             `;
                         }

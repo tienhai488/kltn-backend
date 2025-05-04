@@ -3,7 +3,6 @@
 namespace App\Livewire\Admin\Dashboard\Partials;
 
 use App\Repositories\Donation\DonationRepositoryInterface;
-use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ChartDonation extends Component
@@ -11,7 +10,6 @@ class ChartDonation extends Component
     protected $donationRepository;
     public $projectId;
 
-    #[On('initFilter')]
     public function boot(
         DonationRepositoryInterface $donationRepository,
     ) {

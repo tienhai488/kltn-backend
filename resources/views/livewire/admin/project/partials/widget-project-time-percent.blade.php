@@ -16,6 +16,7 @@
                 </div>
                 <div class="w-info" wire:loading.remove>
                     <p class="value">
+                        Còn lại {{ $project->remaining_days }} ngày
                         <h6>{{ customFormatDate($project->start_date) }} -> {{ customFormatDate($project->end_date) }}</h6>
                     </p>
                 </div>

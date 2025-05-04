@@ -11,7 +11,6 @@ class ChartVolunteer extends Component
     protected $volunteerRepository;
     public $projectId;
 
-    #[On('initFilter')]
     public function boot(
         VolunteerRepositoryInterface $volunteerRepository,
     ) {
