@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\Project;
 
 use App\Acl\Acl;
+use App\Enum\ProjectFrontStatus;
 use App\Enum\ProjectType;
 use App\Enum\UserType;
 use Illuminate\Foundation\Http\FormRequest;
@@ -59,6 +60,10 @@ class ProjectRequest extends FormRequest
             'user_type' => [
                 'nullable',
                 Rule::enum(UserType::class),
+            ],
+            'front_status' => [
+                'nullable',
+                Rule::enum(ProjectFrontStatus::class),
             ],
         ];
     }

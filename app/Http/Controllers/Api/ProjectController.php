@@ -26,7 +26,7 @@ class ProjectController extends Controller
      * Lấy danh sách dự án.
      *
      * Lấy danh sách dự án theo các trường tìm kiếm.
-     * - status: Trạng thái dự án (int) (Xử lý ở frontend)
+     * - front_status: Trạng thái dự án (int)
      * 1. Đang thực hiện
      * 2. Đạt mục tiêu
      * 3. Đã kết thúc
@@ -40,9 +40,10 @@ class ProjectController extends Controller
      */
     public function index(ProjectRequest $request)
     {
-        return $this->okResponse(
-            ProjectResource::collection($this->projectRepository->serverPaginationFilteringForApi($request->all())),
-            __('Danh sách dự án'),
-        );
+        return ProjectResource::collection($this->projectRepository->serverPaginationFilteringForApi($request->all()));
+        // return $this->okResponse(
+        //     ProjectResource::collection($this->projectRepository->serverPaginationFilteringForApi($request->all())),
+        //     __('Danh sách dự án'),
+        // );
     }
 }
