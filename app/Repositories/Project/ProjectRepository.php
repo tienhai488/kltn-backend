@@ -4,6 +4,7 @@ namespace App\Repositories\Project;
 
 use App\Acl\Acl;
 use App\Enum\PriceRangeFilter;
+use App\Enum\ProjectFrontStatus;
 use App\Enum\ProjectStatus;
 use App\Enum\UserType;
 use App\Models\Project;
@@ -121,6 +122,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         $userId = Arr::get($searchParams, 'user_id', null);
         $userType = Arr::get($searchParams, 'user_type', null);
         $projectSlug = Arr::get($searchParams, 'project_slug', null);
+        $frontStatus = Arr::get($searchParams, 'front_status', null);
 
         $query = $this->model->query()
             ->with(
@@ -192,6 +194,48 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
 
         if (! is_null($projectSlug)) {
             $query->where('slug', $projectSlug);
+        }
+
+        if (! is_null($frontStatus)) {
+            switch ($frontStatus) {
+                case ProjectFrontStatus::PAUSED->value:
+                    $query->where('status', ProjectStatus::PAUSED->value);
+                    break;
+                case ProjectFrontStatus::FINISHED->value:
+                    $query->where('status', ProjectStatus::APPROVED->value)
+                        ->where('end_date', '<', now());
+                    break;
+                case ProjectFrontStatus::GOAL_ACHIEVED->value:
+                    $query->where('status', ProjectStatus::APPROVED->value)
+                        ->where('end_date', '>=', now())
+                        ->whereHas('donations_with_paid', function ($q) {
+                            $q->select(DB::raw('SUM(amount) as total_amount'), 'project_id')
+                                ->groupBy('project_id')
+                                ->havingRaw('total_amount >= projects.donation_target');
+                        })
+                        ->whereHas('volunteers_without_canceled', function ($q) {
+                            $q->select(DB::raw('COUNT(*) as volunteer_count'), 'project_id')
+                                ->groupBy('project_id')
+                                ->havingRaw('volunteer_count >= projects.volunteer_quantity');
+                        });
+                    break;
+                case ProjectFrontStatus::IN_PROGRESS->value:
+                    $query->where('status', ProjectStatus::APPROVED->value)
+                        ->where('end_date', '>=', now())
+                        ->where(function ($q) {
+                            $q->whereDoesntHave('donations_with_paid', function ($q1) {
+                                $q1->select(DB::raw('SUM(amount) as total_amount'), 'project_id')
+                                    ->groupBy('project_id')
+                                    ->havingRaw('total_amount >= projects.donation_target');
+                            })
+                                ->orWhereDoesntHave('volunteers_without_canceled', function ($q1) {
+                                    $q1->select(DB::raw('COUNT(*) as volunteer_count'), 'project_id')
+                                        ->groupBy('project_id')
+                                        ->havingRaw('volunteer_count >= projects.volunteer_quantity');
+                                });
+                        });
+                    break;
+            }
         }
 
         return $query;

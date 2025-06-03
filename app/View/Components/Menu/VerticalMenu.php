@@ -34,7 +34,8 @@ class VerticalMenu extends Component
     {
         $this->setProperties();
         $this->buildMenuDashboard();
-        $this->buildMenuSettings();
+        $this->buildMenuFeatures();
+        $this->buildMenuSystem();
     }
 
     private function buildMenuDashboard(): void
@@ -51,7 +52,106 @@ class VerticalMenu extends Component
         ]);
     }
 
-    private function buildMenuSettings(): void
+    private function buildMenuFeatures(): void
+    {
+        $this->menuItems = array_merge($this->menuItems, [
+            [
+                'title' => __('Dự án'),
+            ],
+            [
+                'title' => __('Dự án'),
+                'url' => route('admin.project.index'),
+                'icon' => 'folder-plus',
+                'active' => Route::is([
+                    'admin.project.*',
+                ]),
+                'show' => checkPermissions([Acl::PERMISSION_PROJECT_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
+            [
+                'title' => __('Quyên góp'),
+                'url' => route('admin.donation.index'),
+                'icon' => 'dollar-sign',
+                'active' => Route::is([
+                    'admin.donation.*',
+                ]),
+                'show' => checkPermissions([Acl::PERMISSION_DONATION_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
+            [
+                'title' => __('Tình nguyện viên'),
+                'url' => route('admin.volunteer.index'),
+                'icon' => 'user-check',
+                'active' => Route::is([
+                    'admin.volunteer.*',
+                ]),
+                'show' => checkPermissions([Acl::PERMISSION_VOLUNTEER_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
+            [
+                'title' => __('Phòng ban'),
+                'url' => route('admin.department.index'),
+                'icon' => 'users',
+                'active' => Route::is(['admin.department.*']),
+                'show' => checkPermissions([Acl::PERMISSION_DEPARTMENT_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
+            [
+                'title' => __('Danh mục'),
+                'url' => route('admin.category.index'),
+                'icon' => 'bookmark',
+                'active' => Route::is(['admin.category.*']),
+                'show' => checkPermissions([Acl::PERMISSION_CATEGORY_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
+            [
+                'title' => __('Liên hệ'),
+                'url' => route('admin.contact.index'),
+                'icon' => 'mail',
+                'active' => Route::is(['admin.contact.*']),
+                'show' => checkPermissions([Acl::PERMISSION_CONTACT_LIST]),
+                'child' => [
+                    //
+                ],
+            ],
+            [
+                'title' => __('Yêu cầu tài khoản'),
+                'url' => '',
+                'icon' => 'user-plus',
+                'active' => Route::is([
+                    'admin.account_request.organization.*',
+                    'admin.account_request.individual.*',
+                ]),
+                'show' => checkPermissions([Acl::PERMISSION_ACCOUNT_REQUEST_LIST]),
+                'child' => [
+                    [
+                        'title' => __('Tổ chức'),
+                        'url' => route('admin.account_request.organization.index'),
+                        'active' => Route::is(['admin.account_request.organization.*']),
+                        'show' => checkPermissions([Acl::PERMISSION_ACCOUNT_REQUEST_LIST]),
+                    ],
+                    [
+                        'title' => __('Cá nhân'),
+                        'url' => route('admin.account_request.individual.index'),
+                        'active' => Route::is(['admin.account_request.individual.*']),
+                        'show' => checkPermissions([Acl::PERMISSION_ACCOUNT_REQUEST_LIST]),
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    private function buildMenuSystem(): void
     {
         $this->menuItems = array_merge($this->menuItems, [
             [
@@ -122,96 +222,6 @@ class VerticalMenu extends Component
                 'icon' => 'settings',
                 'active' => Route::is(['admin.setting.*']),
                 'show' => checkPermissions([]),
-                'child' => [
-                    //
-                ],
-            ],
-            [
-                'title' => __('Phòng ban'),
-                'url' => route('admin.department.index'),
-                'icon' => 'users',
-                'active' => Route::is(['admin.department.*']),
-                'show' => checkPermissions([Acl::PERMISSION_DEPARTMENT_LIST]),
-                'child' => [
-                    //
-                ],
-            ],
-            [
-                'title' => __('Danh mục'),
-                'url' => route('admin.category.index'),
-                'icon' => 'bookmark',
-                'active' => Route::is(['admin.category.*']),
-                'show' => checkPermissions([Acl::PERMISSION_CATEGORY_LIST]),
-                'child' => [
-                    //
-                ],
-            ],
-            [
-                'title' => __('Liên hệ'),
-                'url' => route('admin.contact.index'),
-                'icon' => 'mail',
-                'active' => Route::is(['admin.contact.*']),
-                'show' => checkPermissions([Acl::PERMISSION_CONTACT_LIST]),
-                'child' => [
-                    //
-                ],
-            ],
-            [
-                'title' => __('Yêu cầu tài khoản'),
-                'url' => '',
-                'icon' => 'user-plus',
-                'active' => Route::is([
-                    'admin.account_request.organization.*',
-                    'admin.account_request.individual.*',
-                ]),
-                'show' => checkPermissions([Acl::PERMISSION_ACCOUNT_REQUEST_LIST]),
-                'child' => [
-                    [
-                        'title' => __('Tổ chức'),
-                        'url' => route('admin.account_request.organization.index'),
-                        'active' => Route::is(['admin.account_request.organization.*']),
-                        'show' => checkPermissions([Acl::PERMISSION_ACCOUNT_REQUEST_LIST]),
-                    ],
-                    [
-                        'title' => __('Cá nhân'),
-                        'url' => route('admin.account_request.individual.index'),
-                        'active' => Route::is(['admin.account_request.individual.*']),
-                        'show' => checkPermissions([Acl::PERMISSION_ACCOUNT_REQUEST_LIST]),
-                    ],
-                ],
-            ],
-            [
-                'title' => __('Dự án'),
-                'url' => route('admin.project.index'),
-                'icon' => 'folder-plus',
-                'active' => Route::is([
-                    'admin.project.*',
-                ]),
-                'show' => checkPermissions([Acl::PERMISSION_PROJECT_LIST]),
-                'child' => [
-                    //
-                ],
-            ],
-            [
-                'title' => __('Quyên góp'),
-                'url' => route('admin.donation.index'),
-                'icon' => 'dollar-sign',
-                'active' => Route::is([
-                    'admin.donation.*',
-                ]),
-                'show' => checkPermissions([Acl::PERMISSION_DONATION_LIST]),
-                'child' => [
-                    //
-                ],
-            ],
-            [
-                'title' => __('Tình nguyện viên'),
-                'url' => route('admin.volunteer.index'),
-                'icon' => 'user-check',
-                'active' => Route::is([
-                    'admin.volunteer.*',
-                ]),
-                'show' => checkPermissions([Acl::PERMISSION_VOLUNTEER_LIST]),
                 'child' => [
                     //
                 ],
