@@ -40,10 +40,9 @@ class ProjectController extends Controller
      */
     public function index(ProjectRequest $request)
     {
-        return ProjectResource::collection($this->projectRepository->serverPaginationFilteringForApi($request->all()));
-        // return $this->okResponse(
-        //     ProjectResource::collection($this->projectRepository->serverPaginationFilteringForApi($request->all())),
-        //     __('Danh sách dự án'),
-        // );
+        return $this->okResponse(
+            ProjectResource::collection($this->projectRepository->serverPaginationFilteringForApi($request->all())),
+            __('Danh sách dự án'),
+        );
     }
 }

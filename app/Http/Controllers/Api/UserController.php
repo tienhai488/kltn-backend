@@ -35,11 +35,10 @@ class UserController extends Controller
      */
     public function index(UserRequest $request)
     {
-        return UserResource::collection($this->userRepository->serverPaginationFilteringForApi($request->all()));
-        // return $this->okResponse(
-        //     UserResource::collection($this->userRepository->serverPaginationFilteringForApi($request->all())),
-        //     __('Danh sách người dùng'),
-        // );
+        return $this->okResponse(
+            UserResource::collection($this->userRepository->serverPaginationFilteringForApi($request->all())),
+            __('Danh sách người dùng'),
+        );
     }
 
     /**

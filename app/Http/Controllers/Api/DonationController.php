@@ -34,11 +34,10 @@ class DonationController extends Controller
      */
     public function index(DonationRequest $request)
     {
-        return DonationResource::collection($this->donationRepository->serverPaginationFilteringForApi($request->all()));
-        // return $this->okResponse(
-        //     DonationResource::collection($this->donationRepository->serverPaginationFilteringForApi($request->all())),
-        //     __('Danh sách quyên góp')
-        // );
+        return $this->okResponse(
+            DonationResource::collection($this->donationRepository->serverPaginationFilteringForApi($request->all())),
+            __('Danh sách quyên góp')
+        );
     }
 
     /**
