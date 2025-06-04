@@ -34,11 +34,10 @@ class VolunteerController extends Controller
      */
     public function index(VolunteerRequest $request)
     {
-        return VolunteerResource::collection($this->volunteerRepository->serverPaginationFilteringForApi($request->all()));
-        // return $this->okResponse(
-        //     VolunteerResource::collection($this->volunteerRepository->serverPaginationFilteringForApi($request->all())),
-        //     __('Danh sách tình nguyện viên')
-        // );
+        return $this->okResponse(
+            VolunteerResource::collection($this->volunteerRepository->serverPaginationFilteringForApi($request->all())),
+            __('Danh sách tình nguyện viên')
+        );
     }
 
     /**

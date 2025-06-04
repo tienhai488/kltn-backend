@@ -29,6 +29,13 @@ trait ApiResponses
                     'last_page' => $data->lastPage(),
                     'per_page' => $data->perPage(),
                     'total' => $data->total(),
+                    'links' => $data->linkCollection(),
+                ],
+                'links' => [
+                    'first' => $data->url(1),
+                    'last' => $data->url($data->lastPage()),
+                    'prev' => $data->previousPageUrl(),
+                    'next' => $data->nextPageUrl(),
                 ],
             ], $statusCode);
         }
