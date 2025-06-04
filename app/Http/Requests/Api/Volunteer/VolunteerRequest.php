@@ -52,6 +52,11 @@ class VolunteerRequest extends FormRequest
                 'nullable',
                 Rule::enum(VolunteerStatus::class),
             ],
+            // not include status
+            'status_not_in' => [
+                'nullable',
+                Rule::in(VolunteerStatus::cases()),
+            ],
             'keyword' => 'nullable|string',
             'projects_belong_to_user_id' => [
                 'nullable',
