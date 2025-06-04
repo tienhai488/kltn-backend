@@ -127,22 +127,30 @@ class MomoPaymentService
         // Generate signature for comparison
         $calculatedSignature = hash_hmac('sha256', $rawHash, $this->secretKey);
 
+        $orderId = explode('_', $momoData['orderId'])[0] ?? null;
+
+        // Find the donation/order
+        $donation = $this->donationRepository->find($orderId)?->loadMissing('project');
+
         // Check if signature is valid
         if ($calculatedSignature != $signature) {
-            return redirect()->away($this->apiConfig->returnUrl)->with([
+            return redirect()->away(str_replace(
+                ['{:project_id}', '{:project_slug}', '{:donation_id}'],
+                [$donation->project->id, $donation->project->slug, $donation->id],
+                $this->apiConfig->returnUrl
+            ))->with([
                 'success' => false,
                 'message' => 'Chữ ký không hợp lệ',
                 'donation_id' => $orderId
             ]);
         }
 
-        $orderId = explode('_', $momoData['orderId'])[0] ?? null;
-
-        // Find the donation/order
-        $donation = $this->donationRepository->find($orderId)?->loadMissing('project');
-
         if (!$donation) {
-            return redirect()->away($this->apiConfig->returnUrl)->with([
+            return redirect()->away(str_replace(
+                ['{:project_id}', '{:project_slug}', '{:donation_id}'],
+                [$donation->project->id, $donation->project->slug, $donation->id],
+                $this->apiConfig->returnUrl
+            ))->with([
                 'success' => false,
                 'message' => 'Không tìm thấy đơn hàng',
                 'donation_id' => $orderId,
@@ -150,7 +158,11 @@ class MomoPaymentService
         }
 
         if ($resultCode != 0) {
-            return redirect()->away($this->apiConfig->returnUrl)->with([
+            return redirect()->away(str_replace(
+                ['{:project_id}', '{:project_slug}', '{:donation_id}'],
+                [$donation->project->id, $donation->project->slug, $donation->id],
+                $this->apiConfig->returnUrl
+            ))->with([
                 'success' => false,
                 'message' => 'Thanh toán không thành công: ' . $message,
                 'donation_id' => $donation->id,
