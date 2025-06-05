@@ -220,7 +220,7 @@
             flatpickr("#start_date", {
                 dateFormat: "Y-m-d H:i",
                 maxDate: "features",
-                minDate: "today",
+                minDate: "features",
                 locale: "vn",
                 enableTime: true,
                 onOpen: function(selectedDates, dateStr, instance) {
@@ -233,7 +233,7 @@
             flatpickr("#end_date", {
                 dateFormat: "Y-m-d H:i",
                 maxDate: "features",
-                minDate: "today",
+                minDate: "features",
                 locale: "vn",
                 enableTime: true,
                 onOpen: function(selectedDates, dateStr, instance) {
