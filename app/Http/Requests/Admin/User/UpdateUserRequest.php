@@ -42,7 +42,6 @@ class UpdateUserRequest extends FormRequest
             ],
             'phone_number' => [
                 'required',
-                Rule::unique('users')->ignore($this->user->id),
                 new PhoneNumber,
             ],
             'birth_of_date' => [
