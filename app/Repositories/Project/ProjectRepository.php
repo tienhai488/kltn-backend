@@ -124,6 +124,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         $userType = Arr::get($searchParams, 'user_type', null);
         $projectSlug = Arr::get($searchParams, 'project_slug', null);
         $frontStatus = Arr::get($searchParams, 'front_status', null);
+        $isProcessing = Arr::get($searchParams, 'is_processing', null);
 
         $query = $this->model->query()
             ->with(
@@ -237,6 +238,11 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
                         });
                     break;
             }
+        }
+
+        if (! is_null($isProcessing)) {
+            // where start_date <= now()
+            $query->whereDate('start_date', '<=', now());
         }
 
         return $query;
