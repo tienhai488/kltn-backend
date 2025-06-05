@@ -9,6 +9,7 @@ use App\Enum\ProjectStatus;
 use App\Enum\UserType;
 use App\Models\Project;
 use App\Repositories\BaseRepository;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
@@ -343,6 +344,8 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         }
 
         if (! is_null($fromDate)) {
+            $fromDate = Carbon::createFromFormat('d/m/Y', $fromDate)->startOfDay();
+
             $query->whereDate('created_at', '>=', $fromDate)
                 ->whereHas('volunteers', function ($q) use ($fromDate) {
                     $q->whereDate('created_at', '>=', $fromDate);
@@ -353,6 +356,8 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         }
 
         if (! is_null($toDate)) {
+            $toDate = Carbon::createFromFormat('d/m/Y', $toDate)->endOfDay();
+
             $query->whereDate('created_at', '<=', $toDate)
                 ->whereHas('volunteers', function ($q) use ($toDate) {
                     $q->whereDate('created_at', '<=', $toDate);

@@ -52,7 +52,6 @@ class StoreUserRequest extends FormRequest
             ],
             'phone_number' => [
                 'required',
-                'unique:users,phone_number',
                 new PhoneNumber,
             ],
             'birth_of_date' => [

@@ -45,7 +45,6 @@ class UpdateProfileRequest extends FormRequest
             ],
             'phone_number' => [
                 'required',
-                Rule::unique('users')->ignore(auth()->id()),
                 new PhoneNumber,
             ],
             'user_avatar' => 'nullable',
