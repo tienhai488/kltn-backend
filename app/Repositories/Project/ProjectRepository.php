@@ -6,6 +6,7 @@ use App\Acl\Acl;
 use App\Enum\PriceRangeFilter;
 use App\Enum\ProjectFrontStatus;
 use App\Enum\ProjectStatus;
+use App\Enum\ProjectType;
 use App\Enum\UserType;
 use App\Models\Project;
 use App\Repositories\BaseRepository;
@@ -210,30 +211,82 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
                 case ProjectFrontStatus::GOAL_ACHIEVED->value:
                     $query->where('status', ProjectStatus::APPROVED->value)
                         ->where('end_date', '>=', now())
-                        ->whereHas('donations_with_paid', function ($q) {
-                            $q->select(DB::raw('SUM(amount) as total_amount'), 'project_id')
-                                ->groupBy('project_id')
-                                ->havingRaw('total_amount >= projects.donation_target');
-                        })
-                        ->whereHas('volunteers_without_canceled', function ($q) {
-                            $q->select(DB::raw('COUNT(*) as volunteer_count'), 'project_id')
-                                ->groupBy('project_id')
-                                ->havingRaw('volunteer_count >= projects.volunteer_quantity');
+                        ->where(function ($q) {
+                            // For DONATION type projects, only check donation target
+                            $q->where(function ($q1) {
+                                $q1->where('type', ProjectType::DONATION->value)
+                                    ->whereHas('donations_with_paid', function ($q2) {
+                                        $q2->select(DB::raw('SUM(amount) as total_amount'), 'project_id')
+                                            ->groupBy('project_id')
+                                            ->havingRaw('total_amount >= projects.donation_target');
+                                    });
+                            })
+                                // For VOLUNTEER type projects, only check volunteer quantity
+                                ->orWhere(function ($q1) {
+                                    $q1->where('type', ProjectType::VOLUNTEER->value)
+                                        ->whereHas('volunteers_without_canceled', function ($q2) {
+                                            $q2->select(DB::raw('COUNT(*) as volunteer_count'), 'project_id')
+                                                ->groupBy('project_id')
+                                                ->havingRaw('(projects.volunteer_quantity = 0 OR volunteer_count >= projects.volunteer_quantity)');
+                                        });
+                                })
+                                // For BOTH type projects, check both conditions
+                                ->orWhere(function ($q1) {
+                                    $q1->where('type', ProjectType::BOTH->value)
+                                        ->whereHas('donations_with_paid', function ($q2) {
+                                            $q2->select(DB::raw('SUM(amount) as total_amount'), 'project_id')
+                                                ->groupBy('project_id')
+                                                ->havingRaw('total_amount >= projects.donation_target');
+                                        })
+                                        ->whereHas('volunteers_without_canceled', function ($q2) {
+                                            $q2->select(DB::raw('COUNT(*) as volunteer_count'), 'project_id')
+                                                ->groupBy('project_id')
+                                                ->havingRaw('(volunteer_count >= projects.volunteer_quantity)');
+                                        });
+                                });
                         });
                     break;
                 case ProjectFrontStatus::IN_PROGRESS->value:
                     $query->where('status', ProjectStatus::APPROVED->value)
                         ->where('end_date', '>=', now())
                         ->where(function ($q) {
-                            $q->whereDoesntHave('donations_with_paid', function ($q1) {
-                                $q1->select(DB::raw('SUM(amount) as total_amount'), 'project_id')
-                                    ->groupBy('project_id')
-                                    ->havingRaw('total_amount >= projects.donation_target');
+                            // For DONATION type projects, only check donation target
+                            $q->where(function ($q1) {
+                                $q1->where('type', ProjectType::DONATION->value)
+                                    ->whereDoesntHave('donations_with_paid', function ($q2) {
+                                        $q2->select(DB::raw('SUM(amount) as total_amount'), 'project_id')
+                                            ->groupBy('project_id')
+                                            ->havingRaw('total_amount >= projects.donation_target');
+                                    });
                             })
-                                ->orWhereDoesntHave('volunteers_without_canceled', function ($q1) {
-                                    $q1->select(DB::raw('COUNT(*) as volunteer_count'), 'project_id')
-                                        ->groupBy('project_id')
-                                        ->havingRaw('volunteer_count >= projects.volunteer_quantity');
+                                // For VOLUNTEER type projects, only check volunteer quantity
+                                ->orWhere(function ($q1) {
+                                    $q1->where('type', ProjectType::VOLUNTEER->value)
+                                        ->where('volunteer_quantity', '>', 0)
+                                        ->whereDoesntHave('volunteers_without_canceled', function ($q2) {
+                                            $q2->select(DB::raw('COUNT(*) as volunteer_count'), 'project_id')
+                                                ->groupBy('project_id')
+                                                ->havingRaw('volunteer_count >= projects.volunteer_quantity');
+                                        });
+                                })
+                                // For BOTH type projects, check if either condition is not met
+                                ->orWhere(function ($q1) {
+                                    $q1->where('type', ProjectType::BOTH->value)
+                                        ->where(function ($q2) {
+                                            $q2->whereDoesntHave('donations_with_paid', function ($q3) {
+                                                $q3->select(DB::raw('SUM(amount) as total_amount'), 'project_id')
+                                                    ->groupBy('project_id')
+                                                    ->havingRaw('total_amount >= projects.donation_target');
+                                            })
+                                                ->orWhere(function ($q3) {
+                                                    $q3->where('volunteer_quantity', '>', 0)
+                                                        ->whereDoesntHave('volunteers_without_canceled', function ($q4) {
+                                                            $q4->select(DB::raw('COUNT(*) as volunteer_count'), 'project_id')
+                                                                ->groupBy('project_id')
+                                                                ->havingRaw('volunteer_count >= projects.volunteer_quantity');
+                                                        });
+                                                });
+                                        });
                                 });
                         });
                     break;

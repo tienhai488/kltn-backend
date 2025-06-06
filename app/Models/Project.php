@@ -79,9 +79,11 @@ class Project extends Model implements HasMedia
         if ($this->status == ProjectStatus::APPROVED) {
             if (now() > $this->end_date) {
                 return ProjectFrontStatus::FINISHED;
-            } else if (
-                $this->donations_with_paid->sum('amount') >= $this->donation_target
-                && $this->volunteers_without_canceled->count() >= $this->volunteer_quantity
+            }
+
+            if (
+                $this->donations_with_paid()->sum('amount') >= $this->donation_target
+                && $this->volunteers_without_canceled()->count() >= $this->volunteer_quantity
             ) {
                 return ProjectFrontStatus::GOAL_ACHIEVED;
             }
