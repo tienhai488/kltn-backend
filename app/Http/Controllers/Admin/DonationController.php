@@ -49,8 +49,9 @@ class DonationController extends Controller
     public function export(Request $request)
     {
         $donations = $this->donationRepository->serverPaginationFilteringForAdmin($request->all());
+        $project = $this->projectRepository->find($request->get('project_id'));
 
-        return new DonationExport(ExportDonationResource::collection($donations)->resolve());
+        return new DonationExport($project, ExportDonationResource::collection($donations)->resolve());
     }
 
     /**
