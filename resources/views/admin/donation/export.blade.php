@@ -1,7 +1,7 @@
 <table>
     <thead>
         <tr>
-            <th colspan="10" align="center" style="font-weight: bold; font-size: 20px; background-color: yellow;">Danh sách quyên góp của {{ !empty($donations[0]) ? $donations[0]['project']['name'] : '' }}</th>
+            <th colspan="10" align="center" style="font-weight: bold; font-size: 20px; background-color: yellow;">Danh sách quyên góp của {{ $project->name }}</th>
         </tr>
         <tr>
             <th align="left" style="font-weight: bold;">{{ __('STT') }}</th>

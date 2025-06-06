@@ -20,9 +20,10 @@ class VolunteerExport implements FromView, Responsable, ShouldAutoSize, WithColu
     private $fileName = 'volunteers.xlsx';
 
     public function __construct(
-        protected $volunteers = []
+        protected $project = null,
+        protected $volunteers = [],
     ) {
-        $this->fileName = !empty($this->volunteers[0]) ? Str::slug('Danh sach tinh nguyen vien cua ' . $this->volunteers[0]['project']['name']) . '.xlsx' : 'volunteers.xlsx';
+        $this->fileName = $this->project->name . '.xlsx';
     }
 
     /**
@@ -31,6 +32,7 @@ class VolunteerExport implements FromView, Responsable, ShouldAutoSize, WithColu
     public function view(): View
     {
         return view('admin.volunteer.export', [
+            'project' => $this->project,
             'volunteers' => $this->volunteers,
         ]);
     }

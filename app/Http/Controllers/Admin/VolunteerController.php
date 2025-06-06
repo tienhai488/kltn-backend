@@ -49,8 +49,9 @@ class VolunteerController extends Controller
     public function export(Request $request)
     {
         $volunteers = $this->volunteerRepository->serverPaginationFilteringForAdmin($request->all());
+        $project = $this->projectRepository->find($request->get('project_id'));
 
-        return new VolunteerExport(ExportVolunteerResource::collection($volunteers)->resolve());
+        return new VolunteerExport($project, ExportVolunteerResource::collection($volunteers)->resolve());
     }
 
     /**

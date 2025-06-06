@@ -124,7 +124,8 @@ class DonationRepository extends BaseRepository implements DonationRepositoryInt
             });
         }
 
-        if (! is_null($isStudent)) {
+        // parse boolean value for is_student
+        if (! is_null($isStudent) && filter_var($isStudent, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
             $query->whereNotNull('student_code')->whereNot('student_code', '');
         }
 

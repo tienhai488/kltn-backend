@@ -20,14 +20,16 @@ class DonationExport implements FromView, Responsable, ShouldAutoSize, WithColum
     private $fileName = 'donations.xlsx';
 
     public function __construct(
+        protected $project = null,
         protected $donations = null,
     ) {
-        $this->fileName = !empty($this->donations[0]) ? Str::slug('Danh sach quyen gop cua ' . $this->donations[0]['project']['name']) . '.xlsx' : 'donations.xlsx';
+        $this->fileName = $this->project->name . '.xlsx';
     }
 
     public function view(): View
     {
         return view('admin.donation.export', [
+            'project' => $this->project,
             'donations' => $this->donations,
         ]);
     }
